@@ -1,3 +1,5 @@
+'use client';
+
 import { Badge } from '@/components/Badge';
 import { Label } from '@/components/Label';
 import { Mark, Ordinal } from '@/components/Mark';
@@ -10,14 +12,14 @@ import { company, notifications, productsOfLaw } from '@/lib/data';
 import { REFERENCE_DATE, formatDate, formatMonthDay, formatSyncTime } from '@/lib/dday';
 import { heldLaws, markColor, mustDoNow, thisWeek } from '@/lib/derive';
 import { INITIAL_READ_NOTIFICATIONS } from '@/lib/store-defaults';
+import { useActionsDone } from '@/lib/useActionsDone';
 import { RISK_COLOR } from '@/types/neo';
 
 // S1 Home.
-// 액션 완료 상태는 6단계에서 localStorage와 묶는다. 지금은 완료 0건 기준으로 그린다.
-const DONE: string[] = [];
-
 export default function Home() {
-  const must = mustDoNow(DONE);
+  // S3 체크박스와 같은 스토어를 본다. 여기서 따로 읽으면 두 화면이 어긋난다.
+  const done = useActionsDone();
+  const must = mustDoNow(done);
   const week = thisWeek();
   const held = heldLaws();
   const unread = notifications.filter(

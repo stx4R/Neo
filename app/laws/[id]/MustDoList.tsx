@@ -1,23 +1,17 @@
 'use client';
 
-import { useState } from 'react';
 import { Checkbox } from '@/components/Checkbox';
 import { Row, RowMeta } from '@/components/Row';
 import { formatMonthDay } from '@/lib/dday';
+import { toggleAction, useActionsDone } from '@/lib/useActionsDone';
 import type { Action } from '@/types/neo';
 
 /**
  * S3 체크리스트.
- *
- * 완료 상태를 여기서 useState로 들고 있는 건 임시다. 6단계에서 useActionState로
- * 갈아끼운다 — 그때 바꿀 곳은 이 훅 한 줄뿐이고, ActionRow는 손대지 않는다.
+ * 완료 상태는 S1·S2와 같은 스토어에서 온다. ActionRow는 상태를 들지 않는다.
  */
 export function MustDoList({ actions }: { actions: Action[] }) {
-  // TODO 6단계: localStorage 기반 useActionState로 교체. S1과 같은 출처를 봐야 한다.
-  const [done, setDone] = useState<readonly string[]>([]);
-
-  const toggle = (id: string) =>
-    setDone((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+  const done = useActionsDone();
 
   return (
     <>
@@ -25,8 +19,8 @@ export function MustDoList({ actions }: { actions: Action[] }) {
         <ActionRow
           key={action.id}
           action={action}
-          done={done.includes(action.id)}
-          onToggle={() => toggle(action.id)}
+          done={done.has(action.id)}
+          onToggle={() => toggleAction(action.id)}
           last={i === actions.length - 1}
         />
       ))}

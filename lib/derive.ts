@@ -25,8 +25,7 @@ export interface MustDo {
  * 순서는 laws.json 순서를 따르고, 배지는 액션의 dueDate가 아니라 법률의 deadline을 쓴다.
  * 액션이 전부 끝난 법률은 목록에서 빠진다.
  */
-export function mustDoNow(doneIds: readonly string[]): MustDo[] {
-  const done = new Set(doneIds);
+export function mustDoNow(done: ReadonlySet<string>): MustDo[] {
   return laws
     .filter((law) => law.deadline !== null)
     .map((law) => {
@@ -49,9 +48,13 @@ export function heldLaws(): Law[] {
   return laws.filter((law) => law.status === 'hold');
 }
 
-/** 아직 끝나지 않은 액션 수. */
-export function openActionCount(doneIds: readonly string[]): number {
-  const done = new Set(doneIds);
+/** 한 법률에서 아직 끝나지 않은 액션. */
+export function openActionsOfLaw(law: Law, done: ReadonlySet<string>): Action[] {
+  return actionsOfLaw(law).filter((a) => !done.has(a.id));
+}
+
+/** 전체에서 아직 끝나지 않은 액션 수. */
+export function openActionCount(done: ReadonlySet<string>): number {
   return laws.flatMap(actionsOfLaw).filter((a) => !done.has(a.id)).length;
 }
 

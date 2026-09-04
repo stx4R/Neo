@@ -9,18 +9,20 @@ import { Row, RowMeta, RowTitle } from '@/components/Row';
 import { Screen } from '@/components/Screen';
 import { TabBar } from '@/components/TabBar';
 import { TopBar } from '@/components/TopBar';
-import { actionsOfLaw, company, productsOfLaw } from '@/lib/data';
+import { company, productsOfLaw } from '@/lib/data';
 import { REFERENCE_DATE, formatSyncTime } from '@/lib/dday';
 import {
   FILTER_PRESETS,
   SORT_OPTIONS,
   listBadge,
   markColor,
+  openActionsOfLaw,
   statusLine,
   visibleLaws,
   type FilterPreset,
   type SortKey,
 } from '@/lib/derive';
+import { useActionsDone } from '@/lib/useActionsDone';
 
 // S2 Laws.
 // 필터·정렬·검색은 전부 useState. localStorage로 옮기는 건 6단계다.
@@ -28,6 +30,7 @@ export default function LawsPage() {
   const [preset, setPreset] = useState<FilterPreset>('내 우선순위');
   const [sort, setSort] = useState<SortKey>('date');
   const [query, setQuery] = useState('');
+  const done = useActionsDone();
 
   const rows = useMemo(() => visibleLaws(preset, sort, query), [preset, sort, query]);
   const activeCountry = company.countries.find((c) => c.active);
@@ -151,8 +154,8 @@ export default function LawsPage() {
               <Label>{law.officialRef}</Label>
               <RowTitle>{law.title}</RowTitle>
               <RowMeta>
-                {statusLine(law)} · 제품 {productsOfLaw(law).length} · 액션{' '}
-                {actionsOfLaw(law).length} · <RiskText level={law.riskLevel} />
+                {statusLine(law)} · 제품 {productsOfLaw(law).length} · 미완{' '}
+                {openActionsOfLaw(law, done).length} · <RiskText level={law.riskLevel} />
               </RowMeta>
             </Row>
           );
