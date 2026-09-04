@@ -1,0 +1,69 @@
+import type { ReactNode } from 'react';
+
+/**
+ * 색면 배지. height 22, padding 0 7. 배경은 꽉 찬 색면, 글자는 항상 --on-color.
+ * 둥글지 않다 — pill 금지.
+ */
+export function Badge({
+  tone,
+  tnum = false,
+  children,
+}: {
+  /** 색면 배경. RISK_COLOR / STATUS_COLOR 값이나 var(--accent) 등. */
+  tone: string;
+  tnum?: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <span
+      className={tnum ? 't-badge tnum' : 't-badge'}
+      style={{
+        flex: 'none',
+        height: 'var(--badge-h)',
+        display: 'flex',
+        alignItems: 'center',
+        padding: '0 var(--badge-pad)',
+        background: tone,
+        color: 'var(--on-color)',
+      }}
+    >
+      {children}
+    </span>
+  );
+}
+
+/**
+ * 배지와 같은 치수의 필터 칩. 선택되지 않으면 색면 없이 밑줄 1px 만 남는다.
+ * 색을 테두리로 쓰지 않기 위한 형태다.
+ */
+export function FilterChip({
+  active,
+  children,
+  onClick,
+}: {
+  active: boolean;
+  children: ReactNode;
+  onClick?: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="t-badge"
+      style={{
+        flex: 'none',
+        height: 'var(--badge-h)',
+        display: 'flex',
+        alignItems: 'center',
+        padding: '0 var(--badge-pad)',
+        border: 'none',
+        borderBottom: active ? 'none' : '1px solid var(--hairline)',
+        background: active ? 'var(--accent)' : 'transparent',
+        color: active ? 'var(--on-color)' : 'var(--text-3)',
+        cursor: 'pointer',
+      }}
+    >
+      {children}
+    </button>
+  );
+}

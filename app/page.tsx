@@ -1,0 +1,135 @@
+import { Badge } from '@/components/Badge';
+import { Label } from '@/components/Label';
+import { Mark, Ordinal } from '@/components/Mark';
+import { RiskText } from '@/components/RiskText';
+import { Row, RowMeta, RowTitle } from '@/components/Row';
+import { Screen, Section } from '@/components/Screen';
+import { TabBar } from '@/components/TabBar';
+import { TopBar, UnreadDot } from '@/components/TopBar';
+import { company, notifications, productsOfLaw } from '@/lib/data';
+import { REFERENCE_DATE, formatDate, formatMonthDay, formatSyncTime } from '@/lib/dday';
+import { heldLaws, mustDoNow, thisWeek } from '@/lib/derive';
+import { INITIAL_READ_NOTIFICATIONS } from '@/lib/store-defaults';
+import { RISK_COLOR } from '@/types/neo';
+
+// S1 Home.
+// 액션 완료 상태는 6단계에서 localStorage와 묶는다. 지금은 완료 0건 기준으로 그린다.
+const DONE: string[] = [];
+
+export default function Home() {
+  const must = mustDoNow(DONE);
+  const week = thisWeek();
+  const held = heldLaws();
+  const unread = notifications.filter(
+    (n) => !INITIAL_READ_NOTIFICATIONS.includes(n.id),
+  ).length;
+
+  const activeCountry = company.countries.find((c) => c.active);
+  const sector = company.industry.split(' · ')[0];
+
+  return (
+    <Screen scrollPadBottom={130} footer={<TabBar />}>
+      <TopBar
+        left={<Label color="var(--text)">NEO</Label>}
+        right={
+          <>
+            <span className="t-meta tnum" style={{ color: 'var(--text-3)' }}>
+              {formatSyncTime(REFERENCE_DATE)}
+            </span>
+            <UnreadDot count={unread} />
+          </>
+        }
+      />
+
+      <div style={{ padding: '12px var(--pad) 0' }}>
+        <div
+          style={{
+            height: 'var(--block-h)',
+            display: 'flex',
+            alignItems: 'center',
+            padding: '0 var(--block-pad)',
+            background: RISK_COLOR.critical,
+          }}
+        >
+          <h1 className="t-h1" style={{ margin: 0, color: 'var(--on-color)' }}>
+            대응 필요 <span className="tnum">{must.length}</span>건.
+          </h1>
+        </div>
+        <p className="t-meta" style={{ margin: '10px 0 0', color: 'var(--text-2)' }}>
+          {company.name}
+          {activeCountry ? ` · ${activeCountry.code} ${activeCountry.name}` : ''} · {sector}
+        </p>
+      </div>
+
+      {/* 지구본. 8단계에서 DotGeo를 얹는다. 자리를 먼저 잡아 세로 리듬을 고정한다.
+          원본 실측: 296×240, margin-right -36 으로 우측을 화면 밖으로 흘린다. */}
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 4 }}>
+        <div style={{ width: 296, height: 240, marginRight: -36 }} />
+      </div>
+
+      {held.length > 0 && (
+        <div style={{ marginTop: 4, padding: '0 var(--pad)' }}>
+          {held.map((law, i) => (
+            <Row
+              key={law.id}
+              height="short"
+              gap={12}
+              leading={<Mark status="hold" fixedWidth={false} />}
+              trailing={
+                <span
+                  className="t-meta tnum"
+                  style={{ flex: 'none', color: 'var(--text-3)' }}
+                >
+                  {law.heldAt ? formatMonthDay(law.heldAt) : ''}
+                </span>
+              }
+              last={i === held.length - 1}
+            >
+              <RowTitle as="span">{law.officialRef} 시행 보류</RowTitle>
+            </Row>
+          ))}
+        </div>
+      )}
+
+      <Section label="MUST DO NOW">
+        {must.map(({ law, action, countdown }, i) => (
+          <Row
+            key={action.id}
+            height="action"
+            leading={<Ordinal n={i + 1} />}
+            leadingAlign="top"
+            trailing={
+              <Badge tone={countdown.tone} tnum={!countdown.overdue}>
+                {countdown.text}
+              </Badge>
+            }
+            last={i === must.length - 1}
+          >
+            <span className="t-body" style={{ color: 'var(--text)' }}>
+              {action.title}
+            </span>
+            <Label>{law.officialRef}</Label>
+          </Row>
+        ))}
+      </Section>
+
+      <Section label="THIS WEEK">
+        {week.map((law, i) => (
+          <Row
+            key={law.id}
+            height="info"
+            leading={<Mark status={law.status} />}
+            last={i === week.length - 1}
+          >
+            <RowTitle>{law.title}</RowTitle>
+            <RowMeta>
+              {formatDate(law.effectiveDate)} · 제품 {productsOfLaw(law).length} ·{' '}
+              <RiskText level={law.riskLevel} />
+            </RowMeta>
+          </Row>
+        ))}
+      </Section>
+    </Screen>
+  );
+}
+

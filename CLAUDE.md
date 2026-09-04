@@ -32,7 +32,7 @@
 8. **폰트는 Pretendard 하나.** 무게로 위계를 만든다. `32px`은 존재하지 않는다 — 최상위가 H1 24px다.
 9. **스켈레톤에 shimmer 금지.** 좌→우로 흐르는 광택은 글로우다. opacity 펄스만 쓴다.
 
-토큰은 `seed/styles/tokens.css`에 있다. **색상·간격 하드코딩 금지, 전부 CSS 변수로.**
+토큰은 `app/globals.css`에 있다. **색상·간격 하드코딩 금지, 전부 CSS 변수로.**
 
 한자 상태 마커 `施`(시행중) `留`(보류) `豫`(예정)는 이 앱의 서명이다.
 `font-family`에 **`serif` 폴백을 반드시 유지**한다 — 이게 마커를 텍스트가 아닌 기호로 읽히게 만든다.
@@ -68,5 +68,5 @@
 ## 기준 날짜
 
 목 데이터의 D-Day는 **2026-09-03** 기준으로 계산되어 있다.
-`seed/data/meta.json`의 `referenceDate`를 쓰고 `new Date()`를 쓰지 않는다.
+`data/meta.json`의 `referenceDate`를 쓰고 `new Date()`를 쓰지 않는다.
 실제 시각을 쓰면 D-Day가 디자인 산출물과 어긋난다.

@@ -1,0 +1,10 @@
+{
+  "name": "한맛식품",
+  "industry": "식품·음료 · 조미료/소스류",
+  "countries": [
+    { "code": "VN", "name": "베트남", "active": true },
+    { "code": "ID", "name": "인도네시아", "active": false },
+    { "code": "TH", "name": "태국", "active": false }
+  ],
+  "productIds": ["p-kimchi-sauce", "p-seasoned-laver", "p-gochujang", "p-yuja"]
+}

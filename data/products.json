@@ -1,0 +1,6 @@
+[
+  { "id": "p-kimchi-sauce",   "name": "김치양념 소스", "hsCode": "2103.90", "impact": "high" },
+  { "id": "p-seasoned-laver", "name": "조미김",       "hsCode": "2008.99", "impact": "high" },
+  { "id": "p-gochujang",      "name": "고추장",       "hsCode": "2103.90", "impact": "medium" },
+  { "id": "p-yuja",           "name": "유자청",       "hsCode": "2007.99", "impact": "low" }
+]
