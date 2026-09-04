@@ -37,20 +37,24 @@ export type Countdown =
 /**
  * 마감까지의 카운트다운. 배지에 그대로 넣는다.
  *
- * 색은 디자인 원본 실측을 따른다 — D-45는 --risk-medium, D-14와 기한 경과는
- * --risk-critical. 두 값 사이 어디에 경계가 있는지는 원본에 없어서 30일로 잡았다.
+ * 원본의 확정점은 D-14 = critical, D-45 = medium 둘뿐이다.
+ * 그 사이를 3단으로 끊어 --risk-high 까지 쓴다.
+ *
+ *   기한 경과 · D-14 이하  →  critical
+ *   D-15 ~ D-30           →  high
+ *   D-31 이상             →  medium
+ *
+ * 초록(--risk-low)은 쓰지 않는다. 마감일 배지가 "안전"으로 읽히면 안 된다.
+ * deadline이 없는 법률은 배지 자체를 그리지 않는다 — 호출부에서 거른다.
  */
 export function countdown(deadline: string): Countdown {
   const days = daysUntil(deadline);
   if (days < 0) {
     return { overdue: true, days, text: '기한 경과', tone: RISK_COLOR.critical };
   }
-  return {
-    overdue: false,
-    days,
-    text: `D-${days}`,
-    tone: days <= 30 ? RISK_COLOR.critical : RISK_COLOR.medium,
-  };
+  const tone =
+    days <= 14 ? RISK_COLOR.critical : days <= 30 ? RISK_COLOR.high : RISK_COLOR.medium;
+  return { overdue: false, days, text: `D-${days}`, tone };
 }
 
 /** '2026.01.23' */

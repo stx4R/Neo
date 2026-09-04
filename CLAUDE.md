@@ -26,7 +26,7 @@
 2. **`border-radius: 0`.** 유일한 예외는 S3 체크박스(16×16 원형) 하나.
 3. **카드 박스 금지.** 행 구분은 `border-top: 1px solid var(--hairline)` 로만.
 4. **색은 꽉 찬 면으로만.** 얇은 테두리·글로우로 쓰지 않는다. 색면 위 글자는 항상 `var(--on-color)`.
-5. **전부 좌측 정렬.** 예외는 S5 시트 드래그 핸들 하나.
+5. **화면 콘텐츠는 전부 좌측 정렬.** 탭바와 S5 시트 드래그 핸들은 예외.
 6. **이모지 금지.** 국기 포함. 국가는 `VN` / `ID` / `TH` 두 글자.
 7. **둥근 pill 칩 금지.**
 8. **폰트는 Pretendard 하나.** 무게로 위계를 만든다. `32px`은 존재하지 않는다 — 최상위가 H1 24px다.
@@ -58,7 +58,7 @@
 | 스택 | Next.js App Router + TypeScript + Tailwind + shadcn |
 | 데이터 | 정적 JSON + localStorage. 백엔드 없음 |
 | 지오그래피 | `design/neo-dots.js` 포팅. **cobe·three.js·외부 지도 라이브러리 금지** |
-| PWA | Serwist (`@serwist/next`). next-pwa 쓰지 않는다 |
+| PWA | 서비스워커를 직접 쓴다. Serwist·next-pwa 쓰지 않는다 |
 | 배포 | Vercel |
 
 **`neo-dots.js` 포팅 시 반드시**: CDN 의존(unpkg d3, topojson, jsdelivr world-atlas)을 전부 제거하고 `d3-geo`·`topojson-client`를 npm으로, `countries-110m.json`을 `public/geo/`에 정적으로 포함한다. 오프라인 PWA에서 CDN 의존은 치명적이다.

@@ -4,7 +4,7 @@
    디자인이 쓰는 무게는 400·500·700 셋뿐이다.
    CDN을 쓰지 않는다 — 오프라인 PWA에서 치명적이다.
    폰트 파일 출처: npm `pretendard` v1.3.9 / dist/web/static/woff2-subset
-   라이선스: SIL OFL 1.1 (public/fonts/LICENSE.txt) ─────────────── */
+   라이선스: SIL OFL 1.1 (public/fonts/PRETENDARD-LICENSE.txt) ─────────────── */
 
 @font-face {
   font-family: Pretendard;
@@ -28,6 +28,48 @@
   font-style: normal;
   font-display: swap;
   src: url("/fonts/Pretendard-Bold.subset.woff2") format("woff2");
+}
+
+/* ── NEO Mark — 한자 상태 마커 전용. 施 留 豫 세 글자뿐이다.
+   이 세 글자는 Pretendard에 없어서 serif로 떨어지는데, 어느 serif로 떨어지는지가
+   기기마다 다르다 (Windows 바탕 / macOS·iOS 명조 / Android 또 다름).
+   앱의 서명 요소가 플랫폼마다 다른 골격으로 찍히면 안 되므로 글꼴을 고정한다.
+
+   font-display: block — 폴백으로 잠깐 찍혔다가 바뀌면 눈에 띈다.
+   1KB짜리 파일이라 즉시 로드된다.
+
+   출처: npm `@fontsource/noto-serif-kr` v5.3.0, 700 무게에서 글자별 서브셋.
+   재생성은 scripts/make-mark-font.mjs. 라이선스: SIL OFL 1.1
+   (public/fonts/NOTO-SERIF-KR-LICENSE.txt)
+
+   세 글자가 원본에서 서로 다른 청크에 있어 파일도 셋이다. unicode-range가
+   겹치지 않으므로 브라우저는 실제로 쓰인 마커만 받는다. ──────────────── */
+
+@font-face {
+  font-family: 'NEO Mark';
+  font-weight: 700;
+  font-style: normal;
+  font-display: block;
+  src: url("/fonts/neo-mark-65BD.woff2") format("woff2");
+  unicode-range: U+65BD;  /* 施 시행중 */
+}
+
+@font-face {
+  font-family: 'NEO Mark';
+  font-weight: 700;
+  font-style: normal;
+  font-display: block;
+  src: url("/fonts/neo-mark-7559.woff2") format("woff2");
+  unicode-range: U+7559;  /* 留 보류 */
+}
+
+@font-face {
+  font-family: 'NEO Mark';
+  font-weight: 700;
+  font-style: normal;
+  font-display: block;
+  src: url("/fonts/neo-mark-8C6B.woff2") format("woff2");
+  unicode-range: U+8C6B;  /* 豫 예정 */
 }
 
 /* NEO 디자인 토큰. 확정 6화면에서 실측한 값.
@@ -84,7 +126,7 @@
 .t-body  { font: 500 15px/22px Pretendard, sans-serif; }
 .t-meta  { font: 400 13px/18px Pretendard, sans-serif; }
 .t-label { font: 700 11px/12px Pretendard, sans-serif; letter-spacing: .08em; text-transform: uppercase; }
-.t-mark  { font: 700 12px/1 Pretendard, serif; }  /* serif 폴백 유지 필수 */
+.t-mark  { font: 700 12px/1 'NEO Mark', Pretendard, serif; }  /* serif 폴백 유지 필수 */
 .t-badge { font: 700 12px/1 Pretendard, sans-serif; }
 .tnum    { font-variant-numeric: tabular-nums; }
 

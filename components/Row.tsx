@@ -25,7 +25,6 @@ export function Row({
   leading,
   leadingAlign = 'center',
   trailing,
-  gap,
   last = false,
   dimmed = false,
   onClick,
@@ -37,8 +36,6 @@ export function Row({
   /** 'top'이면 첫 줄에 맞춰 위로 붙는다. 3줄 이상인 행에서 쓴다. */
   leadingAlign?: 'center' | 'top';
   trailing?: ReactNode;
-  /** 기본 14px(--row-gap). S1 상단 상태 스트립만 12를 쓴다. */
-  gap?: number;
   /** 목록 마지막 행. border-bottom을 하나 더 그어 닫는다. */
   last?: boolean;
   /** 보류 등 힘을 뺀 행. 원본 실측 opacity .55 */
@@ -57,7 +54,7 @@ export function Row({
         height: HEIGHT[height],
         display: 'flex',
         alignItems: 'center',
-        gap: gap === undefined ? 'var(--row-gap)' : `${gap}px`,
+        gap: 'var(--row-gap)',
         borderTop: '1px solid var(--hairline)',
         borderBottom: last ? '1px solid var(--hairline)' : undefined,
         borderLeft: 'none',

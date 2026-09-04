@@ -220,10 +220,9 @@ export default function KitchenSink() {
         </Row>
       </Section>
 
-      <Section title="ROW — SHORT 44px · 상태 스트립 (gap 12, 마커 자연폭)">
+      <Section title="ROW — SHORT 44px · 상태 스트립 (마커 자연폭)">
         <Row
           height="short"
-          gap={12}
           leading={<Mark status="hold" fixedWidth={false} />}
           trailing={
             <span className="t-meta tnum" style={{ flex: 'none', color: 'var(--text-3)' }}>

@@ -73,7 +73,6 @@ export default function Home() {
             <Row
               key={law.id}
               height="short"
-              gap={12}
               leading={<Mark status="hold" fixedWidth={false} />}
               trailing={
                 <span
