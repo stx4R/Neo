@@ -1,4 +1,5 @@
-import type { ReactNode } from 'react';
+import Link from 'next/link';
+import type { CSSProperties, ReactNode } from 'react';
 
 /**
  * 목록 행. 카드 박스가 아니다 — 구분은 border-top 1px --hairline 으로만 한다.
@@ -27,6 +28,7 @@ export function Row({
   trailing,
   last = false,
   dimmed = false,
+  href,
   onClick,
   children,
 }: {
@@ -40,34 +42,33 @@ export function Row({
   last?: boolean;
   /** 보류 등 힘을 뺀 행. 원본 실측 opacity .55 */
   dimmed?: boolean;
+  /** 행 전체가 링크인 경우. onClick과 같이 쓰지 않는다. */
+  href?: string;
   onClick?: () => void;
   children: ReactNode;
 }) {
-  const interactive = Boolean(onClick);
-  const Tag = interactive ? 'button' : 'div';
+  const style: CSSProperties = {
+    width: '100%',
+    height: HEIGHT[height],
+    display: 'flex',
+    alignItems: 'center',
+    gap: 'var(--row-gap)',
+    borderTop: '1px solid var(--hairline)',
+    borderBottom: last ? '1px solid var(--hairline)' : undefined,
+    borderLeft: 'none',
+    borderRight: 'none',
+    padding: 0,
+    background: 'transparent',
+    textAlign: 'left',
+    color: 'inherit',
+    font: 'inherit',
+    opacity: dimmed ? 0.55 : undefined,
+    cursor: href || onClick ? 'pointer' : undefined,
+    textDecoration: 'none',
+  };
 
-  return (
-    <Tag
-      {...(interactive ? { type: 'button' as const, onClick } : {})}
-      style={{
-        width: '100%',
-        height: HEIGHT[height],
-        display: 'flex',
-        alignItems: 'center',
-        gap: 'var(--row-gap)',
-        borderTop: '1px solid var(--hairline)',
-        borderBottom: last ? '1px solid var(--hairline)' : undefined,
-        borderLeft: 'none',
-        borderRight: 'none',
-        padding: 0,
-        background: 'transparent',
-        textAlign: 'left',
-        color: 'inherit',
-        font: 'inherit',
-        opacity: dimmed ? 0.55 : undefined,
-        cursor: interactive ? 'pointer' : undefined,
-      }}
-    >
+  const inner = (
+    <>
       {leading !== undefined && (
         <span
           style={{
@@ -95,8 +96,24 @@ export function Row({
       </div>
 
       {trailing}
-    </Tag>
+    </>
   );
+
+  if (href) {
+    return (
+      <Link href={href} style={style}>
+        {inner}
+      </Link>
+    );
+  }
+  if (onClick) {
+    return (
+      <button type="button" onClick={onClick} style={style}>
+        {inner}
+      </button>
+    );
+  }
+  return <div style={style}>{inner}</div>;
 }
 
 /** 행 안에서 한 줄로 잘리는 제목. 넘치면 말줄임. */

@@ -8,7 +8,7 @@ import { TabBar } from '@/components/TabBar';
 import { TopBar, UnreadDot } from '@/components/TopBar';
 import { company, notifications, productsOfLaw } from '@/lib/data';
 import { REFERENCE_DATE, formatDate, formatMonthDay, formatSyncTime } from '@/lib/dday';
-import { heldLaws, mustDoNow, thisWeek } from '@/lib/derive';
+import { heldLaws, markColor, mustDoNow, thisWeek } from '@/lib/derive';
 import { INITIAL_READ_NOTIFICATIONS } from '@/lib/store-defaults';
 import { RISK_COLOR } from '@/types/neo';
 
@@ -117,7 +117,7 @@ export default function Home() {
           <Row
             key={law.id}
             height="info"
-            leading={<Mark status={law.status} />}
+            leading={<Mark status={law.status} color={markColor(law)} />}
             last={i === week.length - 1}
           >
             <RowTitle>{law.title}</RowTitle>
