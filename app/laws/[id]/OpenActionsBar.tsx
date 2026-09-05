@@ -1,7 +1,8 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { actionsOfLaw } from '@/lib/data';
+import { useDataset } from '@/lib/dataset';
+import { actionsOfLaw } from '@/lib/derive';
 import { useActionsDone } from '@/lib/useActionsDone';
 import type { Law } from '@/types/neo';
 
@@ -21,7 +22,9 @@ import type { Law } from '@/types/neo';
 export function OpenActionsBar({ law }: { law: Law }) {
   const done = useActionsDone();
   const router = useRouter();
-  const open = actionsOfLaw(law).filter((a) => !done.has(a.id)).length;
+  const ds = useDataset();
+  // 공용 법령은 액션이 품목별로 갈린다. 지금 조합의 것만 센다.
+  const open = ds ? actionsOfLaw(ds, law).filter((a) => !done.has(a.id)).length : 0;
 
   if (open === 0) return null;
 

@@ -1,4 +1,4 @@
-import { actionsOfLaw, priorities, productsMatching } from '@/lib/data';
+import { priorities, productsMatching } from '@/lib/data';
 import type { Dataset } from '@/lib/dataset';
 import {
   countdown,
@@ -38,6 +38,20 @@ import {
 export function dataAsOf(ds: Dataset): string | null {
   const days = ds.laws.map((l) => l.source.lastVerified).sort();
   return days.length > 0 ? days[days.length - 1] : null;
+}
+
+/**
+ * 이 조합에서 이 법령에 걸린 액션. `law.actionIds` 순서를 지킨다.
+ *
+ * 전역 목록이 아니라 `ds.actions`에서 찾는다. 공용 법령은 액션이 품목별로 갈리는데
+ * (`Action.itemCategories`) 전역에서 찾으면 화장품 사용자에게 식품 액션이 섞인다.
+ * `ds.actions`는 이미 품목으로 걸러져 있다.
+ */
+export function actionsOfLaw(ds: Dataset, law: Law): Action[] {
+  const byId = new Map(ds.actions.map((a) => [a.id, a]));
+  return law.actionIds
+    .map((id) => byId.get(id))
+    .filter((a): a is Action => a !== undefined);
 }
 
 /** 이 법령의 영향 제품. 사용자의 제품 목록에서 HS 앞자리로 고른다. */
@@ -94,7 +108,7 @@ export function mustDoNow(ds: Dataset, done: ReadonlySet<string>): MustDo[] {
   return ds.laws
     .filter((law) => law.status !== 'hold')
     .map((law) => {
-      const action = actionsOfLaw(law).find((a) => !done.has(a.id));
+      const action = actionsOfLaw(ds, law).find((a) => !done.has(a.id));
       if (!action) return null;
       return { law, action, countdown: actionBadge(law, ds.today) };
     })
@@ -126,13 +140,17 @@ export function heldLaws(ds: Dataset): Law[] {
 }
 
 /** 한 법률에서 아직 끝나지 않은 액션. */
-export function openActionsOfLaw(law: Law, done: ReadonlySet<string>): Action[] {
-  return actionsOfLaw(law).filter((a) => !done.has(a.id));
+export function openActionsOfLaw(
+  ds: Dataset,
+  law: Law,
+  done: ReadonlySet<string>,
+): Action[] {
+  return actionsOfLaw(ds, law).filter((a) => !done.has(a.id));
 }
 
 /** 전체에서 아직 끝나지 않은 액션 수. */
 export function openActionCount(ds: Dataset, done: ReadonlySet<string>): number {
-  return ds.laws.flatMap(actionsOfLaw).filter((a) => !done.has(a.id)).length;
+  return ds.actions.filter((a) => !done.has(a.id)).length;
 }
 
 /**
@@ -237,7 +255,7 @@ function matchesQuery(ds: Dataset, law: Law, query: string): boolean {
     law.title,
     law.officialRef,
     ...productsOfLaw(ds, law).map((p) => p.name),
-    ...actionsOfLaw(law).map((a) => a.title),
+    ...actionsOfLaw(ds, law).map((a) => a.title),
   ];
   return haystack.some((s) => s.toLowerCase().includes(q));
 }
@@ -284,7 +302,10 @@ export function priorityStat(
   const matched = ds.laws.filter((law) => law.category === category);
   return {
     lawCount: matched.length,
-    openCount: matched.reduce((sum, law) => sum + openActionsOfLaw(law, done).length, 0),
+    openCount: matched.reduce(
+      (sum, law) => sum + openActionsOfLaw(ds, law, done).length,
+      0,
+    ),
     // 해당 법률 중 가장 높은 위험도. 라벨과 상단 4px 바가 같이 이 값을 쓴다.
     risk: maxRisk(matched),
   };
@@ -328,7 +349,7 @@ export const SHEET_ROWS = 3;
  */
 export function sheetLaws(ds: Dataset, code: string, done: ReadonlySet<string>): Law[] {
   return lawsOfCountry(ds, code)
-    .filter((law) => openActionsOfLaw(law, done).length > 0)
+    .filter((law) => openActionsOfLaw(ds, law, done).length > 0)
     .sort((a, b) => {
       // 마감 없는 법률은 뒤로. 지금 데이터엔 없지만 순서가 임의가 되면 안 된다.
       if (a.deadline === null || b.deadline === null) {
@@ -345,7 +366,10 @@ export function openActionCountOfCountry(
   code: string,
   done: ReadonlySet<string>,
 ): number {
-  return lawsOfCountry(ds, code).reduce((sum, law) => sum + openActionsOfLaw(law, done).length, 0);
+  return lawsOfCountry(ds, code).reduce(
+    (sum, law) => sum + openActionsOfLaw(ds, law, done).length,
+    0,
+  );
 }
 
 // ── S6 Notifications ───────────────────────────────────────────
@@ -460,7 +484,7 @@ export function derivedNotifications(
   // 완료 알림 — 사용자가 체크한 액션. 완료 시각을 저장하지 않으므로
   // 시각은 오늘로 둔다. 없는 시각을 지어내지 않고 '오늘'로만 말한다.
   for (const law of ds.laws) {
-    for (const action of actionsOfLaw(law)) {
+    for (const action of actionsOfLaw(ds, law)) {
       if (!done.has(action.id)) continue;
       out.push({
         id: `n-done-${action.id}`,

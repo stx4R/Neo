@@ -67,9 +67,14 @@ for (const file of files) {
   const key = file.replace('.json', '');
   const [country, category] = key.split('-');
   const set = read(`laws/${file}`);
+  // <국가>-shared.json은 품목을 가리지 않는 법령 파일이다.
+  // 어느 품목에 걸리는지는 파일명이 아니라 law.itemCategories가 정한다.
+  const shared = category === 'shared';
 
   if (!codes.has(country)) fail(file, `countries.json에 없는 국가다 (${country})`);
-  if (!catIds.has(category)) fail(file, `categories.json에 없는 품목이다 (${category})`);
+  if (!shared && !catIds.has(category)) {
+    fail(file, `categories.json에 없는 품목이다 (${category})`);
+  }
   if (!Array.isArray(set.laws) || !Array.isArray(set.actions)) {
     fail(file, 'laws/actions 배열이 아니다');
     continue;
@@ -78,15 +83,27 @@ for (const file of files) {
   const actionIds = new Set(set.actions.map((a) => a.id));
   const lawIds = new Set(set.laws.map((l) => l.id));
   const usedActions = new Set();
-  const defaults = defaultProductIds.get(category) ?? new Set();
-  const catPrefixes = categories.find((c) => c.id === category)?.hsPrefixes ?? [];
+  // 공용 파일은 품목이 여럿이라 기본 제품 세트·품목 prefix를 합쳐서 본다.
+  const cats = shared ? [...catIds] : [category];
+  const defaults = new Set(cats.flatMap((c) => [...(defaultProductIds.get(c) ?? [])]));
+  const catPrefixes = cats.flatMap(
+    (c) => categories.find((x) => x.id === c)?.hsPrefixes ?? [],
+  );
 
   for (const law of set.laws) {
     lawCount += 1;
     const at = `${file}/${law.id}`;
 
     if (law.country !== country) fail(at, `country가 파일과 다르다 (${law.country})`);
-    if (!law.itemCategories?.includes(category)) {
+    if (shared) {
+      if (!law.itemCategories?.length) fail(at, '공용 법령인데 itemCategories가 비었다');
+      for (const c of law.itemCategories ?? []) {
+        if (!catIds.has(c)) fail(at, `itemCategories의 ${c}가 categories.json에 없다`);
+      }
+      if (law.itemCategories?.length === 1) {
+        fail(at, '품목이 하나뿐이면 공용 파일이 아니라 그 조합 파일에 둔다');
+      }
+    } else if (!law.itemCategories?.includes(category)) {
       fail(at, `itemCategories에 ${category}가 없다`);
     }
     if (!new RegExp(`^${country}-\\d{4}-\\d{3}$`).test(law.id)) {
@@ -102,7 +119,8 @@ for (const file of files) {
     if (!law.source?.url) fail(at, 'source.url이 없다');
     if (!law.source?.lastVerified) fail(at, 'source.lastVerified가 없다');
 
-    if (!law.hsPrefixes?.length) fail(at, 'hsPrefixes가 비었다');
+    // 빈 hsPrefixes는 '품목을 가리지 않는다'는 뜻이라 공용 파일에서만 허용한다.
+    if (!shared && !law.hsPrefixes?.length) fail(at, 'hsPrefixes가 비었다');
     for (const prefix of law.hsPrefixes ?? []) {
       // 법령 prefix는 품목 prefix보다 좁거나 같아야 한다. 한쪽이 다른 쪽의 앞자리면 된다.
       const ok = catPrefixes.some((c) => prefix.startsWith(c) || c.startsWith(prefix));
@@ -128,6 +146,16 @@ for (const file of files) {
     if (!a.id.startsWith(`${country}-`)) fail(at, '액션 id에 국가 접두어가 없다');
     if (!lawIds.has(a.lawId)) fail(at, `lawId ${a.lawId}가 이 파일에 없다`);
     if (!usedActions.has(a.id)) fail(at, '어느 법령의 actionIds에도 걸려 있지 않다');
+    for (const c of a.itemCategories ?? []) {
+      if (!catIds.has(c)) fail(at, `액션 itemCategories의 ${c}가 categories.json에 없다`);
+      const law = set.laws.find((l) => l.id === a.lawId);
+      if (law && !law.itemCategories.includes(c)) {
+        fail(at, `액션이 법령에 없는 품목 ${c}를 가리킨다`);
+      }
+    }
+    if (!shared && a.itemCategories) {
+      fail(at, '조합 파일의 액션에는 itemCategories를 달지 않는다 — 이미 그 품목 전용이다');
+    }
   }
 }
 

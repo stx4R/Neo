@@ -188,7 +188,7 @@ export default function LawsPage() {
               <RowTitle>{law.title}</RowTitle>
               <RowMeta>
                 {statusLine(law)} · 제품 {productsOfLaw(ds!, law).length} · 미완{' '}
-                {openActionsOfLaw(law, done).length} · <RiskText level={law.riskLevel} />
+                {openActionsOfLaw(ds!, law, done).length} · <RiskText level={law.riskLevel} />
               </RowMeta>
             </Row>
           );

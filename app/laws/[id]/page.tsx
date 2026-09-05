@@ -92,13 +92,9 @@ export default async function LawDetail({ params }: PageProps<'/laws/[id]'>) {
         </div>
       )}
 
-      {/* ★ MUST DO가 WHAT CHANGED보다 위에 온다. 이 앱은 법률을 설명하는 앱이 아니라
-          행동을 시키는 앱이다. 순서를 바꾸지 말 것. */}
-      {actions.length > 0 && (
-        <Section label={`MUST DO — ${actions.length}`}>
-          <MustDoList actions={actions} />
-        </Section>
-      )}
+      {/* 섹션 라벨과 목록을 MustDoList가 같이 그린다 — 액션 수가 품목에 따라
+          달라지는데 서버는 사용자의 품목을 모른다. */}
+      <MustDoList law={law} />
 
       {law.changes.length > 0 && (
         <Section label="WHAT CHANGED">

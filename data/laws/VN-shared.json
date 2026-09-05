@@ -1,0 +1,93 @@
+{
+  "laws": [
+    {
+      "id": "VN-2026-037",
+      "officialRef": "DECREE 37/2026",
+      "title": "상품 라벨 규정 전면 개정 — 전자라벨 도입",
+      "country": "VN",
+      "category": "labeling",
+      "itemCategories": [
+        "food",
+        "cosmetics",
+        "electronics"
+      ],
+      "hsPrefixes": [],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "high",
+      "effectiveDate": "2026-01-23",
+      "deadline": "2028-01-22",
+      "addedAt": "2026-09-01",
+      "transitionEndsAt": "2028-01-22",
+      "transitionNote": "기존 인쇄 포장재는 2028.01.22까지 소진 허용",
+      "changes": [
+        {
+          "before": "라벨 규정이 Decree 43/2017과 Decree 111/2021로 나뉘어 있음",
+          "after": "Decree 37/2026이 둘을 대체해 하나로 통합"
+        },
+        {
+          "before": "종이 라벨의 물리적 표시만 인정",
+          "after": "QR·RFID·NFC 등 데이터 매체를 통한 전자라벨 허용"
+        },
+        {
+          "before": "품목 구분 없이 동일한 표시 항목",
+          "after": "위험도 등급(저·중·고)에 따라 표시 항목이 달라짐"
+        }
+      ],
+      "affectedProductIds": [],
+      "actionIds": [
+        "VN-a-037-all-01",
+        "VN-a-037-all-02",
+        "VN-a-037-food-01",
+        "VN-a-037-cos-01"
+      ],
+      "source": {
+        "url": "https://english.luatvietnam.vn/decreeno37-2026-nd-cpdatedjanuary232026ofthegovernmentdetailinganumberofarticlesandprovidingmeasurestoorganizeandguidetheimp-424821-doc1.html",
+        "publisher": "베트남 정부",
+        "publishedAt": "2026-01-23",
+        "originalLang": "vi",
+        "lastVerified": "2026-09-06"
+      }
+    }
+  ],
+  "actions": [
+    {
+      "id": "VN-a-037-all-01",
+      "lawId": "VN-2026-037",
+      "title": "라벨 시안을 Decree 37/2026 표시 항목에 맞춰 재작성",
+      "owner": "디자인",
+      "effort": "4주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-037-all-02",
+      "lawId": "VN-2026-037",
+      "title": "2026.01.23 이전 인쇄 포장재 재고 소진 계획 수립",
+      "owner": "영업",
+      "effort": "1주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-037-food-01",
+      "lawId": "VN-2026-037",
+      "title": "식품 표시사항(원산지·영양성분) 베트남어 보조라벨 확정",
+      "owner": "품질팀",
+      "effort": "3주",
+      "dueDate": null,
+      "itemCategories": [
+        "food"
+      ]
+    },
+    {
+      "id": "VN-a-037-cos-01",
+      "lawId": "VN-2026-037",
+      "title": "화장품 전성분·사용기한 베트남어 보조라벨 확정",
+      "owner": "품질팀",
+      "effort": "3주",
+      "dueDate": null,
+      "itemCategories": [
+        "cosmetics"
+      ]
+    }
+  ]
+}
