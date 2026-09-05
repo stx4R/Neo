@@ -39,12 +39,61 @@
         "VN-a-037-all-01",
         "VN-a-037-all-02",
         "VN-a-037-food-01",
-        "VN-a-037-cos-01"
+        "VN-a-037-cos-01",
+        "VN-a-037-elec-01"
       ],
       "source": {
         "url": "https://english.luatvietnam.vn/decreeno37-2026-nd-cpdatedjanuary232026ofthegovernmentdetailinganumberofarticlesandprovidingmeasurestoorganizeandguidetheimp-424821-doc1.html",
         "publisher": "베트남 정부",
         "publishedAt": "2026-01-23",
+        "originalLang": "vi",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "VN-2026-110",
+      "officialRef": "DECREE 110/2026",
+      "title": "생산자책임재활용(EPR) 의무 시행",
+      "country": "VN",
+      "category": "packaging",
+      "itemCategories": [
+        "food",
+        "cosmetics",
+        "electronics"
+      ],
+      "hsPrefixes": [],
+      "sourceTier": "secondary",
+      "status": "active",
+      "riskLevel": "critical",
+      "effectiveDate": "2026-05-25",
+      "deadline": null,
+      "addedAt": "2026-09-01",
+      "changes": [
+        {
+          "before": "포장재 재활용 의무 없음",
+          "after": "자체 재활용 또는 기금 분담금 납부 의무"
+        },
+        {
+          "before": "포장재 중량 신고 불필요",
+          "after": "포장재 종류별 중량 산정·신고 의무"
+        },
+        {
+          "before": "08/2022/ND-CP 체계에서 면제 기준 연매출 200억 동",
+          "after": "110/2026/ND-CP가 대체 — 면제 기준 연매출 300억 동, 전기전자는 포장재와 별도의 재활용률 적용"
+        }
+      ],
+      "affectedProductIds": [],
+      "actionIds": [
+        "VN-a-05",
+        "VN-a-06",
+        "VN-a-07",
+        "VN-a-110-elec-01",
+        "VN-a-110-elec-02"
+      ],
+      "source": {
+        "url": "https://english.luatvietnam.vn/decree-no-110-2026-nd-cp-dated-april-01-2026-of-the-government-detailing-a-number-of-articles-of-the-law-on-environmental-protection-regarding-respo-430991-doc1.html",
+        "publisher": "베트남 정부",
+        "publishedAt": "2026-04-01",
         "originalLang": "vi",
         "lastVerified": "2026-09-06"
       }
@@ -87,6 +136,63 @@
       "dueDate": null,
       "itemCategories": [
         "cosmetics"
+      ]
+    },
+    {
+      "id": "VN-a-037-elec-01",
+      "lawId": "VN-2026-037",
+      "title": "전기전자 표시사항(정격전압·소비전력·안전경고) 베트남어 보조라벨 확정",
+      "owner": "품질팀",
+      "effort": "3주",
+      "dueDate": null,
+      "itemCategories": [
+        "electronics"
+      ]
+    },
+    {
+      "id": "VN-a-05",
+      "lawId": "VN-2026-110",
+      "title": "포장재 중량 산정 자료 제출",
+      "owner": "품질팀",
+      "effort": "2주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-06",
+      "lawId": "VN-2026-110",
+      "title": "재활용 계획 등록 또는 분담금 납부 결정",
+      "owner": "경영",
+      "effort": "1주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-07",
+      "lawId": "VN-2026-110",
+      "title": "포장재 종류별 재질 분류표 작성",
+      "owner": "품질팀",
+      "effort": "1주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-110-elec-01",
+      "lawId": "VN-2026-110",
+      "title": "전기전자 제품 재활용 의무 대상 여부 판정 — 연매출 300억 동 기준",
+      "owner": "경영",
+      "effort": "2주",
+      "dueDate": null,
+      "itemCategories": [
+        "electronics"
+      ]
+    },
+    {
+      "id": "VN-a-110-elec-02",
+      "lawId": "VN-2026-110",
+      "title": "제품별 재활용 비용 분담을 수입자와 계약서에 반영",
+      "owner": "영업",
+      "effort": "3주",
+      "dueDate": null,
+      "itemCategories": [
+        "electronics"
       ]
     }
   ]

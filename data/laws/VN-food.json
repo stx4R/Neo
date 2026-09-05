@@ -1,54 +1,6 @@
 {
   "laws": [
     {
-      "id": "VN-2026-110",
-      "officialRef": "DECREE 110/2026",
-      "title": "생산자책임재활용(EPR) 의무 시행",
-      "country": "VN",
-      "category": "packaging",
-      "itemCategories": [
-        "food"
-      ],
-      "hsPrefixes": [
-        "20",
-        "21"
-      ],
-      "sourceTier": "secondary",
-      "status": "active",
-      "riskLevel": "critical",
-      "effectiveDate": "2026-05-25",
-      "deadline": null,
-      "addedAt": "2026-09-01",
-      "changes": [
-        {
-          "before": "포장재 재활용 의무 없음",
-          "after": "자체 재활용 또는 기금 분담금 납부 의무"
-        },
-        {
-          "before": "포장재 중량 신고 불필요",
-          "after": "포장재 종류별 중량 산정·신고 의무"
-        }
-      ],
-      "affectedProductIds": [
-        "p-kimchi-sauce",
-        "p-seasoned-laver",
-        "p-gochujang",
-        "p-yuja"
-      ],
-      "actionIds": [
-        "VN-a-05",
-        "VN-a-06",
-        "VN-a-07"
-      ],
-      "source": {
-        "url": "https://www.bakermckenzie.com/en/insight/publications/2026/06/vietnam-new-regulations-on-extended-producer-responsibility",
-        "publisher": "베트남 정부 관보",
-        "publishedAt": "2026-05-10",
-        "originalLang": "vi",
-        "lastVerified": "2026-09-01"
-      }
-    },
-    {
       "id": "VN-2023-029",
       "officialRef": "CIRCULAR 29/2023",
       "title": "영양성분 표시 의무화",
@@ -175,30 +127,6 @@
     }
   ],
   "actions": [
-    {
-      "id": "VN-a-05",
-      "lawId": "VN-2026-110",
-      "title": "포장재 중량 산정 자료 제출",
-      "owner": "품질팀",
-      "effort": "2주",
-      "dueDate": null
-    },
-    {
-      "id": "VN-a-06",
-      "lawId": "VN-2026-110",
-      "title": "재활용 계획 등록 또는 분담금 납부 결정",
-      "owner": "경영",
-      "effort": "1주",
-      "dueDate": null
-    },
-    {
-      "id": "VN-a-07",
-      "lawId": "VN-2026-110",
-      "title": "포장재 종류별 재질 분류표 작성",
-      "owner": "품질팀",
-      "effort": "1주",
-      "dueDate": null
-    },
     {
       "id": "VN-a-08",
       "lawId": "VN-2023-029",

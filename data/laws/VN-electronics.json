@@ -1,4 +1,309 @@
 {
-  "laws": [],
-  "actions": []
+  "laws": [
+    {
+      "id": "VN-2026-036",
+      "officialRef": "CIRCULAR 36/2026/TT-BKHCN",
+      "title": "제품 위험도 2단계 분류 — 고위험군은 수입 시 국가품질검사",
+      "country": "VN",
+      "category": "safety",
+      "itemCategories": ["electronics"],
+      "hsPrefixes": ["8507", "8516", "8518", "8539"],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "critical",
+      "effectiveDate": "2026-07-01",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [
+        {
+          "before": "IT·통신·무선기기는 30/2011/TT-BTTTT 계열의 형식승인 체계로 따로 관리",
+          "after": "과학기술부 소관 전 품목을 위험도 목록 하나로 통합 — 29/2025/TT-BKHCN 등 5개 통칙 대체"
+        },
+        {
+          "before": "품목군마다 적합성 평가 절차가 달랐다",
+          "after": "고위험은 인증 + 수입 시 국가품질검사 등록(vnsw.gov.vn), 중위험은 자기적합성선언(nqi.gov.vn)만 하고 통관 검사 면제"
+        },
+        {
+          "before": "품목별 위험도 구분이 없었다",
+          "after": "전기밥솥(8516.60)·무선 이어폰(8518.30)은 부속서 I 고위험, LED 전구(8539.52)·리튬배터리(8507.60)는 부속서 II 중위험"
+        }
+      ],
+      "affectedProductIds": ["p-elec-1", "p-elec-2", "p-elec-3", "p-elec-4"],
+      "actionIds": ["VN-a-elec-01", "VN-a-elec-02", "VN-a-elec-03", "VN-a-elec-04"],
+      "source": {
+        "url": "https://mic.mediacdn.vn/document/2026/7/1/tt362026-1782881420543779583110.pdf",
+        "publisher": "베트남 과학기술부(MST)",
+        "publishedAt": "2026-06-30",
+        "originalLang": "vi",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "VN-2009-004",
+      "officialRef": "QCVN 4:2009/BKHCN",
+      "title": "가전제품 전기안전 국가기술규정 — CR 마크 없이 판매할 수 없다",
+      "country": "VN",
+      "category": "safety",
+      "itemCategories": ["electronics"],
+      "hsPrefixes": ["8516"],
+      "sourceTier": "secondary",
+      "status": "active",
+      "riskLevel": "critical",
+      "effectiveDate": "2010-06-01",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [],
+      "affectedProductIds": ["p-elec-3"],
+      "actionIds": ["VN-a-elec-05", "VN-a-elec-06", "VN-a-elec-07"],
+      "source": {
+        "url": "https://www.tuv.com/market-access-services/en/certification-filter/vietnam-cr-mark-for-safety-and-emc-of-household-appliances.html",
+        "publisher": "베트남 과학기술부(MST)",
+        "publishedAt": "2009-09-30",
+        "originalLang": "vi",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "VN-2025-056",
+      "officialRef": "CIRCULAR 56/2025/TT-BKHCN",
+      "title": "LED 조명 안전·전자파 기준 교체 (QCVN 19:2025)",
+      "country": "VN",
+      "category": "safety",
+      "itemCategories": ["electronics"],
+      "hsPrefixes": ["853952"],
+      "sourceTier": "secondary",
+      "status": "active",
+      "riskLevel": "high",
+      "effectiveDate": "2026-06-01",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "transitionEndsAt": "2026-12-31",
+      "transitionNote": "HS 9405.11.99 조명기구만 2026.12.31까지 유예 — 2027.01.01부터 부속서 A 전 품목 적용. LED 전구(8539.52)는 2026.06.01부터 이미 대상이다",
+      "changes": [
+        {
+          "before": "QCVN 19:2019/BKHCN 기준으로 시험·인증",
+          "after": "2026.06.01부터 QCVN 19:2025/BKHCN이 대체 — 기존 성적서로는 통관되지 않는다"
+        },
+        {
+          "before": "모델마다 시험 시료를 개별 제출",
+          "after": "부속서에 시료 그룹화 조항 신설 — 유사 모델을 묶어 시험 시료 수를 줄인다"
+        },
+        {
+          "before": "소량 수입 건도 동일한 평가 절차",
+          "after": "소량 수입품 절차 완화 규정 신설"
+        }
+      ],
+      "affectedProductIds": ["p-elec-4"],
+      "actionIds": ["VN-a-elec-08", "VN-a-elec-09", "VN-a-elec-10"],
+      "source": {
+        "url": "https://luatvietnam.vn/khoa-hoc/thong-tu-56-2025-tt-bkhcn-quy-chuan-an-toan-va-tuong-thich-dien-tu-cho-led-423210-d1.html",
+        "publisher": "베트남 과학기술부(MST)",
+        "publishedAt": "2025-12-31",
+        "originalLang": "vi",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "VN-2025-052",
+      "officialRef": "CIRCULAR 52/2025/TT-BCT",
+      "title": "에너지효율 라벨 의무 품목 확대 — 2026.01.01부터 15개 품목",
+      "country": "VN",
+      "category": "labeling",
+      "itemCategories": ["electronics"],
+      "hsPrefixes": ["8516", "8528", "8539"],
+      "sourceTier": "secondary",
+      "status": "active",
+      "riskLevel": "high",
+      "effectiveDate": "2026-01-01",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [
+        {
+          "before": "에너지라벨 대상은 04/2017/QD-TTg의 목록",
+          "after": "15개 품목이 2026.01.01부터 의무 — 전기밥솥·LED 조명·TV·냉장고·에어컨 포함"
+        },
+        {
+          "before": "인덕션·전기레인지·전자레인지·데스크톱은 대상 밖",
+          "after": "2026년은 자율 부착, 2027.01.01부터 의무"
+        }
+      ],
+      "affectedProductIds": ["p-elec-3", "p-elec-4"],
+      "actionIds": ["VN-a-elec-11", "VN-a-elec-12", "VN-a-elec-13"],
+      "source": {
+        "url": "https://extendmax.vn/circular-52-2025-tt-bct-on-vneep-energy-labeling-in-vietnam",
+        "publisher": "베트남 산업무역부(MOIT)",
+        "publishedAt": "2025-11-14",
+        "originalLang": "vi",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "VN-2026-001",
+      "officialRef": "CIRCULAR 01/2026/TT-BCT",
+      "title": "제품 내 유해화학물질 국가화학물질DB 공개 의무",
+      "country": "VN",
+      "category": "safety",
+      "itemCategories": ["electronics"],
+      "hsPrefixes": ["8507", "8516", "8518", "8528", "8539"],
+      "sourceTier": "secondary",
+      "status": "active",
+      "riskLevel": "high",
+      "effectiveDate": "2026-01-17",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [
+        {
+          "before": "화학물질 관리는 32/2017/TT-BCT · 17/2022/TT-BCT로 나뉘어 있었다",
+          "after": "01/2026/TT-BCT가 둘을 대체 — 화학물질법과 26/2026/ND-CP를 이행한다"
+        },
+        {
+          "before": "완제품에 든 유해물질을 공개할 의무가 없었다",
+          "after": "납·카드뮴·6가크롬 등 함유 제품은 시장 출시 전 국가화학물질DB(chemicaldata.gov.vn)에 공개"
+        },
+        {
+          "before": "구매자가 유해물질 정보를 확인할 통로가 없었다",
+          "after": "제품 라벨·사용설명서·웹사이트 중 하나로 접근 가능하게 유지"
+        }
+      ],
+      "affectedProductIds": ["p-elec-1", "p-elec-2", "p-elec-3", "p-elec-4"],
+      "actionIds": ["VN-a-elec-14", "VN-a-elec-15", "VN-a-elec-16"],
+      "source": {
+        "url": "https://www.gmalabs.com/post/vietnam-hazardous-chemical-declaration-new-moit-circular-01-2026",
+        "publisher": "베트남 산업무역부(MOIT)",
+        "publishedAt": "2026-01-17",
+        "originalLang": "vi",
+        "lastVerified": "2026-09-06"
+      }
+    }
+  ],
+  "actions": [
+    {
+      "id": "VN-a-elec-01",
+      "lawId": "VN-2026-036",
+      "title": "고위험 품목(전기밥솥·무선 이어폰) 적합성인증서 취득",
+      "owner": "품질팀",
+      "effort": "10주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-elec-02",
+      "lawId": "VN-2026-036",
+      "title": "통관 전 국가품질검사 등록 절차 수립 — vnsw.gov.vn",
+      "owner": "구매",
+      "effort": "3주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-elec-03",
+      "lawId": "VN-2026-036",
+      "title": "중위험 품목(LED 전구·보조배터리) 자기적합성선언 등록 — nqi.gov.vn",
+      "owner": "품질팀",
+      "effort": "2주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-elec-04",
+      "lawId": "VN-2026-036",
+      "title": "2026.07.01 이전 발급 인증서의 잔여 유효기간 확인",
+      "owner": "품질팀",
+      "effort": "1주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-elec-05",
+      "lawId": "VN-2009-004",
+      "title": "지정 시험소에서 QCVN 4:2009 전기안전 시험성적서 확보",
+      "owner": "품질팀",
+      "effort": "8주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-elec-06",
+      "lawId": "VN-2009-004",
+      "title": "QCVN 9:2012 전자파적합성(EMC) 시험 병행",
+      "owner": "품질팀",
+      "effort": "4주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-elec-07",
+      "lawId": "VN-2009-004",
+      "title": "제품·포장의 CR 마크 표시 위치 확정",
+      "owner": "디자인",
+      "effort": "2주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-elec-08",
+      "lawId": "VN-2025-056",
+      "title": "LED 전구 시험성적서를 QCVN 19:2025 기준으로 재발급",
+      "owner": "품질팀",
+      "effort": "6주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-elec-09",
+      "lawId": "VN-2025-056",
+      "title": "시료 그룹화를 적용할 모델 묶음 정리",
+      "owner": "품질팀",
+      "effort": "2주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-elec-10",
+      "lawId": "VN-2025-056",
+      "title": "QCVN 19:2019 기준 인증서의 잔여 유효기간 확인",
+      "owner": "품질팀",
+      "effort": "1주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-elec-11",
+      "lawId": "VN-2025-052",
+      "title": "전기밥솥·LED 전구 에너지효율 시험성적서 확보",
+      "owner": "품질팀",
+      "effort": "5주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-elec-12",
+      "lawId": "VN-2025-052",
+      "title": "에너지라벨 도안을 베트남 양식으로 제작",
+      "owner": "디자인",
+      "effort": "2주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-elec-13",
+      "lawId": "VN-2025-052",
+      "title": "산업무역부 에너지라벨 등록 신청",
+      "owner": "품질팀",
+      "effort": "3주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-elec-14",
+      "lawId": "VN-2026-001",
+      "title": "배터리·기판의 납·카드뮴·6가크롬 함량 분석성적서 확보",
+      "owner": "품질팀",
+      "effort": "6주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-elec-15",
+      "lawId": "VN-2026-001",
+      "title": "chemicaldata.gov.vn 공개 항목 작성 및 제출 주체를 수입자와 확정",
+      "owner": "품질팀",
+      "effort": "3주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-elec-16",
+      "lawId": "VN-2026-001",
+      "title": "유해물질 정보를 제품 웹페이지 또는 사용설명서에 반영",
+      "owner": "마케팅",
+      "effort": "2주",
+      "dueDate": null
+    }
+  ]
 }
