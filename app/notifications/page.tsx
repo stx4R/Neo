@@ -23,7 +23,7 @@ export default function NotificationsPage() {
   const unread = notifications.filter((n) => !read.has(n.id)).length;
 
   return (
-    <Screen scrollPadBottom={40}>
+    <Screen scrollPadBottom="var(--pad-plain)">
       <TopBar
         left={
           // router.back()이 아니라 Link다. 딥링크로 들어오면 back()이 갈 곳이 없다.

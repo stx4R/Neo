@@ -81,7 +81,10 @@ export default function MapPage() {
         left: 0,
         right: 0,
         bottom: 0,
-        height: 418,
+        // 시트 위에 탭바가 겹쳐 앉는 구조는 유지한다. 다만 탭바가 안전영역만큼
+        // 두꺼워지므로 시트도 같이 늘려야 마지막 행("법률 N건 모두 보기")이
+        // 탭바 뒤로 들어가지 않는다. 418은 안전영역 0 기준 실측값이다.
+        height: 'calc(418px + var(--safe-bottom))',
         zIndex: 4,
         background: 'var(--surface)',
         borderTop: '1px solid var(--hairline)',
@@ -147,7 +150,8 @@ export default function MapPage() {
 
   return (
     <Screen
-      scrollPadBottom={0}
+      // 시트가 스크롤 영역을 통째로 덮는다. 하단 여백은 시트 쪽에서 잡는다.
+      scrollPadBottom="0px"
       footer={
         <>
           {sheet}

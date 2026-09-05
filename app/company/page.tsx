@@ -32,7 +32,7 @@ export default function CompanyPage() {
   );
 
   return (
-    <Screen scrollPadBottom={180} footer={<TabBar />}>
+    <Screen scrollPadBottom="var(--pad-tabbar)" footer={<TabBar />}>
       <TopBar
         left={<Label color="var(--text)">NEO</Label>}
         right={

@@ -28,7 +28,7 @@ export default async function LawDetail({ params }: PageProps<'/laws/[id]'>) {
 
   return (
     <Screen
-      scrollPadBottom={actions.length > 0 ? 140 : 40}
+      scrollPadBottom={actions.length > 0 ? 'var(--pad-ctabar)' : 'var(--pad-plain)'}
       footer={actions.length > 0 ? <AddActionsBar count={actions.length} /> : undefined}
     >
       <TopBar
@@ -208,32 +208,41 @@ function AddActionsBar({ count }: { count: number }) {
         right: 0,
         bottom: 0,
         zIndex: 5,
-        height: 56,
-        padding: '0 var(--pad)',
-        display: 'flex',
-        alignItems: 'center',
+        // 탭바와 같은 규칙이다 — bottom: 0에 붙이고 안전영역은 패딩으로만 흡수한다.
+        // 이걸 빠뜨리면 CTA 버튼이 홈 인디케이터 아래로 들어간다.
+        // 높이를 고정하지 않는다 — 셀은 안쪽 div가, 안전영역은 이 패딩이 잡는다.
+        paddingBottom: 'var(--safe-bottom)',
         background: 'var(--bg)',
         borderTop: '1px solid var(--hairline)',
       }}
     >
-      {/* TODO 6단계: 담기 동작 연결. 지금은 렌더만 한다. */}
-      <button
-        type="button"
+      <div
         style={{
-          width: '100%',
-          height: 44,
+          height: 'var(--ctabar-cell)',
           display: 'flex',
           alignItems: 'center',
-          padding: '0 var(--block-pad)',
-          border: 'none',
-          background: 'var(--accent)',
-          cursor: 'pointer',
+          padding: '0 var(--pad)',
         }}
       >
-        <span className="t-h2" style={{ color: 'var(--on-color)' }}>
-          액션 {count}건 담기
-        </span>
-      </button>
+        {/* TODO 6단계: 담기 동작 연결. 지금은 렌더만 한다. */}
+        <button
+          type="button"
+          style={{
+            width: '100%',
+            height: 44,
+            display: 'flex',
+            alignItems: 'center',
+            padding: '0 var(--block-pad)',
+            border: 'none',
+            background: 'var(--accent)',
+            cursor: 'pointer',
+          }}
+        >
+          <span className="t-h2" style={{ color: 'var(--on-color)' }}>
+            액션 {count}건 담기
+          </span>
+        </button>
+      </div>
     </div>
   );
 }

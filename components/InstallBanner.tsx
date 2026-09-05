@@ -23,8 +23,8 @@ export function InstallBanner() {
         position: 'absolute',
         left: 0,
         right: 0,
-        // 탭바 높이(64 + 하단 인디케이터)만큼 띄운다.
-        bottom: 'calc(64px + var(--safe-bottom))',
+        // 탭바 실측 높이(셀 + 상단 하나선) + 하단 인디케이터만큼 띄운다.
+        bottom: 'calc(var(--tabbar-h) + var(--safe-bottom))',
         height: INSTALL_BANNER_H,
         zIndex: 4,
         display: 'flex',

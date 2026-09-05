@@ -9,7 +9,7 @@ import { Screen } from '@/components/Screen';
  */
 export default function NotFound() {
   return (
-    <Screen scrollPadBottom={0}>
+    <Screen scrollPadBottom="var(--pad-plain)">
       <div style={{ padding: '12px var(--pad) 0' }}>
         <h1 className="t-h1" style={{ margin: 0, color: 'var(--text)' }}>
           없는 법률입니다

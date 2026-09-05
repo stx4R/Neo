@@ -14,6 +14,13 @@ export const metadata: Metadata = {
   },
   // 매니페스트 아이콘과 달리 apple-touch-icon은 <link>로 따로 알려야 한다.
   icons: { apple: "/icons/apple-touch-icon-180.png" },
+  // appleWebApp.capable은 Next 16에서 표준명 mobile-web-app-capable 하나만 낸다.
+  // iOS Safari는 그 이름을 모른다 — apple- 접두 이름이 없으면 위의
+  // statusBarStyle "black-translucent"를 통째로 무시하고, 그러면 웹뷰가
+  // 화면 전체를 덮지 않아 env(safe-area-inset-*)이 0으로 접힌다.
+  // 그 결과가 "탭바가 바닥에서 떠 있고 아래에 검은 띠가 남는" 증상이다.
+  // 표준명은 Next가 이미 내보내므로 여기서는 애플 이름만 더한다.
+  other: { "apple-mobile-web-app-capable": "yes" },
 };
 
 // maximumScale 1 · userScalable false는 접근성과 맞바꾼 값이다 — WCAG 1.4.4는

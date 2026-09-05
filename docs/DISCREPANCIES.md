@@ -592,3 +592,110 @@ S5 지도 박스는 `Screen` 스크롤 영역 기준 `absolute`라 `--safe-top`�
   스켈레톤은 지오 fetch를 지연시켜, 에러는 지오 파일을 잠시 옮겨 유발하고 복구했다.
 - **빌드.** `next build` 경고 0으로 15페이지 정적 생성, `tsc --noEmit` 통과.
   dev 서버와 `.next`가 충돌하므로 worktree로 떼어내 돌리고 정리했다.
+
+---
+
+# 2차 작업 — 작업 A (하단 탭바 위치)
+
+배포본을 아이폰 standalone에서 열었을 때 나온 증상 3건. **추측으로 고치지 않고 실제로 측정했다.**
+측정 방법: 뷰포트 402×874(iPhone 16 Pro), `--safe-top: 59px` / `--safe-bottom: 34px`를
+JS로 덮어써서 standalone 기하를 재현하고 `getBoundingClientRect()`로 읽었다.
+`env()`는 브라우저에서 0이라 이 두 변수를 갈아 끼우는 것이 유일한 재현 경로다.
+
+## 35. 원인은 `bottom: env()`가 아니었다 — 후보 5개 중 3개가 실제 원인
+
+인수인계가 제시한 첫 후보(`bottom: env(safe-area-inset-bottom)`)는 **원인이 아니다.**
+`git log -p components/TabBar.tsx`로 확인했다 — 탭바는 처음부터 `bottom: 0` +
+`padding-bottom: var(--safe-bottom)`이었고 한 번도 다른 적이 없다.
+`viewport-fit=cover`도 meta에 정상 출력되고 있었다. 실제 원인은 아래 셋이다.
+
+### 원인 1 — 프레임 `maxWidth: 390`이 기기 폭이 아니다 (증상 3)
+
+390은 아트보드 폭이다. 실제 아이폰은 393(16)·402(16 Pro)·430(16 Plus)·440(16 Pro Max)다.
+`Screen`이 390으로 잘라 가운데 두므로 402pt 기기에서 **프레임이 x=6에서 시작**한다.
+탭바·CTA 바·시트가 전부 프레임 안쪽이라 같이 6pt 밀리고, 좌우에 배경과 같은 색
+검은 띠가 남는다. 인디케이터는 자기 탭 셀과는 정확히 맞아 있었다 —
+어긋난 것은 **셀이 아니라 화면 좌측 끝**이었고, 사용자가 본 "약 5pt"가 이 6pt다.
+
+측정: 402 뷰포트에서 `frame.x = 6`, `nav.x = 6`, `indicator.x = 6`.
+
+**조치**: `--frame-max: 440px`. 현재 가장 넓은 아이폰까지 꽉 채우고,
+그보다 넓은 데스크톱에서만 프레임으로 잘린다. 390 고정을 유지하면 402·430·440pt
+기기에서 영구히 검은 띠가 남는다. 콘텐츠는 좌측 정렬이라 폭이 늘어도 어법이 유지되고,
+우측으로 흘리는 지구본·지도(`margin-right: -36`)도 그대로 흘러 나간다.
+조치 후 측정: `frame.x = 0, w = 402`, `nav.x = 0, w = 402`, `nav.bottom = 874`(화면 최하단),
+인디케이터 x/폭이 4개 탭 셀(0·101·201·302, 폭 101)과 일치.
+
+### 원인 2 — `apple-mobile-web-app-capable`이 출력되지 않는다 (증상 1)
+
+`layout.tsx`의 `appleWebApp.capable: true`는 **Next 16에서 표준명
+`mobile-web-app-capable` 하나만** 내보낸다. iOS Safari는 그 이름을 모른다.
+애플 접두 이름이 없으면 iOS는 같이 준 `apple-mobile-web-app-status-bar-style:
+black-translucent`를 통째로 무시하고, 웹뷰가 화면 전체를 덮지 않아
+`env(safe-area-inset-*)`이 0으로 접힌다. 그 결과가 "탭바가 홈 인디케이터보다
+훨씬 위에 떠 있고 그 아래로 배경색과 같은 검은 띠가 남는" 증상이다.
+
+확인: 배포 전 HTML에 `apple-mobile-web-app-capable`이 **없었다**(`curl | grep`).
+
+**조치**: `metadata.other`로 애플 이름을 직접 더한다. 표준명은 Next가 이미 내므로
+둘 다 나간다. 조치 후 HTML에 두 meta가 모두 출력됨을 확인했다.
+
+### 원인 3 — 하단 여백이 화면마다 다른 숫자였다 (증상 2)
+
+`scrollPadBottom`이 화면마다 `130 / 180 / 180 / 140 / 40 / 0`으로 박혀 있었고
+**어느 것도 안전영역을 항으로 갖지 않았다.** 숫자가 6개면 기기마다 6가지로 어긋난다.
+
+**조치**: 토큰 하나에서 전부 계산한다.
+
+```
+--tabbar-cell: 64px            탭 셀 (TabBar가 이 값을 쓴다)
+--tabbar-h:    cell + 1px      상단 하나선 포함한 바 실제 높이
+--ctabar-cell: 56px            S3 CTA 셀
+--ctabar-h:    cell + 1px
+--pad-tabbar:  --tabbar-h + --safe-bottom + 24px    S1/S2/S4
+--pad-ctabar:  --ctabar-h + --safe-bottom + 24px    S3
+--pad-plain:   --safe-bottom + 24px                 S6·에러·404 (하단 바 없음)
+```
+
+`Screen`의 `scrollPadBottom`을 `number`에서 CSS 길이 문자열로 바꿨다. 숫자를 받으면
+`calc()`를 넘길 수 없어 안전영역을 항으로 넣을 방법이 없다.
+`InstallBanner`의 `calc(64px + ...)`도 `--tabbar-h`로 바꿨다 — 기존 값은 하나선 1px이 빠져 있었다.
+
+## 36. S3 CTA 바에는 안전영역이 아예 없었다
+
+`AddActionsBar`가 `bottom: 0; height: 56`뿐이라 CTA 버튼이 홈 인디케이터 아래로 들어간다.
+탭바와 같은 규칙으로 고쳤다 — 바깥이 `padding-bottom: var(--safe-bottom)`,
+안쪽 div가 `height: var(--ctabar-cell)`. 높이를 고정하지 않는 이유는 Tailwind 리셋의
+`box-sizing: border-box` 때문이다. `height: 56px` + `padding-bottom: 34px`를 같이 주면
+셀이 22px로 찌그러진다.
+
+측정: 안전영역 34에서 버튼 하단이 화면 바닥에서 40px 위(34 + 셀 여백 6),
+안전영역 0에서 6px 위. 두 경우 모두 본문과의 여백은 정확히 24px.
+
+## 37. S5 시트 높이 418은 안전영역 0 기준값이었다
+
+시트가 `height: 418` 고정이라 탭바가 안전영역만큼 두꺼워지면 그만큼 잠식된다.
+측정: 마지막 행("법률 N건 모두 보기")과 탭바 사이가 안전영역 0에서 37px,
+34에서 **3px**. 같은 화면이 기기에 따라 34px씩 달라지고 있었다.
+
+**조치**: `height: calc(418px + var(--safe-bottom))`. 418은 §11에서 확정한
+안전영역 0 기준 실측값이므로 그대로 두고 항만 더한다. 시트 위에 탭바가 겹쳐 앉는
+구조(z-index 4 / 5)는 유지한다. 조치 후 두 경우 모두 37px.
+
+## 38. 검증 결과 — 4개 탭 + S3, 안전영역 34/0 양쪽
+
+| 화면 | 프레임 | 탭바/CTA | 마지막 행 여백 | 인디케이터 |
+|---|---|---|---|---|
+| S1 Home | x 0 · w 402 | bottom 874 | 34px | x 0 · w 101 |
+| S2 Laws | x 0 · w 402 | bottom 874 | 40px | x 101 · w 101 |
+| S4 Company | x 0 · w 402 | bottom 874 | 26px | x 201 · w 101 |
+| S5 Map | x 0 · w 402 | bottom 874 | 37px (시트) | x 302 · w 101 |
+| S3 Detail | x 0 · w 402 | bottom 874 | 24px | — (탭바 없음) |
+
+`nav.bottom = 874 = innerHeight` — 탭바 배경이 화면 최하단까지 내려간다.
+안전영역 0(안드로이드 Chrome·데스크톱)에서도 동일하게 바닥에 붙고 여백만 34px씩 줄어든다.
+
+**실기기 확인 대기**: 위는 전부 브라우저에서 `--safe-*`를 덮어써 재현한 값이다.
+iOS standalone 실기기 스크린샷으로 확인받기 전에는 통과로 치지 않는다.
+특히 원인 2(`apple-mobile-web-app-capable`)는 로컬에서 결과를 볼 수 없다 —
+iOS만 이 meta를 읽는다.

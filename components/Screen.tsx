@@ -15,7 +15,9 @@ import { useOnline } from '@/lib/useOnline';
  * 아닌 기기는 20, 브라우저 탭은 0이다. 없는 상태바를 44px로 흉내 내면
  * 브라우저에서 빈 띠가 남는다.
  *
- * 뷰포트가 390보다 넓으면 프레임 자체를 가운데 둔다.
+ * 뷰포트가 --frame-max보다 넓으면 프레임 자체를 가운데 둔다. 390이 아니다 —
+ * 390은 아트보드 폭이고, 실제 아이폰은 393·402·430·440pt다. 390으로 자르면
+ * 좌우에 검은 띠가 남고 하단 탭바 배경도 화면 끝까지 가지 않는다.
  * 화면 '안'의 콘텐츠는 규칙대로 전부 좌측 정렬이다 — 프레임 배치와는 다른 얘기다.
  *
  * 오프라인 바가 여기 있는 이유: 여섯 화면이 전부 Screen을 쓰므로 한 곳만 고치면 된다.
@@ -25,12 +27,16 @@ import { useOnline } from '@/lib/useOnline';
 export function Screen({
   children,
   footer,
-  /** 하단 고정 요소에 가리지 않도록 스크롤 안쪽에 두는 여백. 화면마다 다르다. */
+  /**
+   * 하단 고정 요소에 가리지 않도록 스크롤 안쪽에 두는 여백. CSS 길이다.
+   * 화면마다 숫자를 적지 않는다 — globals.css의 --pad-tabbar / --pad-ctabar /
+   * --pad-plain 셋 중 하나를 넘긴다. 셋 다 바 높이 + 안전영역 + 24px 한 식이다.
+   */
   scrollPadBottom,
 }: {
   children: ReactNode;
   footer?: ReactNode;
-  scrollPadBottom: number;
+  scrollPadBottom: string;
 }) {
   const online = useOnline();
 
@@ -40,7 +46,7 @@ export function Screen({
         style={{
           position: 'relative',
           width: '100%',
-          maxWidth: 390,
+          maxWidth: 'var(--frame-max)',
           height: '100dvh',
           overflow: 'hidden',
           background: 'var(--bg)',

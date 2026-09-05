@@ -12,6 +12,10 @@ import { usePathname } from 'next/navigation';
  *
  * 하단 여백은 iOS 홈 인디케이터 자리다. 아트보드 실측 34px이 아니라 --safe-bottom을
  * 쓴다 — 기기가 알려주는 값이라야 인디케이터가 탭 라벨을 가리지 않는다.
+ *
+ * bottom: 0 + padding-bottom: 안전영역이다. bottom에 안전영역을 주면 바 전체가
+ * 그만큼 위로 밀려 바닥에 검은 띠가 남는다. 바 높이는 --tabbar-cell 하나에서 오고,
+ * 스크롤 화면들의 하단 여백(--pad-tabbar)도 같은 값에서 계산된다.
  */
 const TABS = [
   { href: '/', label: 'HOME' },
@@ -36,7 +40,7 @@ export function TabBar() {
         borderTop: '1px solid var(--hairline)',
       }}
     >
-      <div style={{ height: 64, display: 'flex', alignItems: 'stretch' }}>
+      <div style={{ height: 'var(--tabbar-cell)', display: 'flex', alignItems: 'stretch' }}>
         {TABS.map(({ href, label }) => {
           const active = href === '/' ? pathname === '/' : pathname.startsWith(href);
           return (

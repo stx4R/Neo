@@ -107,6 +107,26 @@
   /* 레이아웃 */
   --pad:      20px;   /* 좌우 패딩 */
   --topbar:   40px;
+
+  /* 프레임 최대 폭. 390은 아트보드 폭이지 기기 폭이 아니다 — 402·430·440pt
+     아이폰에서 390으로 잘라 가운데 두면 좌우에 검은 띠가 남고, 하단 탭바 배경도
+     화면 끝까지 내려가지 않는다. 현재 가장 넓은 아이폰(16 Pro Max 440pt)까지
+     꽉 채우고, 그보다 넓은 데스크톱에서만 프레임으로 잘린다. */
+  --frame-max: 440px;
+
+  /* 하단 고정 바. 셀 높이 + 상단 하나선 1px이 바의 실제 높이다.
+     안전영역은 바 '안쪽 패딩'으로만 흡수한다 — bottom에 주면 바 전체가
+     위로 밀려 바닥에 검은 띠가 남는다. */
+  --tabbar-cell: 64px;                                 /* 탭 셀 */
+  --tabbar-h:    calc(var(--tabbar-cell) + 1px);       /* S1/S2/S4/S5 탭바 */
+  --ctabar-cell: 56px;                                 /* S3 하단 CTA */
+  --ctabar-h:    calc(var(--ctabar-cell) + 1px);
+
+  /* 스크롤 화면의 하단 여백. 화면마다 숫자를 따로 적지 않는다 —
+     바 높이 + 안전영역 + 24px 한 식에서 전부 나온다. */
+  --pad-tabbar: calc(var(--tabbar-h) + var(--safe-bottom) + 24px);
+  --pad-ctabar: calc(var(--ctabar-h) + var(--safe-bottom) + 24px);
+  --pad-plain:  calc(var(--safe-bottom) + 24px);       /* 하단 바가 없는 화면 */
   --sec-gap:  28px;   /* 섹션 간격 */
   --lbl-gap:  12px;   /* 섹션 라벨 아래 */
   --row-gap:  14px;   /* 행 내부 가로 */

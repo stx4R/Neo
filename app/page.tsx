@@ -36,7 +36,9 @@ export default function Home() {
   return (
     <Screen
       // 배너가 뜨면 마지막 행이 그 뒤로 들어가지 않게 여백을 같이 민다.
-      scrollPadBottom={installPrompt ? 130 + INSTALL_BANNER_H : 130}
+      scrollPadBottom={
+        installPrompt ? `calc(var(--pad-tabbar) + ${INSTALL_BANNER_H}px)` : 'var(--pad-tabbar)'
+      }
       footer={
         <>
           {installPrompt && <InstallBanner />}

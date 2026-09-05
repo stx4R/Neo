@@ -14,7 +14,7 @@ import { Screen } from '@/components/Screen';
  */
 export default function Error({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
   return (
-    <Screen scrollPadBottom={0}>
+    <Screen scrollPadBottom="var(--pad-plain)">
       <div style={{ padding: '12px var(--pad) 0' }}>
         <EmptyState
           message="규제 데이터를 불러오지 못했습니다"
