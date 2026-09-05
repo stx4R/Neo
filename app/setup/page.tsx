@@ -199,7 +199,7 @@ function Setup() {
             step={3}
             total={TOTAL}
             title="무엇을 수출하나요"
-            hint="품목을 하나 고르세요"
+            hint="품목을 선택하십시오"
             onBack={() => setStep(1)}
           />
           {/* 품목에는 국가 코드에 해당하는 값이 없다. 빈 28px 열을 만들어
@@ -252,7 +252,7 @@ function DestinationStep({
         step={2}
         total={TOTAL}
         title="어디로 수출하나요"
-        hint="도착 국가를 하나 고르세요"
+        hint="수입국을 선택하십시오"
         onBack={onBack}
       />
       <StepSection label="DESTINATION">
