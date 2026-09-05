@@ -12,7 +12,7 @@
  * 필요한데, /_next/static/* 은 해시가 붙어 불변이므로 cache-first 런타임 캐싱으로 충분하다.
  */
 
-const VERSION = 'v1';
+const VERSION = 'v2';
 const SHELL_CACHE = `neo-${VERSION}`;
 const RSC_CACHE = `neo-${VERSION}-rsc`;
 const KEEP = [SHELL_CACHE, RSC_CACHE];
