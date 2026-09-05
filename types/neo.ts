@@ -9,16 +9,39 @@ export type LawStatus = 'active' | 'hold' | 'scheduled';
 export type Category = 'labeling' | 'safety' | 'packaging' | 'customs';
 
 export interface Law {
-  id: string;                 // 'VN-2026-037'
+  id: string;                 // '<국가>-<연도>-<번호>' — 'VN-2026-037'
   officialRef: string;        // 'DECREE 37/2026' — Label 스타일로 그대로 출력
   title: string;
-  country: 'VN';
+  country: CountryCode;
   category: Category;         // Priority.category와 매칭되는 키
+  /** 이 법령이 걸리는 품목. 한 법령이 여러 품목에 걸릴 수 있다. */
+  itemCategories: ItemCategoryId[];
+  /**
+   * 이 법령이 걸리는 HS 코드 앞자리.
+   * 품목 전체에 걸리는 법령과 특정 HS코드에만 걸리는 법령을 가른다.
+   * 전부 "전 제품 해당"으로 만들면 앱의 존재 이유가 사라진다.
+   */
+  hsPrefixes: string[];
+  /**
+   * 이 출발국에서만 적용되는 요건(수출국 정부 발행 위생증명서 등).
+   * 값이 없으면 출발국과 무관하게 노출한다. 데이터는 KR 출발분만 채운다.
+   */
+  originScope?: CountryCode[];
+  /**
+   * 1차 출처(정부 관보·소관 부처 고시)인가, 2차 출처(로펌·시험인증기관·무역협회 등)인가.
+   * S3 출처 섹션에 그대로 표기한다. 2차를 1차인 척하지 않는다.
+   * 지시서 §B-2가 Law의 최상위 필드로 지정했다 — source 안이 아니다.
+   */
+  sourceTier: 'official' | 'secondary';
   status: LawStatus;
   riskLevel: RiskLevel;
   effectiveDate: string;      // 시행일 (ISO)
   deadline: string | null;    // 사내 대응 마감일 — D-Day 계산 기준
   heldAt?: string;            // status === 'hold' 일 때 보류된 날짜
+  /** 상태가 바뀐 날. 있으면 status 알림을 파생시킨다. */
+  statusChangedAt?: string;
+  /** 데이터셋에 들어온 날. new 알림의 기준이다. */
+  addedAt: string;
   transitionEndsAt?: string;  // 경과규정 종료일
   transitionNote?: string;
   changes: { before: string; after: string }[];
@@ -28,9 +51,16 @@ export interface Law {
     url: string;
     publisher: string;
     publishedAt: string;
-    originalLang: 'vi' | 'en';
+    originalLang: string;     // 'vi' | 'ja' | 'en' | 'id' … 국가마다 다르다
+    /** 실제로 이 URL을 열어 확인한 날. 임의의 미래·과거 날짜를 넣지 않는다. */
     lastVerified: string;
   };
+}
+
+/** 한 조합(도착국 × 품목)의 법령과 액션. data/laws/<국가>-<품목>.json 한 파일이다. */
+export interface LawSet {
+  laws: Law[];
+  actions: Action[];
 }
 
 export interface Action {

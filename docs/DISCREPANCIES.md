@@ -840,3 +840,100 @@ S3의 AFFECTED 행은 값이 없으면 그 칸 자체를 그리지 않는다.
 | `?edit=1` | 기존 값 프리필, 국가 변경 시 `--risk-medium` 경고 블록 |
 | 새 탭 콘솔 | 오류 0 |
 | 빌드 | `next build` 16페이지 · `tsc --noEmit` · `eslint` 전부 통과 |
+
+---
+
+# 2차 작업 — B2 (데이터 스키마 재구조화)
+
+## 51. 조합 파일은 `{ laws, actions }` 한 덩어리다
+
+지시서 §B-2는 `data/laws/VN-food.json` 하나만 적었고 액션 파일은 말하지 않았다.
+"액션은 지금처럼 법률에 종속시킨다"를 따라 **조합 파일 하나가 그 조합의 법령과
+액션을 둘 다 담는다.** 액션만 따로 12파일을 더 만들면 조합 하나를 열 때 파일 두 개를
+맞춰 봐야 하고, 한쪽만 고치는 실수가 난다.
+
+`data/laws.json`과 `data/actions.json`은 지웠다. 12개 파일이 정적 임포트로 묶인다 —
+동적 임포트를 쓰면 오프라인에서 조합을 바꿀 때 네트워크를 타고, 서비스워커가 담아야 할
+청크가 12개로 늘어난다.
+
+## 52. 액션 id에 국가 접두어 — 기존 완료 표시는 버려진다
+
+`a-01` → `VN-a-01`. 조합이 바뀌어도 충돌하지 않게 하라는 §B-2 지시다.
+부작용이 하나 있다: 이미 `neo.actions.done`에 `a-01`을 담아 둔 기기는 그 값이
+어느 액션과도 맞지 않아 **완료 표시가 사라진다.** 배포 전이라 그대로 두었다.
+프로필이 바뀌면 어차피 이 키를 비우므로(§B-1) 새 규칙과 모순되지 않는다.
+
+## 53. `sourceTier`는 `source` 안이 아니라 Law 최상위다
+
+`tier`는 출처의 속성이라 `source` 객체 안이 자연스럽지만, 지시서 §B-2가
+`itemCategories` · `hsPrefixes` · `originScope`와 나란히 **Law의 필드로** 지정했고
+§B-7도 "`sourceTier` 표기 추가"라고 부른다. 명세대로 최상위에 둔다.
+
+## 54. `hsPrefixes`는 기존 `affectedProductIds`를 정확히 재현한다
+
+이관하면서 역산해 넣고 검산했다. B3에서 제품-법령 매칭을 id 목록에서 HS 앞자리로
+갈아탈 때 결과가 달라지지 않아야 하기 때문이다.
+
+| 법령 | affectedProductIds | hsPrefixes | prefix로 뽑은 수 |
+|---|---|---|---|
+| VN-2026-037 | 4 | `20` `21` | 4 |
+| VN-2026-110 | 4 | `20` `21` | 4 |
+| VN-2023-029 | 3 | `2008` `2103` | 3 (유자청 2007.99 제외) |
+| VN-2026-046 | 4 | `20` `21` | 4 |
+| VN-2018-015 | 4 | `20` `21` | 4 |
+
+29/2023이 유자청을 제외하는 것(§2에서 확정한 판단)이 HS 앞자리만으로 그대로 나온다.
+**두 기준이 같은 답을 내므로 B3에서 안전하게 갈아탈 수 있다.**
+
+`categories.json`의 식품 기본 제품 id를 `products.json`과 같게 맞췄다
+(`p-food-1` → `p-kimchi-sauce`). `affectedProductIds`가 가리키는 id와 같아야
+참조무결성 검사가 성립한다.
+
+## 55. `addedAt`은 시드 작성일로 통일했다
+
+새 필드다. 실제로 "데이터셋에 들어온 날"을 아는 값이 없어 1단계 시드 작성일
+`2026-09-01`로 통일했다. `source.lastVerified`와 같은 날이다.
+B5·B6에서 조사하는 조합은 **그 조합을 실제로 채운 날**을 넣는다.
+`statusChangedAt`은 `hold`로 바뀐 VN-2026-046 하나만 채웠고 `heldAt`과 같은 날이다.
+
+## 56. `scripts/check-data.mjs` — 참조무결성 검사
+
+`npm run check-data`. 조합을 하나 완성할 때마다 돌린다. 보는 것:
+
+- 국가 코드 형식·중복·lat/lng 범위, `supported`인데 `destination`이 아닌 모순
+- 품목 기본 제품의 HS코드가 4/6자리인가, 품목 `hsPrefixes` 안에 드는가
+- 법령 id가 `<국가>-<연도>-<번호>`인가, `country`가 파일명과 맞는가,
+  `itemCategories`에 그 품목이 있는가
+- 열거값(`category` `riskLevel` `status` `sourceTier`) 범위
+- `hold`인데 `heldAt`이 없는가, `source.url`·`lastVerified`·`addedAt`이 있는가
+- 법령 `hsPrefixes`가 품목 범위 밖으로 나가지 않는가
+- `affectedProductIds`가 전부 품목 기본 세트 안에 있는가
+- `actionIds`가 실재하는가 / 한 액션이 두 법령에 걸려 있지 않은가 /
+  액션이 어느 법령에도 안 걸려 떠 있지 않은가 / 액션 id에 국가 접두어가 있는가
+- `originScope`의 국가가 `countries.json`에 있는가
+
+## 57. ⚠ B1의 실제 버그 — 프로필이 있는데 새로고침하면 /setup으로 튕겼다
+
+B2 검증 중에 잡았다. `ProfileGate`가 `useProfile()`이 **렌더한** 값으로 판정했는데,
+`useSyncExternalStore`는 hydration 렌더에서 `getServerSnapshot()`(= `null`)을 쓴다.
+이펙트는 그 커밋 직후에 돌기 때문에, **프로필이 저장돼 있어도 전체 페이지 로드마다
+`null`로 읽고 `/setup`으로 replace** 했다.
+
+B1에서 못 잡은 이유: 저장 직후 흐름은 클라이언트 라우팅이라 hydration을 다시 타지 않고,
+스토어 스냅샷이 이미 맞아 있었다. "새로고침에서 크래시 없음"만 보고
+"새로고침에서 프로필이 유지되는가"를 보지 않았다.
+
+**조치**: 판정을 `readProfile()`로 바꿨다. 모듈 로드 때 localStorage에서 읽은 값이라
+클라이언트에서는 언제나 정확하다. `useProfile()`은 저장 직후 이펙트를 다시 돌리기 위한
+구독으로만 남긴다. 확인: 프로필을 넣고 `/`를 새로고침 → `/` 유지, H1 `대응 필요 3건`.
+
+## 58. B2 검증 — 화면 결과가 이관 전과 동일
+
+| 화면 | 결과 |
+|---|---|
+| S1 Home | `대응 필요 3건` · `한맛식품 · VN 베트남 · 식품·음료` · MUST DO 3행(D-45 / D-14 / 기한 경과) · THIS WEEK 2행 |
+| S2 Laws | 5행, 순서·제품 수(4/4/4/3/4)·미완 수(3/0/4/2/0)·배지 전부 동일 |
+| S3 Detail | `MUST DO — 4` `WHAT CHANGED` `AFFECTED — 4` `SOURCE`, 체크박스 4 |
+| S4 Company | `한맛식품` · `PRIORITIES — 3` · `PRODUCTS — 4` |
+
+`npm run check-data` 통과 · `next build` 16페이지 · `tsc --noEmit` · `eslint` 통과.

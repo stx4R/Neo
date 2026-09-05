@@ -1,0 +1,302 @@
+{
+  "laws": [
+    {
+      "id": "VN-2026-037",
+      "officialRef": "DECREE 37/2026",
+      "title": "식품 라벨 표시 규정 전면 개정",
+      "country": "VN",
+      "category": "labeling",
+      "itemCategories": [
+        "food"
+      ],
+      "hsPrefixes": [
+        "20",
+        "21"
+      ],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "high",
+      "effectiveDate": "2026-01-23",
+      "deadline": "2026-10-18",
+      "addedAt": "2026-09-01",
+      "transitionEndsAt": "2028-01-22",
+      "transitionNote": "기존 인쇄 포장재는 2028.01.22까지 소진 허용",
+      "changes": [
+        {
+          "before": "원산지는 베트남어 표기만 허용",
+          "after": "영문 허용 — Origin, Made in, Product of"
+        },
+        {
+          "before": "영양성분 표시 권장",
+          "after": "에너지·단백질·당류 표시 의무"
+        }
+      ],
+      "affectedProductIds": [
+        "p-kimchi-sauce",
+        "p-seasoned-laver",
+        "p-gochujang",
+        "p-yuja"
+      ],
+      "actionIds": [
+        "VN-a-01",
+        "VN-a-02",
+        "VN-a-03",
+        "VN-a-04"
+      ],
+      "source": {
+        "url": "https://vietanlaw.com/vietnam-food-labeling-2026-comply-with-new-regulations-under-decree-37-2026-nd-cp/",
+        "publisher": "베트남 정부 관보",
+        "publishedAt": "2026-01-10",
+        "originalLang": "vi",
+        "lastVerified": "2026-09-01"
+      }
+    },
+    {
+      "id": "VN-2026-110",
+      "officialRef": "DECREE 110/2026",
+      "title": "생산자책임재활용(EPR) 의무 시행",
+      "country": "VN",
+      "category": "packaging",
+      "itemCategories": [
+        "food"
+      ],
+      "hsPrefixes": [
+        "20",
+        "21"
+      ],
+      "sourceTier": "secondary",
+      "status": "active",
+      "riskLevel": "critical",
+      "effectiveDate": "2026-05-25",
+      "deadline": "2026-09-17",
+      "addedAt": "2026-09-01",
+      "changes": [
+        {
+          "before": "포장재 재활용 의무 없음",
+          "after": "자체 재활용 또는 기금 분담금 납부 의무"
+        },
+        {
+          "before": "포장재 중량 신고 불필요",
+          "after": "포장재 종류별 중량 산정·신고 의무"
+        }
+      ],
+      "affectedProductIds": [
+        "p-kimchi-sauce",
+        "p-seasoned-laver",
+        "p-gochujang",
+        "p-yuja"
+      ],
+      "actionIds": [
+        "VN-a-05",
+        "VN-a-06",
+        "VN-a-07"
+      ],
+      "source": {
+        "url": "https://www.bakermckenzie.com/en/insight/publications/2026/06/vietnam-new-regulations-on-extended-producer-responsibility",
+        "publisher": "베트남 정부 관보",
+        "publishedAt": "2026-05-10",
+        "originalLang": "vi",
+        "lastVerified": "2026-09-01"
+      }
+    },
+    {
+      "id": "VN-2023-029",
+      "officialRef": "CIRCULAR 29/2023",
+      "title": "영양성분 표시 의무화",
+      "country": "VN",
+      "category": "labeling",
+      "itemCategories": [
+        "food"
+      ],
+      "hsPrefixes": [
+        "2008",
+        "2103"
+      ],
+      "sourceTier": "secondary",
+      "status": "active",
+      "riskLevel": "high",
+      "effectiveDate": "2026-01-01",
+      "deadline": "2026-08-15",
+      "addedAt": "2026-09-01",
+      "changes": [
+        {
+          "before": "영양성분 표시 자율",
+          "after": "사전포장 식품에 에너지·단백질·당류 표시 의무"
+        }
+      ],
+      "affectedProductIds": [
+        "p-kimchi-sauce",
+        "p-seasoned-laver",
+        "p-gochujang"
+      ],
+      "actionIds": [
+        "VN-a-08",
+        "VN-a-09"
+      ],
+      "source": {
+        "url": "https://www.eurofins.vn/en/news/knowledge-of-testing-industry/nutrition-labeling-compliance-under-circular-29/",
+        "publisher": "베트남 보건부",
+        "publishedAt": "2023-12-30",
+        "originalLang": "vi",
+        "lastVerified": "2026-09-01"
+      }
+    },
+    {
+      "id": "VN-2026-046",
+      "officialRef": "DECREE 46/2026",
+      "title": "식품안전법 시행령 개정",
+      "country": "VN",
+      "category": "safety",
+      "itemCategories": [
+        "food"
+      ],
+      "hsPrefixes": [
+        "20",
+        "21"
+      ],
+      "sourceTier": "official",
+      "status": "hold",
+      "riskLevel": "medium",
+      "effectiveDate": "2026-01-26",
+      "deadline": null,
+      "heldAt": "2026-04-06",
+      "statusChangedAt": "2026-04-06",
+      "addedAt": "2026-09-01",
+      "transitionNote": "Resolution 15/2026/NQ-CP로 효력 정지. 개정 식품안전법 시행 시까지 Decree 15/2018 절차 유지",
+      "changes": [
+        {
+          "before": "자가공표(self-declaration)로 갈음",
+          "after": "기술규정 적합성 선언 + 제3자 인증기관 인증"
+        },
+        {
+          "before": "수입식품 서류 검토만",
+          "after": "서류 검토 + 현물 검사 + 시료 시험 (약 7영업일)"
+        }
+      ],
+      "affectedProductIds": [
+        "p-kimchi-sauce",
+        "p-seasoned-laver",
+        "p-gochujang",
+        "p-yuja"
+      ],
+      "actionIds": [],
+      "source": {
+        "url": "https://vietanlaw.com/vietnam-decree-46-2026-nd-cp-key-food-safety-updates-compliance-guide/",
+        "publisher": "베트남 정부 관보",
+        "publishedAt": "2026-01-12",
+        "originalLang": "vi",
+        "lastVerified": "2026-09-01"
+      }
+    },
+    {
+      "id": "VN-2018-015",
+      "officialRef": "DECREE 15/2018",
+      "title": "자가공표 절차 (현행 유지)",
+      "country": "VN",
+      "category": "safety",
+      "itemCategories": [
+        "food"
+      ],
+      "hsPrefixes": [
+        "20",
+        "21"
+      ],
+      "sourceTier": "secondary",
+      "status": "active",
+      "riskLevel": "low",
+      "effectiveDate": "2018-02-02",
+      "deadline": null,
+      "addedAt": "2026-09-01",
+      "transitionNote": "Decree 46/2026 보류로 당분간 계속 적용",
+      "changes": [],
+      "affectedProductIds": [
+        "p-kimchi-sauce",
+        "p-seasoned-laver",
+        "p-gochujang",
+        "p-yuja"
+      ],
+      "actionIds": [],
+      "source": {
+        "url": "https://food.chemlinked.com/news/food-news/vietnam-to-amend-decree-152018-regulations-on-the-implementation-of-the-food-safety-law",
+        "publisher": "베트남 정부 관보",
+        "publishedAt": "2018-02-02",
+        "originalLang": "vi",
+        "lastVerified": "2026-09-01"
+      }
+    }
+  ],
+  "actions": [
+    {
+      "id": "VN-a-01",
+      "lawId": "VN-2026-037",
+      "title": "라벨 시안에 원산지 영문표기 반영",
+      "owner": "품질팀",
+      "effort": "2주",
+      "dueDate": "2026-10-15"
+    },
+    {
+      "id": "VN-a-02",
+      "lawId": "VN-2026-037",
+      "title": "최소 글꼴 0.9mm 이상 확인",
+      "owner": "디자인",
+      "effort": "3일",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-03",
+      "lawId": "VN-2026-037",
+      "title": "영양성분표 삽입 (Circular 29 연계)",
+      "owner": "품질팀",
+      "effort": "4주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-04",
+      "lawId": "VN-2026-037",
+      "title": "구포장 재고 소진 계획 수립",
+      "owner": "영업",
+      "effort": "1주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-05",
+      "lawId": "VN-2026-110",
+      "title": "포장재 중량 산정 자료 제출",
+      "owner": "품질팀",
+      "effort": "2주",
+      "dueDate": "2026-09-17"
+    },
+    {
+      "id": "VN-a-06",
+      "lawId": "VN-2026-110",
+      "title": "재활용 계획 등록 또는 분담금 납부 결정",
+      "owner": "경영",
+      "effort": "1주",
+      "dueDate": "2026-09-17"
+    },
+    {
+      "id": "VN-a-07",
+      "lawId": "VN-2026-110",
+      "title": "포장재 종류별 재질 분류표 작성",
+      "owner": "품질팀",
+      "effort": "1주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-08",
+      "lawId": "VN-2023-029",
+      "title": "영양성분 시험성적서 확보",
+      "owner": "품질팀",
+      "effort": "4주",
+      "dueDate": "2026-08-15"
+    },
+    {
+      "id": "VN-a-09",
+      "lawId": "VN-2023-029",
+      "title": "라벨 영양성분표 디자인 반영",
+      "owner": "디자인",
+      "effort": "2주",
+      "dueDate": "2026-08-15"
+    }
+  ]
+}
