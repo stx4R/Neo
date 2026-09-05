@@ -6,22 +6,47 @@
 
 ## 현재 상태
 
-디자인 6화면 확정 완료. 구현 착수 전.
+**v1.0.0.** `docs/build-plan.md` §10의 12단계 전부 완료. 6화면과 상태 화면 5종이 동작한다.
 
 | | |
 |---|---|
 | 화면 | Home / Laws / Law Detail / Company / Map / Notifications |
-| 스택 | Next.js App Router + TypeScript + Tailwind + shadcn |
-| 데이터 | 정적 JSON + localStorage |
+| 상태 화면 | 빈 상태 · 스켈레톤 · 에러 · not-found · 오프라인 바 |
+| 스택 | Next.js App Router + TypeScript + Tailwind |
+| 데이터 | 정적 JSON + localStorage. 백엔드 없음 |
+| 지오그래피 | `design/neo-dots.js`를 `d3-geo` + `topojson-client`로 포팅. CDN 의존 0 |
+| PWA | 손으로 쓴 `public/sw.js`. Serwist·next-pwa 쓰지 않는다 |
+| 기준 날짜 | `data/meta.json`의 `2026-09-03`. `new Date()`를 쓰지 않는다 |
+
+계획서(`docs/build-plan.md`)는 스택에 shadcn을 적었지만 의존성에 들어 있지 않다.
+런타임 의존성은 `next` · `react` · `react-dom` · `d3-geo` · `topojson-client` 다섯뿐이고
+컴포넌트는 전부 직접 썼다. 하단 시트에 vaul을 쓰지 않기로 한 경위는
+`docs/DISCREPANCIES.md` §14에 있다.
+
+### 알려진 한계 — 오프라인
+
+라우트 문서와 RSC 페이로드는 10개 전부 프리캐시되지만, **라우트별 JS 청크는 담기지
+않는다.** 첫 방문의 청크 요청이 서비스워커가 제어권을 잡기 전에 끝나기 때문이다.
+그래서 설치 직후 오프라인에서는 페이지가 프리렌더 HTML로 열리기만 하고 하이드레이션이
+되지 않는다 — 체크박스·필터·지도 마커가 동작하지 않는다. 온라인에서 한 번씩 방문한
+라우트는 청크가 런타임 캐시에 들어가 오프라인에서도 정상 동작한다.
+
+고치려면 프리캐시 목록에 청크 URL을 더해야 한다. 범위 밖으로 두기로 한 항목이고,
+경위와 대안은 `docs/DISCREPANCIES.md`의 12단계 판정에 적혀 있다.
 
 ## 시작하기
 
-`CLAUDE.md`를 먼저 읽고, `docs/build-plan.md` §10의 12단계를 순서대로 진행한다.
+```bash
+npm install
+npm run dev
+```
+
+`CLAUDE.md`의 디자인 절대 규칙 9개가 다른 모든 문서보다 우선한다.
 
 ```
-docs/     명세 문서 4종
-design/   6화면 시각 원본 + 지오그래피 렌더러
-seed/     타입·목데이터·디자인 토큰 (스캐폴드 후 제자리로 이동)
+docs/     명세 문서 + 판정 기록(DISCREPANCIES.md)
+design/   6화면 시각 원본 · 포팅 전 지오그래피 원본 · 아이콘 원본
+scripts/  아이콘·마커 글꼴 생성기 (재생성할 때만 돌린다)
 ```
 
 ## 샘플 데이터
