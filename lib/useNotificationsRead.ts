@@ -16,6 +16,7 @@ const INITIAL_READ = ['n-04', 'n-05', 'n-06'] as const;
 const store = createIdSetStore('neo.notifications.read', INITIAL_READ);
 
 export const markRead = store.add;
+export const clearNotificationsRead = store.clear;
 
 export function useNotificationsRead(): ReadonlySet<string> {
   return usePersistentIdSet(store);

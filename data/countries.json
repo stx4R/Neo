@@ -1,0 +1,16 @@
+[
+  { "code": "KR", "nameKo": "대한민국",   "nameEn": "Korea, Republic of", "lng": 129.0,  "lat": 35.1,  "origin": true,  "destination": false, "supported": false },
+  { "code": "VN", "nameKo": "베트남",     "nameEn": "Viet Nam",           "lng": 105.9,  "lat": 20.9,  "origin": true,  "destination": true,  "supported": true  },
+  { "code": "JP", "nameKo": "일본",       "nameEn": "Japan",              "lng": 139.8,  "lat": 35.7,  "origin": true,  "destination": true,  "supported": true  },
+  { "code": "US", "nameKo": "미국",       "nameEn": "United States",      "lng": -118.2, "lat": 33.8,  "origin": true,  "destination": true,  "supported": true  },
+  { "code": "ID", "nameKo": "인도네시아", "nameEn": "Indonesia",          "lng": 106.8,  "lat": -6.2,  "origin": true,  "destination": true,  "supported": true  },
+  { "code": "CN", "nameKo": "중국",       "nameEn": "China",              "lng": 121.5,  "lat": 31.2,  "origin": true,  "destination": true,  "supported": false },
+  { "code": "TH", "nameKo": "태국",       "nameEn": "Thailand",           "lng": 100.5,  "lat": 13.8,  "origin": true,  "destination": true,  "supported": false },
+  { "code": "EU", "nameKo": "유럽연합",   "nameEn": "European Union",     "lng": 4.4,    "lat": 50.8,  "origin": false, "destination": true,  "supported": false },
+  { "code": "TW", "nameKo": "대만",       "nameEn": "Taiwan",             "lng": 121.6,  "lat": 25.0,  "origin": true,  "destination": false, "supported": false },
+  { "code": "SG", "nameKo": "싱가포르",   "nameEn": "Singapore",          "lng": 103.8,  "lat": 1.3,   "origin": true,  "destination": false, "supported": false },
+  { "code": "MY", "nameKo": "말레이시아", "nameEn": "Malaysia",           "lng": 101.7,  "lat": 3.1,   "origin": true,  "destination": false, "supported": false },
+  { "code": "PH", "nameKo": "필리핀",     "nameEn": "Philippines",        "lng": 121.0,  "lat": 14.6,  "origin": true,  "destination": false, "supported": false },
+  { "code": "IN", "nameKo": "인도",       "nameEn": "India",              "lng": 72.9,   "lat": 19.0,  "origin": true,  "destination": false, "supported": false },
+  { "code": "AU", "nameKo": "호주",       "nameEn": "Australia",          "lng": 151.2,  "lat": -33.9, "origin": true,  "destination": false, "supported": false }
+]

@@ -147,12 +147,16 @@ export default async function LawDetail({ params }: PageProps<'/laws/[id]'>) {
                   >
                     HS {product.hsCode}
                   </span>
-                  <span
-                    className="t-meta"
-                    style={{ flex: 'none', width: 64, textAlign: 'right' }}
-                  >
-                    <RiskText level={product.impact} />
-                  </span>
+                  {/* impact는 법령에 종속된 값이라 /setup에서 만든 제품에는 없다.
+                      없으면 칸 자체를 그리지 않는다 — 중립값으로 채우지 않는다. */}
+                  {product.impact && (
+                    <span
+                      className="t-meta"
+                      style={{ flex: 'none', width: 64, textAlign: 'right' }}
+                    >
+                      <RiskText level={product.impact} />
+                    </span>
+                  )}
                 </>
               }
             >

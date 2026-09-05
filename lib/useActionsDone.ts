@@ -11,6 +11,7 @@ import { createIdSetStore, usePersistentIdSet } from '@/lib/persistentIdSet';
 const store = createIdSetStore('neo.actions.done');
 
 export const toggleAction = store.toggle;
+export const clearActionsDone = store.clear;
 
 export function useActionsDone(): ReadonlySet<string> {
   return usePersistentIdSet(store);

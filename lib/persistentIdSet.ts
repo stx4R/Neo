@@ -21,6 +21,8 @@ export interface IdSetStore {
   toggle(id: string): void;
   /** 여러 개를 한 번에 넣는다. 이미 있는 것은 그대로 둔다. */
   add(ids: readonly string[]): void;
+  /** 통째로 비운다. 프로필의 국가·품목이 바뀌면 이전 조합의 상태를 남기지 않는다. */
+  clear(): void;
 }
 
 export function createIdSetStore(key: string, initial: readonly string[] = []): IdSetStore {
@@ -86,6 +88,10 @@ export function createIdSetStore(key: string, initial: readonly string[] = []): 
       const before = next.size;
       for (const id of ids) next.add(id);
       if (next.size !== before) commit(next);
+    },
+    clear() {
+      if (snapshot.size === 0) return;
+      commit(new Set());
     },
   };
 }

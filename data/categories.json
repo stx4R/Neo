@@ -1,0 +1,35 @@
+[
+  {
+    "id": "food",
+    "nameKo": "식품·음료",
+    "hsPrefixes": ["16", "17", "18", "19", "20", "21", "22"],
+    "defaultProducts": [
+      { "id": "p-food-1", "name": "김치양념 소스", "hsCode": "2103.90" },
+      { "id": "p-food-2", "name": "조미김",       "hsCode": "2008.99" },
+      { "id": "p-food-3", "name": "고추장",       "hsCode": "2103.90" },
+      { "id": "p-food-4", "name": "유자청",       "hsCode": "2007.99" }
+    ]
+  },
+  {
+    "id": "cosmetics",
+    "nameKo": "화장품",
+    "hsPrefixes": ["3303", "3304", "3305", "3307", "3401"],
+    "defaultProducts": [
+      { "id": "p-cos-1", "name": "수분 크림",   "hsCode": "3304.99" },
+      { "id": "p-cos-2", "name": "립 틴트",     "hsCode": "3304.10" },
+      { "id": "p-cos-3", "name": "클렌징 폼",   "hsCode": "3401.30" },
+      { "id": "p-cos-4", "name": "샴푸",        "hsCode": "3305.10" }
+    ]
+  },
+  {
+    "id": "electronics",
+    "nameKo": "전기·전자",
+    "hsPrefixes": ["8507", "8516", "8518", "8528", "8539"],
+    "defaultProducts": [
+      { "id": "p-elec-1", "name": "무선 이어폰",   "hsCode": "8518.30" },
+      { "id": "p-elec-2", "name": "보조배터리",   "hsCode": "8507.60" },
+      { "id": "p-elec-3", "name": "전기밥솥",     "hsCode": "8516.60" },
+      { "id": "p-elec-4", "name": "LED 전구",     "hsCode": "8539.52" }
+    ]
+  }
+]

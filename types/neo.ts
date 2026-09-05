@@ -1,6 +1,10 @@
 // NEO 데이터 모델. PRD v2 §5.
 
 export type RiskLevel = 'critical' | 'high' | 'medium' | 'low';
+
+/** 'KR' 'VN' 'JP' 'US' 'ID' … ISO 3166-1 alpha-2. 국기·이모지를 쓰지 않으므로 이게 표시값이다. */
+export type CountryCode = string;
+export type ItemCategoryId = 'food' | 'cosmetics' | 'electronics';
 export type LawStatus = 'active' | 'hold' | 'scheduled';
 export type Category = 'labeling' | 'safety' | 'packaging' | 'customs';
 
@@ -42,7 +46,55 @@ export interface Product {
   id: string;
   name: string;
   hsCode: string;             // '2103.90' — tabular-nums로 출력
-  impact: RiskLevel;
+  /**
+   * 이 제품이 받는 영향. 법령에 종속된 값이라 사용자가 /setup에서 만든 제품에는 없다.
+   * 없으면 화면에서 그 칸을 그리지 않는다 — 0이나 중립색으로 채우지 않는다.
+   */
+  impact?: RiskLevel;
+}
+
+/**
+ * 항로를 그릴 수 있는 국가. lat/lng가 없는 국가는 이 파일에 넣지 않는다.
+ *
+ * 플래그가 셋인 이유는 세 가지가 서로 다른 질문이기 때문이다.
+ *   origin       출발국 목록에 나오는가
+ *   destination  도착국 목록에 나오는가
+ *   supported    도착국으로서 법령 데이터가 실제로 있는가
+ * destination이면서 supported가 아닌 국가는 목록에 흐리게 남는다 —
+ * "왜 4개국뿐인가"에 정직하게 답하는 장치다.
+ */
+export interface CountryInfo {
+  code: CountryCode;
+  nameKo: string;
+  nameEn: string;
+  lng: number;
+  lat: number;
+  origin: boolean;
+  destination: boolean;
+  supported: boolean;
+}
+
+export interface ItemCategory {
+  id: ItemCategoryId;
+  nameKo: string;
+  /** 이 품목에 걸리는 HS 코드 앞자리. 법령의 hsPrefixes와 대조한다. */
+  hsPrefixes: string[];
+  /** 품목을 고르면 복사되는 기본 제품 세트. 이후 사용자가 편집한다. */
+  defaultProducts: Product[];
+}
+
+/**
+ * 사용자의 상황. localStorage 'neo.profile' 하나에 담긴다.
+ * 이 값이 없으면 앱은 어느 경로로 들어와도 /setup으로 보낸다.
+ */
+export interface Profile {
+  /** 선택 입력. 없으면 헤더에서 회사명 줄을 표시하지 않는다. */
+  companyName?: string;
+  originCountry: CountryCode;
+  destinationCountry: CountryCode;
+  itemCategory: ItemCategoryId;
+  products: Product[];
+  updatedAt: string;          // ISO
 }
 
 export interface Priority {

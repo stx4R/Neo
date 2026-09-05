@@ -11,8 +11,12 @@ import { laws } from '@/lib/data';
  * 법률이 늘면 이 목록도 같이 늘어난다.
  */
 
-/** 탭바 4개 + 알림. 아트보드의 6화면 중 법률 상세만 파생이다. */
-const STATIC_ROUTES = ['/', '/laws', '/company', '/map', '/notifications'];
+/**
+ * 탭바 4개 + 알림 + 온보딩. 아트보드의 6화면 중 법률 상세만 파생이다.
+ * /setup이 빠지면 프로필 없는 사용자가 오프라인에서 앱을 아예 못 연다 —
+ * 어느 경로로 들어오든 거기로 보내지기 때문이다.
+ */
+const STATIC_ROUTES = ['/', '/laws', '/company', '/map', '/notifications', '/setup'];
 
 export function ServiceWorker() {
   useEffect(() => {

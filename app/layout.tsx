@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { ProfileGate } from "@/components/ProfileGate";
 import { ServiceWorker } from "@/components/ServiceWorker";
 import "./globals.css";
 
@@ -41,6 +42,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="ko">
       <body>
         {children}
+        <ProfileGate />
         <ServiceWorker />
       </body>
     </html>
