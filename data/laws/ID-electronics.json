@@ -1,4 +1,245 @@
 {
-  "laws": [],
-  "actions": []
+  "laws": [
+    {
+      "id": "ID-2024-003",
+      "officialRef": "Permenkominfo 3/2024",
+      "title": "통신기기 인증(SDPPI) — 블루투스가 있으면 인증 없이 세관을 못 넘는다",
+      "country": "ID",
+      "category": "safety",
+      "itemCategories": [
+        "electronics"
+      ],
+      "hsPrefixes": [
+        "8518"
+      ],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "critical",
+      "effectiveDate": "2024-05-22",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [],
+      "affectedProductIds": [
+        "p-elec-1"
+      ],
+      "actionIds": [
+        "ID-a-003-01",
+        "ID-a-003-02",
+        "ID-a-003-03"
+      ],
+      "source": {
+        "url": "https://peraturan.bpk.go.id/Details/282035/permenkominfo-no-3-tahun-2024",
+        "publisher": "인도네시아 통신정보부",
+        "publishedAt": "2024-05-22",
+        "originalLang": "id",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "ID-2025-021",
+      "officialRef": "Permendag 21/2025",
+      "title": "전자·정보통신 기기 수입 정책 — 밥솥과 LED가 부속서에 있다",
+      "country": "ID",
+      "category": "customs",
+      "itemCategories": [
+        "electronics"
+      ],
+      "hsPrefixes": [
+        "851660",
+        "853952"
+      ],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "high",
+      "effectiveDate": "2025-08-29",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [],
+      "affectedProductIds": [
+        "p-elec-3",
+        "p-elec-4"
+      ],
+      "actionIds": [
+        "ID-a-021e-01",
+        "ID-a-021e-02"
+      ],
+      "source": {
+        "url": "https://peraturan.bpk.go.id/Details/323173/permendag-no-21-tahun-2025",
+        "publisher": "인도네시아 무역부",
+        "publishedAt": "2025-08-29",
+        "originalLang": "id",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "ID-2021-014",
+      "officialRef": "Permen ESDM 14/2021",
+      "title": "최저에너지성능기준(SKEM)과 절전라벨 — 밥솥과 LED가 대상 기기다",
+      "country": "ID",
+      "category": "labeling",
+      "itemCategories": [
+        "electronics"
+      ],
+      "hsPrefixes": [
+        "851660",
+        "853952"
+      ],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "high",
+      "effectiveDate": "2021-06-22",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [
+        {
+          "before": "에어컨은 Permen ESDM 57/2017, 자체안정기 램프는 Permen ESDM 18/2014로 나뉘어 있었다",
+          "after": "Permen ESDM 14/2021이 둘을 폐지하고 에너지사용기기 전반의 SKEM 체계로 통합"
+        }
+      ],
+      "affectedProductIds": [
+        "p-elec-3",
+        "p-elec-4"
+      ],
+      "actionIds": [
+        "ID-a-014-01",
+        "ID-a-014-02",
+        "ID-a-014-03"
+      ],
+      "source": {
+        "url": "https://peraturan.bpk.go.id/Details/175264/permen-esdm-no-14-tahun-2021",
+        "publisher": "인도네시아 에너지광물자원부",
+        "publishedAt": "2021-06-22",
+        "originalLang": "id",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "ID-2021-025",
+      "officialRef": "Permendag 25/2021",
+      "title": "인도네시아어 라벨 — 전압·주파수와 원산지를 제품에 새겨야 한다",
+      "country": "ID",
+      "category": "labeling",
+      "itemCategories": [
+        "electronics"
+      ],
+      "hsPrefixes": [
+        "8507",
+        "8516",
+        "8518",
+        "8528",
+        "8539"
+      ],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "high",
+      "effectiveDate": "2021-05-01",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [
+        {
+          "before": "Permendag 73/M-DAG/PER/9/2015와 개정 79/2019의 라벨 대상 목록",
+          "after": "Permendag 25/2021이 둘을 폐지하고 대상 품목을 다시 정했다"
+        }
+      ],
+      "affectedProductIds": [
+        "p-elec-1",
+        "p-elec-2",
+        "p-elec-3",
+        "p-elec-4"
+      ],
+      "actionIds": [
+        "ID-a-025e-01",
+        "ID-a-025e-02"
+      ],
+      "source": {
+        "url": "https://peraturan.bpk.go.id/Details/166549/permendag-no-25-tahun-2021",
+        "publisher": "인도네시아 무역부",
+        "publishedAt": "2021-05-01",
+        "originalLang": "id",
+        "lastVerified": "2026-09-06"
+      }
+    }
+  ],
+  "actions": [
+    {
+      "id": "ID-a-003-01",
+      "lawId": "ID-2024-003",
+      "title": "무선 이어폰을 SDPPI 인증기관에 신청 — 블루투스 모듈이 대상 판정 기준이다",
+      "owner": "품질팀",
+      "effort": "10주",
+      "dueDate": null
+    },
+    {
+      "id": "ID-a-003-02",
+      "lawId": "ID-2024-003",
+      "title": "인증번호와 PLG ID를 제품 라벨에 넣도록 설계 반영",
+      "owner": "디자인",
+      "effort": "3주",
+      "dueDate": null
+    },
+    {
+      "id": "ID-a-003-03",
+      "lawId": "ID-2024-003",
+      "title": "인증서 유효기간과 연장 시점을 관리대장에 올린다",
+      "owner": "품질팀",
+      "effort": "1주",
+      "dueDate": null
+    },
+    {
+      "id": "ID-a-021e-01",
+      "lawId": "ID-2025-021",
+      "title": "밥솥·LED의 수입승인(PI)과 선적전검사(LS) 요건을 수입자와 확인",
+      "owner": "영업",
+      "effort": "4주",
+      "dueDate": null
+    },
+    {
+      "id": "ID-a-021e-02",
+      "lawId": "ID-2025-021",
+      "title": "제품 HS 코드가 부속서 항목과 일치하는지 통관사와 대조",
+      "owner": "영업",
+      "effort": "2주",
+      "dueDate": null
+    },
+    {
+      "id": "ID-a-014-01",
+      "lawId": "ID-2021-014",
+      "title": "밥솥·LED의 에너지성능을 인정시험소에서 측정해 SKEM 충족 확인",
+      "owner": "품질팀",
+      "effort": "6주",
+      "dueDate": null
+    },
+    {
+      "id": "ID-a-014-02",
+      "lawId": "ID-2021-014",
+      "title": "절전라벨(LTHE) 등록 후 별 등급을 제품·포장에 표시",
+      "owner": "디자인",
+      "effort": "3주",
+      "dueDate": null
+    },
+    {
+      "id": "ID-a-014-03",
+      "lawId": "ID-2021-014",
+      "title": "SKEM 미달이면 사양 개선 계획을 세운다 — 미달 제품은 유통할 수 없다",
+      "owner": "경영",
+      "effort": "8주",
+      "dueDate": null
+    },
+    {
+      "id": "ID-a-025e-01",
+      "lawId": "ID-2021-025",
+      "title": "상품명·상표·수입자 명칭과 주소·전압(V)·주파수(Hz)·원산지를 인도네시아어로 표시",
+      "owner": "디자인",
+      "effort": "4주",
+      "dueDate": null
+    },
+    {
+      "id": "ID-a-025e-02",
+      "lawId": "ID-2021-025",
+      "title": "표시 방식을 각인·인쇄·완전부착 중 하나로 정한다 — 떼어지는 스티커는 안 된다",
+      "owner": "디자인",
+      "effort": "2주",
+      "dueDate": null
+    }
+  ]
 }

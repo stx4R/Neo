@@ -2033,3 +2033,154 @@ VN(§83) · JP(§107) · US(§122)에 이어 **네 조합 모두 HS 차등이 �
 ## `originScope` — 없다
 
 BPOM 통보도 원료 기준도 출발국을 가리지 않는다.
+
+---
+
+# ID — 전기·전자 (`data/laws/ID-electronics.json`)
+
+**조사일 2026-09-06 · 법령 4건 · 액션 10건 · 1차 4 / 2차 0**
+공용 파일은 걸리지 않는다 — **할랄은 식품·화장품 둘뿐이다.**
+
+## HS 차등 — 부속서에서 HS 코드를 직접 확인했다
+
+`제품 2 / 1 / 2 / 4`. **BPK가 올린 원문 PDF의 부속서를 텍스트로 뽑아
+우리 네 제품의 HS 코드를 하나씩 대조한 결과다.**
+
+| 법령 | 제품 | 확인한 부속서 항목 |
+|---|---|---|
+| Permendag 21/2025 | 2 | `8516.60.10 Rice cooker` · `8539.52.10/.90 Lampu LED` |
+| Permenkominfo 3/2024 | 1 | 블루투스 탑재 기기 (무선 이어폰) |
+| Permen ESDM 14/2021 | 2 | Rice Cooker · Lampu LED |
+| Permendag 25/2021 | 4 | 「가정용 전자·통신·정보기기」 전반 |
+
+## 채택
+
+### 1. `Permenkominfo 3/2024` — 통신기기 인증(SDPPI)
+`ID-2024-003` · Berlaku **2024-05-22** · CRITICAL · **hsPrefixes `["8518"]` — 제품 1** · `official`
+
+- **<https://peraturan.bpk.go.id/Details/282035/permenkominfo-no-3-tahun-2024>**
+  — BPK 법령DB. **1차 출처다.** `Sertifikasi Alat Telekomunikasi dan/atau Perangkat
+  Telekomunikasi` · `Status Berlaku`
+- <https://pelayanansdppi.postel.go.id/sertifikasi/bisnispemerintah-1/sertifikasi-alat-dan-perangkat-telekomunikasi>
+  (SDPPI 인증 창구)
+- <https://jdih.komdigi.go.id/produk_hukum/view/id/892/t/peraturan+menteri+komunikasi+dan+informatika+nomor+3+tahun+2024>
+  (통신정보부 JDIH 원문)
+
+**블루투스·WLAN·NFC·셀룰러 기능이 있으면 대상이다.** 인증 없이는 세관에서 억류되어
+유통 자체가 안 된다. 인증 후에는 **인증번호와 PLG ID 두 가지를 라벨에** 넣어야 한다.
+
+대상 기기 목록은 `Keputusan Menteri Nomor 469 Tahun 2025`가 따로 정한다.
+
+일본 `電波法`(기적마크)·미국 `47 CFR Part 15`(Certification)와 같은 자리의 규제다.
+**세 나라 모두 무선 이어폰 하나만 걸리고 리드타임이 10주로 가장 길다.**
+
+### 2. `Permendag 21/2025` — 전자·정보통신 기기 수입 정책
+`ID-2025-021` · Berlaku **2025-08-29** · HIGH · `customs` ·
+**hsPrefixes `["851660","853952"]` — 제품 2** · `official`
+
+- **<https://peraturan.bpk.go.id/Details/323173/permendag-no-21-tahun-2025>** — **1차 출처다**
+- **<https://peraturan.bpk.go.id/Download/384988/Permendag%20Nomor%2021%20Tahun%202025.pdf>**
+  — **원문 PDF 108쪽. 부속서를 텍스트로 뽑아 HS 코드를 직접 대조했다**
+
+부속서에서 확인한 것:
+
+```
+ 40.  8516.60.10  -- Rice cooker                        PCE
+ 61.  8539.52.10  --- Dilengkapi dengan dasar tipe sekrup  PCE
+      8539.52.90  --- Lain-lain                         PCE
+ 45.  8518.29.90  --- Lain-lain (스피커)                 PCE
+```
+
+**`8518.30`(헤드폰·이어폰)은 부속서에 없다.** `8518.29`(기타 스피커)는 있지만 다른 항목이다.
+**`8507`(축전지)도 없다.** 그래서 무선 이어폰과 보조배터리는 이 법령의 대상이 아니다.
+
+**`hsPrefixes`를 6자리로 적었다** — `851660` · `853952`. 4자리 `8516`으로 두면
+다리미(8516.40)·전기주전자(8516.79) 같은 다른 8516 제품까지 대상으로 보이는데,
+부속서는 8516 안에서도 항목을 골라 지정한다. **`productsMatching`이 숫자만 남겨
+앞자리를 대조하므로 6자리 prefix가 그대로 동작한다.**
+
+### 3. `Permen ESDM 14/2021` — 최저에너지성능기준(SKEM)·절전라벨
+`ID-2021-014` · Berlaku **2021-06-22** · HIGH · **hsPrefixes `["851660","853952"]` — 제품 2** · `official`
+
+- **<https://peraturan.bpk.go.id/Details/175264/permen-esdm-no-14-tahun-2021>** — **1차 출처다.**
+  `Mencabut : Permen ESDM No. 57 Tahun 2017` · `Permen ESDM No. 18 Tahun 2014`
+- <https://jdih.esdm.go.id/common/dokumen-external/Permen%20ESDM%20No.%2014%20Tahun%202021.pdf>
+  (에너지광물자원부 JDIH 원문 PDF)
+- <https://b4t.go.id/pengujian-standar-kinerja-energi-minimum-skem-dan-label-tanda-hemat-energi-lthe-peralatan-pemanfaat-energi/>
+  (산업부 산하 B4T 시험소 — 시험 대상이 **에어컨·전기밥솥·선풍기·LED 램프**)
+- <https://simebtke.esdm.go.id/sinergi/skem-label/tentang> (절전라벨 제도 안내)
+
+에어컨(57/2017)과 자체안정기 램프(18/2014)로 나뉘어 있던 것을 통합했다.
+**SKEM에 미달하면 유통할 수 없고, 통과하면 별 등급 절전라벨(LTHE)을 붙인다.**
+
+일본 `省エネ法`(톱러너)과 같은 자리인데 **두 나라 모두 전기밥솥과 LED 전구 둘만 걸린다** —
+우연이 아니라 두 제품이 가정 소비전력의 큰 몫이기 때문이다.
+
+### 4. `Permendag 25/2021` — 인도네시아어 라벨
+`ID-2021-025` · 제정 2021-04-01 · Berlaku **2021-05-01** · HIGH · 전 범위 · `official`
+
+- **<https://peraturan.bpk.go.id/Details/166549/permendag-no-25-tahun-2021>** — **1차 출처다**
+- **<https://peraturan.bpk.go.id/Download/269197/Permendag%20Nomor%2025%20Tahun%202021%20(1).pdf>**
+  — 원문 PDF. 부속서 A 표제와 필수 표시항목을 읽었다
+- <https://jdih.kemendag.go.id/peraturan/peraturan-menteri-perdagangan-nomor-25-tahun-2021-tentang-penetapan-barang-yang-wajib-menggunakan-atau-melengkapi-label-berbahasa-indonesia>
+  (무역부 JDIH)
+
+부속서 A가 **「가정용 전자·통신·정보기기(Barang Elektronika Keperluan Rumah Tangga,
+Telekomunikasi, dan Informatika)」** 이고 필수 표시항목이 이렇다.
+
+```
+a. 상품명                          b. 상표
+c. 국내산은 제조자, 수입품은 수입자의 명칭과 주소
+d. 전기 사용: 전압(Volt/V)과 주파수(Hz)
+e. 원산지 또는 Made in
+표시 방식: a. 각인  b. 인쇄  c. 완전 부착
+```
+
+**떼어지는 스티커는 안 된다** — `melekat secara utuh`(완전 부착)여야 한다.
+한국 전자제품이 임시 스티커로 때우다 걸리는 지점이라 액션으로 뺐다.
+
+**남긴 정밀도**: 부속서 A는 품목을 **HS가 아니라 품명으로** 나열하고, 추출한 PDF에서
+목록 첫 항목 이후가 이미지라 끊겼다. **표제와 필수 표시항목·표시 방식은 원문에서
+확인했지만 네 제품이 각각 어느 줄에 있는지는 확인하지 못했다.**
+품목군 표제가 가정용 전자·통신기기 전체를 담고 필수항목이 전압·주파수라
+네 제품 모두 해당하는 것으로 보고 전 범위로 뒀다.
+
+`PerBPOM`이 식품·화장품 라벨을 따로 규율하므로 이 규정은 실질적으로 전기전자 쪽이다 —
+그래서 공용 파일이 아니라 조합 파일에 뒀다.
+
+## 제외 — 그리고 그 사유
+
+### ⚠ `SNI 의무 인증` — LED 램프에 아직 시행되지 않았다
+
+**제외했다. 넣을 뻔했다.**
+
+인증기관(LSPro) 쪽 자료들이 "LED 램프와 루미네어가 SNI 의무 대상"이라고 쓴다.
+그런데 국가표준화청(BSN)과 조명공업협회 자료를 보면 **LED 램프 의무 SNI는 아직
+시행되지 않았다.** 산업부가 두 가지 이유로 미뤘다 — **기술 성숙도와 시험 인프라**,
+그리고 램프제조협회(Gamatrindo)가 연기를 건의한 것이다.
+
+2001~2002년의 `Kepmenperindag 337/MPP/Kep/11/2001`·`442/MPP/Kep/5/2002`가
+`lampu swaballast`(자체안정기 램프)에 의무 SNI를 걸었지만 그건 **형광등 계열**이고
+LED를 겨냥한 것이 아니다.
+
+- <https://www.bsn.go.id/main/berita/detail/10920/sni-wajib-led-aperlindo-tinggal-tunggu-waktu>
+  (국가표준화청 — "시간 문제일 뿐" = 아직 아니다)
+- <https://qualis-indonesia.com/informasi/read/pemerintah-diminta-segere-wajibkan-sni-lampu-led>
+
+**§89의 뒤집힌 사례가 또 나왔다.** 이번에는 2차 출처가 범위를 **넓게** 말했다 —
+인증기관은 자기 서비스 대상을 넓게 쓴다. 매체가 자기 독자에 맞춰 자르듯,
+인증기관은 자기 사업에 맞춰 넓힌다.
+
+### `TKDN`(국산부품비율)
+
+**제외했다. 정부조달과 특정 품목(4G 단말 등)에 걸리는 요건이다.**
+일반 소비재 수입에는 적용되지 않는다.
+
+### `K3L 등록`
+
+**제외했다. 의무 SNI 대상이 아닌 소비재에 걸리는 제도인데, 우리 제품이 그 목록에
+드는지 확인하지 못했다.** 목록을 원문으로 확보하면 다시 본다.
+
+## `originScope` — 없다
+
+SDPPI 인증도 SKEM도 라벨도 출발국을 가리지 않는다.
