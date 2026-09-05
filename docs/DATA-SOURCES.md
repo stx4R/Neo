@@ -1274,3 +1274,170 @@ PC·에어컨·TV·냉장고·세탁기·전자레인지·의류건조기 7품�
 ## `originScope` — 이 조합에도 없다
 
 PSE도 기적도 성에너지도 출발국을 가리지 않는다. 어느 나라에서 만들었든 같은 절차다.
+
+---
+
+# US — 식품·음료 (`data/laws/US-food.json`)
+
+**조사일 2026-09-06 · 법령 6건 · 액션 17건 · 1차 5 / 2차 1**
+
+## 이 조합이 처음 채운 것 둘
+
+1. **실기한 D-116** — FDA 식품시설 등록 격년 갱신 창구가 **2026.10.01~12.31**이다.
+   데이터셋에서 가장 급한 날짜다
+2. **`originScope`** — 한미 FTA 원산지증명은 출발국이 한국일 때만 걸린다.
+   §69가 만든 `hiddenByOrigin` 경로가 여기서 처음 실행된다
+
+## 채택
+
+### 1. `21 CFR 1 Subpart H` — 식품시설 등록·격년 갱신
+`US-2003-225` · 시행 2003-12-12 · **CRITICAL** · **`deadline: 2026-12-31`** · `official`
+
+- **<https://www.fda.gov/food/online-registration-food-facilities/food-facility-registration-user-guide-biennial-registration-renewal>**
+  — FDA 갱신 사용자 안내. **1차 출처다.**
+  `beginning on October 1 and ending on December 31 of each even-numbered year`
+  `If a registration is not renewed by 11:59 PM on December 31 of the even-numbered year,
+  the registration is considered expired and will be removed from your account`
+- <https://www.fda.gov/food/guidance-regulation-food-and-dietary-supplements/registration-food-facilities-and-other-submissions>
+
+**미국에 식품을 수출하는 모든 해외 시설이 FDA에 등록하고 미국 대리인(U.S. Agent)을
+지정해야 한다.** 등록이 소멸하면 제품이 항구에서 멈춘다.
+
+**`deadline`을 2026-12-31로 넣은 근거**: FDA가 달력 날짜를 문장으로 명시한다.
+§91이 요구하는 "우리 제품의 날짜인가"도 충족한다 — 품목을 가리지 않고 모든 해외
+식품시설에 걸린다. 액션 `US-a-225-01`에는 **`dueDate`도 넣었다.**
+데이터셋에서 `dueDate`가 `null`이 아닌 첫 액션이다(§71 이후 처음).
+
+### 2. `FASTER Act · 21 CFR 101` — 참깨가 9번째 주요 알레르겐
+`US-2021-101` · 서명 2021-04-23 · 시행 2023-01-01 · HIGH · `official`
+
+**이 조합에서 우리 제품에 가장 직접 걸리는 변경이다.** 조미김에는 참깨·참기름이 들어가고
+장류에도 흔하다.
+
+- **<https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101>**
+  — 미국 연방규정집 원문. **1차 출처다**
+- <https://www.fda.gov/food/food-allergies/faster-act-sesame-ninth-major-food-allergen>
+- <https://www.fda.gov/regulatory-information/search-fda-guidance-documents/guidance-industry-questions-and-answers-regarding-food-allergen-labeling-edition-5>
+  (알레르겐 표시 Q&A 제5판)
+- <https://www.canr.msu.edu/news/the-faster-act-sesame-as-major-food-allergen> (미시간주립대 확장)
+
+**라벨 표시만이 아니다.** 주요 알레르겐이 되면 교차접촉 방지 등 제조 요건이 같이 걸린다.
+FDA가 "참깨를 일부러 넣고 라벨로 갈음하는" 회피 행위를 지적하는 지침을 냈기에
+액션에 처방 기준 명문화를 넣었다.
+
+`id`를 `US-2021-101`로 한 것은 FASTER Act 서명 연도(2021)에 근거 조문 번호(21 CFR **101**)를
+붙인 것이다. 일본에서 조문 번호를 id 번호로 쓴 것과 같은 규칙이다(§103).
+
+### 3. `21 CFR 108.25 · 114` — 산성화식품
+`US-1979-114` · 공포 1979-03-16 (44 FR 16235) · 시행 1979-05-15 · HIGH · `official`
+**hsPrefixes `["2103"]` — 이 조합의 유일한 HS 차등이다**
+
+- **<https://www.fda.gov/food/registration-food-facilities-and-other-submissions/establishment-registration-process-filing-acidified-and-low-acid-canned-foods-lacf>**
+  — FDA 산성화식품·저산성통조림 등록/공정신고 페이지. **1차 출처다.**
+  `Form FDA 2541e`로 용기 규격별 살균공정(scheduled process)을 신고한다
+- <https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-114> (21 CFR 114 원문)
+- <https://www.eurofinsus.com/food-testing/resources/acidified-foods-definitions-and-regulations/>
+  (`acidified foods`의 정의 — 수분활성도 0.85 초과 + 평형 pH 4.6 이하)
+- <https://extension.psu.edu/acidified-and-low-acid-food-regulatory-requirements>
+  (21 CFR 108·113·114가 1979-05-15에 발효)
+
+**소스·장류(2103)만 걸린다.** 조미김은 건조식품이라 수분활성도가 0.85를 넘지 않고,
+유자청은 산을 첨가하지 않은 산성식품(acid food)이라 산성화식품 정의에 들지 않는다.
+
+**단정하지 않은 것**: 고추장의 실제 평형 pH가 4.6 이하인지, 산을 첨가하는지는
+제조사 처방에 달렸다. 4.6을 넘으면 산성화식품이 아니라 **저산성식품(LACF)** 이 되어
+요건이 더 무거워진다. 그래서 첫 액션을 "pH와 수분활성도를 재라"로 잡았다 —
+**어느 쪽인지 정하는 것 자체가 첫 번째 할 일이다.**
+
+### 4. `21 CFR 1 Subpart L (FSVP)` — 해외공급자 검증
+`US-2017-500` · 최종규칙 2015-11-27 · 최초 준수일 2017-05-30 · HIGH · `official`
+
+- **<https://www.fda.gov/food/food-safety-modernization-act-fsma/fsma-final-rule-foreign-supplier-verification-programs-fsvp-importers-food-humans-and-animals>**
+  — FDA FSMA 최종규칙 페이지. **1차 출처다**
+- <https://www.fda.gov/food/food-safety-modernization-act-fsma/final-rule-foreign-supplier-verification-programs-fsvp-key-requirements>
+
+**의무자는 미국 수입자다.** 그래도 넣었다 — 수입자가 검증하려면 **위해분석·예방관리
+문서와 현장평가 수용을 수출자가 내놔야 한다.** VN EPR·JP 容リ法과 같은 기준이다(§108).
+
+### 5. `21 CFR 1 Subpart I` — 수입식품 사전신고
+`US-2003-276` · 시행 2003-12-12 · MEDIUM · `official` · `customs`
+
+- **<https://www.fda.gov/industry/fda-import-process/prior-notice-imported-foods>** — **1차 출처다**
+- <https://www.fda.gov/industry/prior-notice-imported-foods/filing-prior-notice-imported-foods>
+
+FDA가 도착 전에 사전신고를 접수·확인해야 항구에서 풀린다. 제출 창구는
+CBP의 ABI/ACE로 최대 도착 30일 전, FDA PNSI로 최대 15일 전이다.
+
+### 6. `KORUS FTA · 19 CFR 10` — 한미 FTA 원산지증명
+`US-2012-010` · 발효 2012-03-15 · MEDIUM · `secondary` · **`originScope: ["KR"]`**
+
+**데이터셋 최초의 `originScope`다.** 한미 FTA 특혜관세는 **출발국이 한국일 때만** 성립한다.
+일본·베트남 출발 프로필에서는 이 법령이 목록에서 빠지고 S2 하단에
+`출발국 KR 외에는 수출국별 요건 데이터가 아직 없습니다`가 뜬다(§69).
+
+- <https://www.customs.go.kr/ftaportalkor/cm/cntnts/cntntsView.do?mi=3318&cntntsId=997>
+  (관세청 FTA포털 — 한-미 FTA 원산지증명 실무. 자율발급, 5년 보관)
+- <https://www.cbp.gov/trade/free-trade-agreements/korea> (미국 CBP — KORUS)
+
+**`sourceTier: secondary`인 이유**: 출처가 **한국 관세청**이다. 미국의 요건을 설명하는
+한국 정부 자료는 1차가 아니다. CBP 페이지는 살아 있으나 원산지증명 실무 절차를
+이 수준으로 적지 않는다. §1-13의 기준 — **소관 당국의 원문일 때만 `official`이다.**
+
+원산지증명서는 **정해진 서식이 없고 수출자가 직접 작성**한다. 그 대신 CBP의 사후검증에
+대비해 BOM·제조공정도·원재료 수급명세를 5년 보관해야 하고, 없으면 특혜가 취소되고
+MFN 관세와 이자·과태료가 붙는다.
+
+## 제외 — 그리고 그 사유
+
+### `FSMA 204` 식품 이력추적 규칙
+
+**제외했다. 우리 제품이 Food Traceability List에 없다.**
+
+준수일도 원래 2026-01-20에서 **2028-07-20으로 30개월 연기**됐다
+(2025-08-07 연방관보 최종규칙, 그리고 2026 회계연도 지속예산법이 그 전 집행을 금지).
+
+FTL은 치즈·껍질달걀·견과버터·신선 채소과일·수산물·즉석 델리샐러드를 담는다.
+소스·조미김·고추장·유자청은 목록에 없다. **"목록 식품을 원재료로 담은 식품"도 대상인데,
+고추장의 고춧가루는 FTL의 `Peppers (fresh)`가 아니라 건조·발효품이다.**
+
+- <https://www.fda.gov/food/food-safety-modernization-act-fsma/fsma-final-rule-requirements-additional-traceability-records-certain-foods>
+- <https://www.federalregister.gov/documents/2025/08/07/2025-14967/requirements-for-additional-traceability-records-for-certain-foods-compliance-date-extension>
+
+**다음 재검증에서 볼 것**: FDA가 FTL을 개정하면 장류·소스가 들어올 수 있다.
+
+### `"Healthy"` 영양강조표시 최종규칙
+
+**제외했다. 쓸 때만 걸리는 임의 표시다.**
+
+2025-04-28 발효, 준수일 **2028-02-25**. 그런데 `healthy`를 라벨에 **쓰겠다고 정한 제품에만**
+적용된다. 안 쓰면 아무 의무가 없다. 모든 제품에 걸리는 것처럼 `deadline`을 붙이면
+D-Day가 거짓이 된다.
+
+- <https://www.fda.gov/food/hfp-constituent-updates/fda-finalizes-updated-healthy-nutrient-content-claim>
+
+### 전면 표시(Front-of-Package) 영양표시
+
+**제외했다. 아직 제안규칙이다.** 2025-01-16 제안, FDA는 2026년 봄 최종규칙을 예고했으나
+2026-09-06 현재 최종규칙 공표가 확인되지 않는다. 준수일은 최종규칙 발효 후
+연매출 1천만 달러 이상 3년 / 미만 4년이라 지금은 계산할 수 없다.
+
+### 한국산 대상 Import Alert
+
+**제외했다. 우리 제품군에 걸린 것이 없다.**
+
+FDA의 국가별 Import Alert 목록에서 한국 항목 49건을 확인했다. 수산물·주스·버섯
+(팽이버섯 리스테리아)·산성화식품·통조림·식품첨가물·알레르겐 미표시 등인데
+**소스·조미김·장류·과일가공품을 지목한 알림은 없다.**
+
+없는 것을 있다고 적지 않는다. Import Alert는 적발 시 수시로 추가되므로 재검증 항목이다.
+
+- <https://www.accessdata.fda.gov/cms_ia/country_KR.html>
+
+## `originScope` — 예상은 맞았고 이유는 달랐다
+
+3차 지시서는 **"미국 식품(FSVP·시설등록)에서 나올 가능성이 높다"** 고 예상했다.
+**그 둘은 아니었다.** FSVP도 시설등록도 출발국을 가리지 않는다 —
+미국 밖 어느 나라에서 오든 똑같이 걸린다.
+
+실제로 나온 것은 **FTA**였다. 특혜관세는 협정 상대국에서 출발한 물품에만 성립하므로
+`originScope`가 정확히 이 경우를 위한 필드다.

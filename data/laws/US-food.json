@@ -1,4 +1,405 @@
 {
-  "laws": [],
-  "actions": []
+  "laws": [
+    {
+      "id": "US-2003-225",
+      "officialRef": "21 CFR 1 Subpart H",
+      "title": "식품시설 등록 격년 갱신 — 2026.12.31까지 안 하면 등록이 소멸한다",
+      "country": "US",
+      "category": "safety",
+      "itemCategories": [
+        "food"
+      ],
+      "hsPrefixes": [
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22"
+      ],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "critical",
+      "effectiveDate": "2003-12-12",
+      "deadline": "2026-12-31",
+      "addedAt": "2026-09-06",
+      "changes": [],
+      "affectedProductIds": [
+        "p-kimchi-sauce",
+        "p-seasoned-laver",
+        "p-gochujang",
+        "p-yuja"
+      ],
+      "actionIds": [
+        "US-a-225-01",
+        "US-a-225-02",
+        "US-a-225-03",
+        "US-a-225-04"
+      ],
+      "source": {
+        "url": "https://www.fda.gov/food/online-registration-food-facilities/food-facility-registration-user-guide-biennial-registration-renewal",
+        "publisher": "미국 FDA",
+        "publishedAt": "2003-12-12",
+        "originalLang": "en",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "US-2021-101",
+      "officialRef": "FASTER Act · 21 CFR 101",
+      "title": "참깨가 9번째 주요 알레르겐 — 조미김과 장류가 직격이다",
+      "country": "US",
+      "category": "labeling",
+      "itemCategories": [
+        "food"
+      ],
+      "hsPrefixes": [
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22"
+      ],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "high",
+      "effectiveDate": "2023-01-01",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [
+        {
+          "before": "주요 식품 알레르겐 8종 — 우유·달걀·생선·갑각류·견과류·땅콩·밀·대두",
+          "after": "참깨를 더해 9종. 라벨 표시뿐 아니라 교차접촉 방지 등 제조 요건도 같이 걸린다"
+        }
+      ],
+      "affectedProductIds": [
+        "p-kimchi-sauce",
+        "p-seasoned-laver",
+        "p-gochujang",
+        "p-yuja"
+      ],
+      "actionIds": [
+        "US-a-101-01",
+        "US-a-101-02",
+        "US-a-101-03"
+      ],
+      "source": {
+        "url": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101",
+        "publisher": "미국 연방규정집 (eCFR)",
+        "publishedAt": "2021-04-23",
+        "originalLang": "en",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "US-1979-114",
+      "officialRef": "21 CFR 108.25 · 114",
+      "title": "산성화식품 공정신고 — 소스·장류는 pH를 재고 FDA에 공정을 걸어야 한다",
+      "country": "US",
+      "category": "safety",
+      "itemCategories": [
+        "food"
+      ],
+      "hsPrefixes": [
+        "2103"
+      ],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "high",
+      "effectiveDate": "1979-05-15",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [],
+      "affectedProductIds": [
+        "p-kimchi-sauce",
+        "p-gochujang"
+      ],
+      "actionIds": [
+        "US-a-114-01",
+        "US-a-114-02",
+        "US-a-114-03"
+      ],
+      "source": {
+        "url": "https://www.fda.gov/food/registration-food-facilities-and-other-submissions/establishment-registration-process-filing-acidified-and-low-acid-canned-foods-lacf",
+        "publisher": "미국 FDA",
+        "publishedAt": "1979-03-16",
+        "originalLang": "en",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "US-2017-500",
+      "officialRef": "21 CFR 1 Subpart L (FSVP)",
+      "title": "해외공급자 검증 — 수입자가 요구하는 문서를 수출자가 만들어야 한다",
+      "country": "US",
+      "category": "safety",
+      "itemCategories": [
+        "food"
+      ],
+      "hsPrefixes": [
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22"
+      ],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "high",
+      "effectiveDate": "2017-05-30",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [],
+      "affectedProductIds": [
+        "p-kimchi-sauce",
+        "p-seasoned-laver",
+        "p-gochujang",
+        "p-yuja"
+      ],
+      "actionIds": [
+        "US-a-500-01",
+        "US-a-500-02",
+        "US-a-500-03"
+      ],
+      "source": {
+        "url": "https://www.fda.gov/food/food-safety-modernization-act-fsma/fsma-final-rule-foreign-supplier-verification-programs-fsvp-importers-food-humans-and-animals",
+        "publisher": "미국 FDA",
+        "publishedAt": "2015-11-27",
+        "originalLang": "en",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "US-2003-276",
+      "officialRef": "21 CFR 1 Subpart I",
+      "title": "수입식품 사전신고 — 도착 전 확인이 나야 항구에서 풀린다",
+      "country": "US",
+      "category": "customs",
+      "itemCategories": [
+        "food"
+      ],
+      "hsPrefixes": [
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22"
+      ],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "medium",
+      "effectiveDate": "2003-12-12",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [],
+      "affectedProductIds": [
+        "p-kimchi-sauce",
+        "p-seasoned-laver",
+        "p-gochujang",
+        "p-yuja"
+      ],
+      "actionIds": [
+        "US-a-276-01",
+        "US-a-276-02"
+      ],
+      "source": {
+        "url": "https://www.fda.gov/industry/fda-import-process/prior-notice-imported-foods",
+        "publisher": "미국 FDA",
+        "publishedAt": "2003-12-12",
+        "originalLang": "en",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "US-2012-010",
+      "officialRef": "KORUS FTA · 19 CFR 10",
+      "title": "한미 FTA 특혜관세 — 원산지증명은 수출자가 직접 쓰고 5년 보관한다",
+      "country": "US",
+      "category": "customs",
+      "itemCategories": [
+        "food"
+      ],
+      "hsPrefixes": [
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22"
+      ],
+      "originScope": [
+        "KR"
+      ],
+      "sourceTier": "secondary",
+      "status": "active",
+      "riskLevel": "medium",
+      "effectiveDate": "2012-03-15",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [],
+      "affectedProductIds": [
+        "p-kimchi-sauce",
+        "p-seasoned-laver",
+        "p-gochujang",
+        "p-yuja"
+      ],
+      "actionIds": [
+        "US-a-010-01",
+        "US-a-010-02"
+      ],
+      "source": {
+        "url": "https://www.customs.go.kr/ftaportalkor/cm/cntnts/cntntsView.do?mi=3318&cntntsId=997",
+        "publisher": "대한민국 관세청 FTA포털",
+        "publishedAt": "2012-03-15",
+        "originalLang": "ko",
+        "lastVerified": "2026-09-06"
+      }
+    }
+  ],
+  "actions": [
+    {
+      "id": "US-a-225-01",
+      "lawId": "US-2003-225",
+      "title": "2026.10.01~12.31 창구에서 시설등록 갱신 — 놓치면 등록이 소멸한다",
+      "owner": "경영",
+      "effort": "1주",
+      "dueDate": "2026-12-31"
+    },
+    {
+      "id": "US-a-225-02",
+      "lawId": "US-2003-225",
+      "title": "미국 대리인(U.S. Agent) 연락처가 유효한지 확인 — 없으면 갱신이 안 된다",
+      "owner": "경영",
+      "effort": "1주",
+      "dueDate": null
+    },
+    {
+      "id": "US-a-225-03",
+      "lawId": "US-2003-225",
+      "title": "제조소별 등록번호와 FDA 산업시스템 계정 접근 권한 정리",
+      "owner": "품질팀",
+      "effort": "2주",
+      "dueDate": null
+    },
+    {
+      "id": "US-a-225-04",
+      "lawId": "US-2003-225",
+      "title": "주소·품목 카테고리 등 변경된 시설 정보 반영",
+      "owner": "품질팀",
+      "effort": "1주",
+      "dueDate": null
+    },
+    {
+      "id": "US-a-101-01",
+      "lawId": "US-2021-101",
+      "title": "참깨·참기름 함유 여부와 제조라인 교차접촉 가능성 전수 점검",
+      "owner": "품질팀",
+      "effort": "3주",
+      "dueDate": null
+    },
+    {
+      "id": "US-a-101-02",
+      "lawId": "US-2021-101",
+      "title": "영문 라벨의 Contains 문구에 Sesame 반영",
+      "owner": "디자인",
+      "effort": "2주",
+      "dueDate": null
+    },
+    {
+      "id": "US-a-101-03",
+      "lawId": "US-2021-101",
+      "title": "참깨를 일부러 넣고 라벨로 갈음하지 않도록 처방 기준 명문화",
+      "owner": "품질팀",
+      "effort": "1주",
+      "dueDate": null
+    },
+    {
+      "id": "US-a-114-01",
+      "lawId": "US-1979-114",
+      "title": "제품 평형 pH와 수분활성도 측정 — pH 4.6 이하·aw 0.85 초과면 산성화식품이다",
+      "owner": "품질팀",
+      "effort": "3주",
+      "dueDate": null
+    },
+    {
+      "id": "US-a-114-02",
+      "lawId": "US-1979-114",
+      "title": "Form FDA 2541로 제조소 등록, 2541e로 용기 규격별 살균공정 신고",
+      "owner": "품질팀",
+      "effort": "6주",
+      "dueDate": null
+    },
+    {
+      "id": "US-a-114-03",
+      "lawId": "US-1979-114",
+      "title": "Better Process Control School 이수자를 공정 책임자로 지정",
+      "owner": "경영",
+      "effort": "8주",
+      "dueDate": null
+    },
+    {
+      "id": "US-a-500-01",
+      "lawId": "US-2017-500",
+      "title": "수입자의 검증 요구에 대응할 위해분석·예방관리 문서 준비",
+      "owner": "품질팀",
+      "effort": "6주",
+      "dueDate": null
+    },
+    {
+      "id": "US-a-500-02",
+      "lawId": "US-2017-500",
+      "title": "현장평가 또는 대체 검증활동 수용 범위를 수입자와 합의",
+      "owner": "경영",
+      "effort": "4주",
+      "dueDate": null
+    },
+    {
+      "id": "US-a-500-03",
+      "lawId": "US-2017-500",
+      "title": "수입자 DUNS 번호와 FSVP 신고 정보가 통관 서류에 들어가는지 확인",
+      "owner": "영업",
+      "effort": "1주",
+      "dueDate": null
+    },
+    {
+      "id": "US-a-276-01",
+      "lawId": "US-2003-276",
+      "title": "선적별 사전신고 정보를 수입자·통관사에 미리 넘긴다",
+      "owner": "영업",
+      "effort": "1주",
+      "dueDate": null
+    },
+    {
+      "id": "US-a-276-02",
+      "lawId": "US-2003-276",
+      "title": "제조소 등록번호와 품목코드가 사전신고 서식과 일치하는지 대조",
+      "owner": "품질팀",
+      "effort": "2주",
+      "dueDate": null
+    },
+    {
+      "id": "US-a-010-01",
+      "lawId": "US-2012-010",
+      "title": "원산지증명서를 수출자 명의로 자율 작성해 수입자에 제공",
+      "owner": "영업",
+      "effort": "2주",
+      "dueDate": null
+    },
+    {
+      "id": "US-a-010-02",
+      "lawId": "US-2012-010",
+      "title": "BOM·제조공정도·원재료 수급명세를 5년 보관 — CBP 사후검증 대비",
+      "owner": "품질팀",
+      "effort": "3주",
+      "dueDate": null
+    }
+  ]
 }
