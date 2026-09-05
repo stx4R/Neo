@@ -48,7 +48,7 @@ export function InstallBanner() {
           홈 화면에 추가
         </span>
         <span className="t-meta" style={{ color: 'var(--text-3)' }}>
-          오프라인에서도 열립니다
+          PWA 설치를 권장드립니다!
         </span>
       </div>
 
