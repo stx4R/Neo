@@ -216,52 +216,6 @@
         "originalLang": "en",
         "lastVerified": "2026-09-06"
       }
-    },
-    {
-      "id": "US-2012-010",
-      "officialRef": "KORUS FTA · 19 CFR 10",
-      "title": "한미 FTA 특혜관세 — 원산지증명은 수출자가 직접 쓰고 5년 보관한다",
-      "country": "US",
-      "category": "customs",
-      "itemCategories": [
-        "food"
-      ],
-      "hsPrefixes": [
-        "16",
-        "17",
-        "18",
-        "19",
-        "20",
-        "21",
-        "22"
-      ],
-      "originScope": [
-        "KR"
-      ],
-      "sourceTier": "secondary",
-      "status": "active",
-      "riskLevel": "medium",
-      "effectiveDate": "2012-03-15",
-      "deadline": null,
-      "addedAt": "2026-09-06",
-      "changes": [],
-      "affectedProductIds": [
-        "p-kimchi-sauce",
-        "p-seasoned-laver",
-        "p-gochujang",
-        "p-yuja"
-      ],
-      "actionIds": [
-        "US-a-010-01",
-        "US-a-010-02"
-      ],
-      "source": {
-        "url": "https://www.customs.go.kr/ftaportalkor/cm/cntnts/cntntsView.do?mi=3318&cntntsId=997",
-        "publisher": "대한민국 관세청 FTA포털",
-        "publishedAt": "2012-03-15",
-        "originalLang": "ko",
-        "lastVerified": "2026-09-06"
-      }
     }
   ],
   "actions": [
@@ -383,22 +337,6 @@
       "title": "제조소 등록번호와 품목코드가 사전신고 서식과 일치하는지 대조",
       "owner": "품질팀",
       "effort": "2주",
-      "dueDate": null
-    },
-    {
-      "id": "US-a-010-01",
-      "lawId": "US-2012-010",
-      "title": "원산지증명서를 수출자 명의로 자율 작성해 수입자에 제공",
-      "owner": "영업",
-      "effort": "2주",
-      "dueDate": null
-    },
-    {
-      "id": "US-a-010-02",
-      "lawId": "US-2012-010",
-      "title": "BOM·제조공정도·원재료 수급명세를 5년 보관 — CBP 사후검증 대비",
-      "owner": "품질팀",
-      "effort": "3주",
       "dueDate": null
     }
   ]

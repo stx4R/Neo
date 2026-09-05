@@ -1441,3 +1441,188 @@ FDA의 국가별 Import Alert 목록에서 한국 항목 49건을 확인했다. 
 
 실제로 나온 것은 **FTA**였다. 특혜관세는 협정 상대국에서 출발한 물품에만 성립하므로
 `originScope`가 정확히 이 경우를 위한 필드다.
+
+---
+
+# US — 화장품 (`data/laws/US-cosmetics.json`)
+
+**조사일 2026-09-06 · 법령 5건 · 액션 13건 · 1차 5 / 2차 0**
+(공용 파일 3건을 합치면 화면에는 8건이 뜬다)
+
+## MoCRA 하나가 이 조합의 대부분이다
+
+2022-12-29에 제정된 **화장품규제현대화법(MoCRA)** 이 미국 화장품 규제를 통째로 바꿨다.
+그전까지 화장품은 **FDA 등록 의무가 없는** 유일한 FDA 규제 품목이었다 —
+자율 프로그램(VCRP)뿐이었다. 지금은 시설등록·제품리스팅·안전성 입증·부작용 보고가
+전부 의무다.
+
+법령 5건 중 넷이 MoCRA 조항이라 `id` 번호를 **조항 번호**로 썼다
+(`US-2022-605` · `607` · `608` · `609`). 일본에서 조문 번호를 쓴 것과 같은 규칙이다(§103).
+
+## 채택
+
+### 1. `MoCRA §607` — 시설등록·제품리스팅
+`US-2022-607` · 준수일 2023-12-29 · **CRITICAL** · `official`
+
+- **<https://www.fda.gov/cosmetics/registration-listing-cosmetic-product-facilities-and-products>**
+  — FDA 등록·리스팅 페이지. **1차 출처다.**
+  `Every person who is required to register a facility must renew such registration
+  biennially (i.e., every two years)`
+- <https://www.fda.gov/cosmetics/registration-listing-cosmetic-product-facilities-and-products/cosmetics-direct>
+  (제출 포털 Cosmetics Direct)
+
+**`deadline`을 넣지 않았다.** 갱신 주기는 2년인데 **기준일이 시설의 최초 등록일**이라
+회사마다 다르다. FDA 예시가 그대로다 — `registration on February 20, 2024 requires
+renewal by February 20, 2026`. 데이터에 특정 날짜를 넣으면 모든 사용자에게
+남의 날짜를 보여주게 된다. 대신 `transitionNote`에 규칙을 적고
+액션에 "갱신일 확인"을 넣었다.
+
+**소규모 사업자 면제에 구멍이 있다.** MoCRA는 일정 규모 이하 사업자를 시설등록에서
+면제하지만, **점막에 접촉하는 제품**을 만드는 시설에는 면제가 적용되지 않는다.
+기본 제품 중 **립 틴트가 점막 접촉**이라 이 조합에서는 면제를 기대할 수 없다.
+액션에 그대로 적었다.
+
+### 2. `MoCRA §608` — 안전성 입증
+`US-2022-608` · 준수일 2023-12-29 · HIGH · `official`
+
+### 3. `MoCRA §605` — 심각한 부작용 보고
+`US-2022-605` · 준수일 2023-12-29 · HIGH · `official`
+
+인지 후 **15영업일 내** FDA 보고, 기록은 **6년 보관**이다.
+
+### 4. `MoCRA §609` — 라벨 부작용 접수 연락처
+`US-2022-609` · 준수일 **2024-12-29** · MEDIUM · `official`
+
+미국 내 주소·전화 또는 전자적 연락 수단을 라벨에 넣어야 한다.
+§605~608보다 1년 늦은 것은 MoCRA가 라벨 조항에만 2년 유예를 뒀기 때문이다.
+
+- **<https://www.fda.gov/cosmetics/cosmetics-laws-regulations/modernization-cosmetics-regulation-act-2022-mocra>**
+  — FDA MoCRA 개요. **1차 출처다.** §605~609의 내용을 여기서 확인했다
+- <https://biorius.com/cosmetic-regulations/usa-cosmetic-regulations/mocra-cosmetics/> ·
+  <https://www.wiley.law/alert-Time-Flies-Cosmetic-Manufacturing-Facilities-are-Due-for-FDA-Registration-Renewal>
+  (준수일 2023-12-29 / 라벨 2024-12-29, 갱신 첫 회 2026-07-01)
+
+**FDA 개요 페이지는 조항 내용을 적지만 날짜를 적지 않는다.** 날짜는 법 제정일
+(2022-12-29)에서 1년·2년으로 산정되는 값이라 **독립 출처 3곳의 서술로 확정했다.**
+
+### 5. `21 CFR 73 · 74 · 82` — 색소첨가물
+`US-1960-073` · 색소첨가물 개정법 1960-07-12 · HIGH · `official`
+
+**한국 수출자가 가장 자주 걸리는 지점이다.** 미국은 색소를 두 층으로 규제한다.
+
+1. **승인된 색소만** 쓸 수 있다 (21 CFR 73 = 인증 면제, 74·82 = 인증 대상)
+2. 74·82 색소는 **FDA가 배치(batch)를 인증한 것**만 쓸 수 있다 —
+   색소 제조사가 FDA 색소인증과에 배치 샘플을 보내 인증서를 받는다.
+   **한국에서 받은 인증으로 갈음되지 않는다**
+
+거기에 사용 부위 제한이 겹친다 —
+`Color additives that are permitted for general use may not be used in the area of the eye
+… unless such use is specified in the color additive regulations`.
+**일반용 승인이 눈가 사용 허가를 뜻하지 않는다.**
+
+- **<https://www.fda.gov/industry/color-additives/color-additives-and-cosmetics-fact-sheet>**
+  — FDA 화장품 색소 팩트시트. **1차 출처다**
+- <https://www.fda.gov/industry/color-additives/summary-color-additives-use-united-states-foods-drugs-cosmetics-and-medical-devices>
+- <https://www.fda.gov/industry/color-certification/color-certification-faqs> (배치인증 절차)
+
+## 제외 — 그리고 그 사유
+
+### `MoCRA §606` GMP 규칙
+
+**제외했다. 제안규칙조차 나오지 않았다.**
+
+MoCRA는 FDA가 2024-12-29까지 GMP 제안규칙(NPRM)을 내도록 정했는데 지키지 못했고,
+2026년 통합규제일정에서 **「장기 과제(Long-Term Actions)」로 옮겨져 시한이 사라졌다.**
+폐기된 것은 아니지만 1년 내 제안 예정이 없다.
+
+### 향료 알레르겐 표시 규칙 (`MoCRA §609` 위임분)
+
+**제외했다. 2026년 5월 제안 예정 단계다.**
+
+`fragrance`로 뭉뚱그려 적던 향료 성분을 개별 표시하게 하는 규칙인데
+FDA 일정상 제안이 2026-05, 최종은 빨라야 2027년이다. 시행일이 없다.
+
+### 활석(talc) 석면 시험 규칙
+
+**제외했다. 제안규칙이 철회됐다.**
+
+2024-12-27 제안됐다가 **2025-11-28에 FDA가 철회**했다. 수정 제안을 내겠다고 했으나
+시점이 정해지지 않았다. 우리 기본 제품에 활석 함유품도 없다.
+
+- <https://www.registrarcorp.com/blog/cosmetics/mocra/mocra-unified-agenda/> ·
+  <https://www.foley.com/insights/publications/2026/03/how-mocra-is-reshaping-fda-oversight-of-cosmetics-in-2026/>
+- <https://www.govinfo.gov/content/pkg/FR-2025-11-28/pdf/2025-21581.pdf> (철회 고시)
+
+**셋 다 MoCRA가 FDA에 위임한 하위규칙이다.** 법은 있는데 규칙이 없다 —
+`scheduled`로도 넣을 수 없다. 다음 재검증에서 향료 알레르겐 규칙을 먼저 본다.
+
+### 주(州) 단위 규제 (캘리포니아 Prop 65 · 주별 PFAS 금지)
+
+**제외했다. 이 데이터셋은 연방·국가 단위 규제를 담는다.**
+
+실제로 걸리는 규제이지만 주마다 목록과 시행일이 달라 **하나의 `deadline`으로 표현할 수 없고**,
+`hsPrefixes`로도 `originScope`로도 나눌 수 없다. 도착국을 `US`로 잡은 이 데이터 모델이
+담을 수 있는 단위가 아니다. **모델의 한계이지 규제가 없어서가 아니다.**
+
+## HS 차등 — 없다. JP-화장품과 같은 이유다
+
+법령 5건이 전부 화장품 전 범위다. 실제 차등의 축은 **점막 접촉 여부**(MoCRA 면제 예외)와
+**눈가·립 사용 여부**(색소 규정)인데, `3304`가 립 틴트(3304.10)와 수분크림(3304.99)을
+같이 담아 HS로 가를 수 없다. §107이 일본 화장품에서 내린 결론과 정확히 같다.
+
+**화장품은 두 나라 모두에서 HS 차등이 성립하지 않는다.** 우연이 아니다 —
+화장품 규제는 **어디에 바르는가**로 갈리는데 HS 분류는 **무엇인가**로 갈린다.
+
+---
+
+# US — 공용 (`data/laws/US-shared.json`)
+
+**조사일 2026-09-06 · 법령 3건 · 액션 7건 · 1차 2 / 2차 1**
+
+## ⚠ `KORUS FTA`를 US-food에서 공용으로 옮겼다
+
+2-e에서 `US-2012-010`(한미 FTA 원산지증명)을 `US-food.json`에 넣었는데
+**이 법령은 품목을 가리지 않는다.** 화장품도 전기전자도 특혜관세를 받는다.
+§92가 EPR에서, §82가 라벨 시행령에서 지적한 것과 **같은 누락**이다.
+
+`US-shared.json`으로 옮기고 `itemCategories`를 세 품목으로,
+`hsPrefixes`를 `[]`로 바꿨다(§86). **액션 id `US-a-010-01`·`US-a-010-02`는 그대로다**(§15 · §52).
+
+`originScope: ["KR"]`도 그대로 살아 있어, 공용 법령이면서 출발국을 가리는 첫 사례가 됐다.
+
+## `UFLPA` — 위구르 강제노동 방지법
+`US-2021-078` · Public Law 117-78 · 시행 2022-06-21 · HIGH · `official`
+
+3차 지시서가 **"US 강제노동 심사(UFLPA) — 품목을 가리지 않는다"** 고 예상한 그대로다.
+
+- **<https://www.cbp.gov/trade/forced-labor/UFLPA>** — 미국 관세국경보호청. **1차 출처다**
+- <https://www.cbp.gov/trade/forced-labor/faqs-uflpa-enforcement> (억류 시 적용가능성 심사 절차)
+- <https://www.dhs.gov/news/2026/07/31/dhs-announces-addition-43-companies-uflpa-entity-list>
+  (국토안보부 — 2026-07-31 43사 추가, 총 187사)
+- <https://www.hklaw.com/en/insights/publications/2026/07/new-compliance-tools-cbp-issues-comprehensive-forced-labor-guidance>
+  (2026년 지침 — 잠재적 투입 / 직접 투입 경로 구분)
+
+신장 지역에서 채굴·생산·제조됐거나 대상기업 목록에 오른 기업이 만든 물품은
+**강제노동으로 만들어진 것으로 추정**되어 반입이 금지된다. 추정은 반증 가능하지만
+**인용률이 12% 안팎**이다.
+
+**한국 수출자에게 걸리는 경로는 원재료·부품이다.** 완제품이 한국산이어도
+중국·신장 유래 투입물이 있으면 걸린다. 그래서 액션을 공급망 추적 자료 구축과
+대상기업 대조로 잡았다.
+
+`changes`에 2026-07-31 확대와 2026년 지침의 경로 구분을 적었다 —
+**이건 실제로 올해 바뀐 것이다.**
+
+## `19 CFR 134` — 원산지 표시
+`US-1930-134` · 1930년 관세법 · 시행 1930-06-17 · MEDIUM · `official`
+
+- **<https://www.ecfr.gov/current/title-19/chapter-I/part-134>** — 미국 연방규정집. **1차 출처다**
+- <https://www.cbp.gov/trade/nafta/guide-customs-procedures/country-origin-marking> (CBP 안내)
+
+수입 물품 또는 그 용기에 **최종 구매자가 볼 수 있는 자리에, 지워지지 않게, 영문으로**
+원산지를 표시해야 한다. 라벨에 미국 지명·주소가 있으면 **바로 옆에 같은 크기로**
+원산지를 병기해야 한다 — 한국 화장품·식품이 미국 총판 주소를 크게 적으면서
+원산지를 작게 적어 걸리는 전형적인 지점이다.
+
+`effectiveDate`가 1930년이다. §113이 정리한 대로 **오래된 것은 숨길 일이 아니다** —
+`changes: []`와 함께 읽히면 "원래부터 지켜야 하는 것"이라는 뜻이 된다.

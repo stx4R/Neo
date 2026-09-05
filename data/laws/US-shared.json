@@ -1,4 +1,171 @@
 {
-  "laws": [],
-  "actions": []
+  "laws": [
+    {
+      "id": "US-2021-078",
+      "officialRef": "UFLPA",
+      "title": "강제노동 추정 배제 — 신장 유래 원재료가 하나라도 있으면 억류된다",
+      "country": "US",
+      "category": "customs",
+      "itemCategories": [
+        "food",
+        "cosmetics",
+        "electronics"
+      ],
+      "hsPrefixes": [],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "high",
+      "effectiveDate": "2022-06-21",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [
+        {
+          "before": "대상기업 목록 144사",
+          "after": "2026.07.31 43사가 추가돼 187사. 역대 최대 확대다"
+        },
+        {
+          "before": "신장 연관이 확인된 물품만 억류",
+          "after": "2026년 지침이 잠재적 투입(potential-input) 경로를 나눠, 연관이 의심되기만 해도 억류·반입거부가 가능하다"
+        }
+      ],
+      "affectedProductIds": [],
+      "actionIds": [
+        "US-a-078-01",
+        "US-a-078-02",
+        "US-a-078-03"
+      ],
+      "source": {
+        "url": "https://www.cbp.gov/trade/forced-labor/UFLPA",
+        "publisher": "미국 관세국경보호청 (CBP)",
+        "publishedAt": "2021-12-23",
+        "originalLang": "en",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "US-1930-134",
+      "officialRef": "19 CFR 134",
+      "title": "원산지 표시 — 지워지지 않게, 최종 구매자가 보이는 자리에",
+      "country": "US",
+      "category": "labeling",
+      "itemCategories": [
+        "food",
+        "cosmetics",
+        "electronics"
+      ],
+      "hsPrefixes": [],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "medium",
+      "effectiveDate": "1930-06-17",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [],
+      "affectedProductIds": [],
+      "actionIds": [
+        "US-a-134-01",
+        "US-a-134-02"
+      ],
+      "source": {
+        "url": "https://www.ecfr.gov/current/title-19/chapter-I/part-134",
+        "publisher": "미국 연방규정집 (eCFR)",
+        "publishedAt": "1930-06-17",
+        "originalLang": "en",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "US-2012-010",
+      "officialRef": "KORUS FTA · 19 CFR 10",
+      "title": "한미 FTA 특혜관세 — 원산지증명은 수출자가 직접 쓰고 5년 보관한다",
+      "country": "US",
+      "category": "customs",
+      "itemCategories": [
+        "food",
+        "cosmetics",
+        "electronics"
+      ],
+      "hsPrefixes": [],
+      "originScope": [
+        "KR"
+      ],
+      "sourceTier": "secondary",
+      "status": "active",
+      "riskLevel": "medium",
+      "effectiveDate": "2012-03-15",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [],
+      "affectedProductIds": [],
+      "actionIds": [
+        "US-a-010-01",
+        "US-a-010-02"
+      ],
+      "source": {
+        "url": "https://www.customs.go.kr/ftaportalkor/cm/cntnts/cntntsView.do?mi=3318&cntntsId=997",
+        "publisher": "대한민국 관세청 FTA포털",
+        "publishedAt": "2012-03-15",
+        "originalLang": "ko",
+        "lastVerified": "2026-09-06"
+      }
+    }
+  ],
+  "actions": [
+    {
+      "id": "US-a-078-01",
+      "lawId": "US-2021-078",
+      "title": "중국·신장 유래 원재료와 부품의 공급망 추적 자료 구축",
+      "owner": "구매",
+      "effort": "8주",
+      "dueDate": null
+    },
+    {
+      "id": "US-a-078-02",
+      "lawId": "US-2021-078",
+      "title": "협력사를 UFLPA 대상기업 목록 187사와 대조 — 2026.07.31 추가분 포함",
+      "owner": "구매",
+      "effort": "3주",
+      "dueDate": null
+    },
+    {
+      "id": "US-a-078-03",
+      "lawId": "US-2021-078",
+      "title": "억류 시 제출할 반증 자료 묶음을 미리 준비 — 반증 인용률이 낮다",
+      "owner": "품질팀",
+      "effort": "6주",
+      "dueDate": null
+    },
+    {
+      "id": "US-a-134-01",
+      "lawId": "US-1930-134",
+      "title": "제품 또는 용기에 영문 원산지를 지워지지 않게 표시",
+      "owner": "디자인",
+      "effort": "3주",
+      "dueDate": null
+    },
+    {
+      "id": "US-a-134-02",
+      "lawId": "US-1930-134",
+      "title": "라벨에 미국 지명·주소가 있으면 바로 옆에 같은 크기로 원산지 병기",
+      "owner": "디자인",
+      "effort": "2주",
+      "dueDate": null
+    },
+    {
+      "id": "US-a-010-01",
+      "lawId": "US-2012-010",
+      "title": "원산지증명서를 수출자 명의로 자율 작성해 수입자에 제공",
+      "owner": "영업",
+      "effort": "2주",
+      "dueDate": null
+    },
+    {
+      "id": "US-a-010-02",
+      "lawId": "US-2012-010",
+      "title": "BOM·제조공정도·원재료 수급명세를 5년 보관 — CBP 사후검증 대비",
+      "owner": "품질팀",
+      "effort": "3주",
+      "dueDate": null
+    }
+  ]
 }
