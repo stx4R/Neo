@@ -1,5 +1,5 @@
 [
   { "id": "pr-labeling",  "name": "라벨링·표시",   "category": "labeling" },
-  { "id": "pr-safety",    "name": "식품안전·인증", "category": "safety" },
+  { "id": "pr-safety",    "name": "안전·인증", "category": "safety" },
   { "id": "pr-packaging", "name": "포장·환경",     "category": "packaging" }
 ]

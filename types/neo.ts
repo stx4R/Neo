@@ -177,9 +177,10 @@ export const RISK_LABEL = {
   low: 'LOW',
 } as const satisfies Record<RiskLevel, string>;
 
+// 품목이 식품만이 아니다. '식품안전·인증'은 화장품·전기전자 사용자에게 거짓말이 된다.
 export const CATEGORY_LABEL = {
   labeling: '라벨링·표시',
-  safety: '식품안전·인증',
+  safety: '안전·인증',
   packaging: '포장·환경',
   customs: '통관·관세',
 } as const satisfies Record<Category, string>;

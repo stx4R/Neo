@@ -64,7 +64,20 @@ export interface MustDo {
 export function actionBadge(law: Law, today: string): Countdown | null {
   if (law.status === 'hold') return null;
   if (law.deadline) return countdown(law.deadline, today);
-  return countdown(law.effectiveDate, today);
+  return sinceEffective(law, today);
+}
+
+/**
+ * 기한이 없는 법령의 배지.
+ *
+ * 시행일이 지났다면 `기한 경과`가 아니라 **`미이행`**이다. 놓친 날짜가 있는 게
+ * 아니라 이미 지켜야 하는 의무를 아직 안 한 것이다. CIRCULAR 06/2011처럼
+ * 애초에 기한 개념이 없는 상시 의무에 "기한 경과"를 붙이면 틀린 말이 된다.
+ * 색은 그대로 critical이다 — 지금 위반 상태라는 사실은 달라지지 않는다.
+ */
+function sinceEffective(law: Law, today: string): Countdown {
+  const c = countdown(law.effectiveDate, today);
+  return c.overdue ? { ...c, text: '미이행' } : c;
 }
 
 /**
@@ -161,9 +174,7 @@ export function listBadge(law: Law, today: string): BadgeSpec | null {
   }
   // 대응할 것이 없는 법률에는 배지를 달지 않는다.
   if (isDormant(law)) return null;
-  const c = law.deadline
-    ? countdown(law.deadline, today)
-    : countdown(law.effectiveDate, today);
+  const c = law.deadline ? countdown(law.deadline, today) : sinceEffective(law, today);
   return { tone: c.tone, text: c.text, tnum: !c.overdue };
 }
 
@@ -176,9 +187,7 @@ export function headerBadge(law: Law, today: string): BadgeSpec {
   const risk = RISK_LABEL[law.riskLevel];
   if (law.status === 'hold') return { tone, text: `${risk} · 보류`, tnum: false };
   if (isDormant(law)) return { tone, text: risk, tnum: false };
-  const c = law.deadline
-    ? countdown(law.deadline, today)
-    : countdown(law.effectiveDate, today);
+  const c = law.deadline ? countdown(law.deadline, today) : sinceEffective(law, today);
   return { tone, text: `${risk} · ${c.text}`, tnum: !c.overdue };
 }
 

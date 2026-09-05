@@ -1,4 +1,229 @@
 {
-  "laws": [],
-  "actions": []
+  "laws": [
+    {
+      "id": "VN-2011-006",
+      "officialRef": "CIRCULAR 06/2011/TT-BYT",
+      "title": "화장품 제품신고 및 관리 규정",
+      "country": "VN",
+      "category": "safety",
+      "itemCategories": ["cosmetics"],
+      "hsPrefixes": ["3303", "3304", "3305", "3307", "3401"],
+      "sourceTier": "secondary",
+      "status": "active",
+      "riskLevel": "critical",
+      "effectiveDate": "2011-04-01",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [],
+      "affectedProductIds": ["p-cos-1", "p-cos-2", "p-cos-3", "p-cos-4"],
+      "actionIds": ["VN-a-cos-01", "VN-a-cos-02", "VN-a-cos-03", "VN-a-cos-04"],
+      "source": {
+        "url": "https://cosmetic.chemlinked.com/cosmepedia/vietnam-cosmetic-regulation",
+        "publisher": "베트남 보건부",
+        "publishedAt": "2011-01-25",
+        "originalLang": "vi",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "VN-2025-034",
+      "officialRef": "CIRCULAR 34/2025/TT-BYT",
+      "title": "화장품 신고 절차 개정 — 온라인 제출 도입",
+      "country": "VN",
+      "category": "safety",
+      "itemCategories": ["cosmetics"],
+      "hsPrefixes": ["3303", "3304", "3305", "3307", "3401"],
+      "sourceTier": "secondary",
+      "status": "active",
+      "riskLevel": "medium",
+      "effectiveDate": "2025-08-18",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [
+        {
+          "before": "신고서는 직접 방문 또는 우편으로만 제출",
+          "after": "국가공공서비스포털을 통한 온라인 제출 허용"
+        },
+        {
+          "before": "서명 요건이 명시되지 않음",
+          "after": "온라인은 전자서명·디지털서명 허용, 오프라인은 원본 서명만 — 스탬프·생성 서명 불가"
+        },
+        {
+          "before": "수입 시료 신청서(부록 14-MP) 접수는 의약품관리국",
+          "after": "성 인민위원회 산하 보건기관이 접수, 처리 3영업일"
+        }
+      ],
+      "affectedProductIds": ["p-cos-1", "p-cos-2", "p-cos-3", "p-cos-4"],
+      "actionIds": ["VN-a-cos-05", "VN-a-cos-06"],
+      "source": {
+        "url": "https://www.tilleke.com/insights/vietnam-updates-regulations-on-cosmetic-notification/",
+        "publisher": "베트남 보건부",
+        "publishedAt": "2025-07-03",
+        "originalLang": "vi",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "VN-2026-647",
+      "officialRef": "OFFICIAL LETTER 647/QLD-MP",
+      "title": "ASEAN 화장품 성분 부속서 갱신 (ACC 42 · ACSB 42)",
+      "country": "VN",
+      "category": "safety",
+      "itemCategories": ["cosmetics"],
+      "hsPrefixes": ["3303", "3304", "3305", "3307", "3401"],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "high",
+      "effectiveDate": "2026-02-25",
+      "deadline": "2027-11-17",
+      "addedAt": "2026-09-06",
+      "changes": [
+        {
+          "before": "미코나졸·미코나졸질산염 사용 제한 없음",
+          "after": "금지 성분(부속서 II)에 추가 — 2025.11.21부터 적용"
+        },
+        {
+          "before": "제니스테인·다이드제인 농도 제한 없음",
+          "after": "각각 0.007% · 0.02% 이하로 제한(부속서 III) — 2027.11.17부터 적용"
+        },
+        {
+          "before": "4-메틸벤질리덴캠퍼는 자외선차단 허용 성분(부속서 VII)",
+          "after": "부속서 VII에서 삭제하고 금지 성분(부속서 II)으로 이동 — 2028.11.17부터 적용"
+        }
+      ],
+      "affectedProductIds": ["p-cos-1", "p-cos-2", "p-cos-3", "p-cos-4"],
+      "actionIds": ["VN-a-cos-07", "VN-a-cos-08", "VN-a-cos-09"],
+      "source": {
+        "url": "https://dav.gov.vn/upload_images/files/647_QLD_MP_signed.pdf",
+        "publisher": "베트남 보건부 의약품관리국(DAV)",
+        "publishedAt": "2026-02-25",
+        "originalLang": "vi",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "VN-2026-003",
+      "officialRef": "CIRCULAR 03/2026/TT-BYT",
+      "title": "화장품 광고 사전심의 폐지 — 사후 시장감시로 전환",
+      "country": "VN",
+      "category": "labeling",
+      "itemCategories": ["cosmetics"],
+      "hsPrefixes": ["3303", "3304", "3305", "3307", "3401"],
+      "sourceTier": "secondary",
+      "status": "active",
+      "riskLevel": "medium",
+      "effectiveDate": "2026-02-15",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [
+        {
+          "before": "광고 전 관할 보건국에서 광고내용 확인서를 발급받아야 함",
+          "after": "확인서 절차 폐지 — 사업자 자기책임 + 사후 시장감시"
+        },
+        {
+          "before": "광고내용 확인서 발급 수수료 납부",
+          "after": "수수료 규정 폐지"
+        }
+      ],
+      "affectedProductIds": ["p-cos-1", "p-cos-2", "p-cos-3", "p-cos-4"],
+      "actionIds": ["VN-a-cos-10", "VN-a-cos-11"],
+      "source": {
+        "url": "https://cosmetic.chemlinked.com/news/cosmetic-news/vietnam-abolishes-the-approval-process-for-cosmetic-advertising-content",
+        "publisher": "베트남 보건부",
+        "publishedAt": "2026-02-12",
+        "originalLang": "vi",
+        "lastVerified": "2026-09-06"
+      }
+    }
+  ],
+  "actions": [
+    {
+      "id": "VN-a-cos-01",
+      "lawId": "VN-2011-006",
+      "title": "제품신고서 제출 및 접수번호 확보",
+      "owner": "품질팀",
+      "effort": "6주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-cos-02",
+      "lawId": "VN-2011-006",
+      "title": "자유판매증명서(CFS) 원본 확보 — CPTPP 회원국 제조분은 면제",
+      "owner": "영업",
+      "effort": "4주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-cos-03",
+      "lawId": "VN-2011-006",
+      "title": "위임장(Power of Attorney) 영사확인",
+      "owner": "영업",
+      "effort": "3주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-cos-04",
+      "lawId": "VN-2011-006",
+      "title": "제품정보파일(PIF) 구비 및 보관",
+      "owner": "품질팀",
+      "effort": "4주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-cos-05",
+      "lawId": "VN-2025-034",
+      "title": "국가공공서비스포털 온라인 신고 계정 개설",
+      "owner": "품질팀",
+      "effort": "1주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-cos-06",
+      "lawId": "VN-2025-034",
+      "title": "신고서 서명 방식 점검 — 스탬프 서명 불가",
+      "owner": "품질팀",
+      "effort": "3일",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-cos-07",
+      "lawId": "VN-2026-647",
+      "title": "전 제품 성분표를 ASEAN 부속서 II·III 최신본과 대조",
+      "owner": "품질팀",
+      "effort": "2주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-cos-08",
+      "lawId": "VN-2026-647",
+      "title": "제니스테인·다이드제인 함량 시험성적서 확보",
+      "owner": "품질팀",
+      "effort": "4주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-cos-09",
+      "lawId": "VN-2026-647",
+      "title": "자외선차단 제품의 4-MBC 사용 여부 확인 및 대체 처방",
+      "owner": "품질팀",
+      "effort": "8주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-cos-10",
+      "lawId": "VN-2026-003",
+      "title": "기존 광고 문구를 사후감시 기준으로 자체 재검토",
+      "owner": "마케팅",
+      "effort": "2주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-cos-11",
+      "lawId": "VN-2026-003",
+      "title": "광고 금지표현 점검 체계 수립",
+      "owner": "마케팅",
+      "effort": "3주",
+      "dueDate": null
+    }
+  ]
 }
