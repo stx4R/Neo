@@ -1920,3 +1920,116 @@ BPOM 규정도 할랄도 출발국을 가리지 않는다. 다만 **할랄은 �
 여부에 따라 실무 절차가 달라진다** — 한국 인증기관이 BPJPH와 MRA를 맺고 있으면
 한국에서 받은 할랄 인증이 인정된다. 그건 `originScope`(적용 여부)가 아니라
 절차의 차이라 액션에 적었다.
+
+---
+
+# ID — 화장품 (`data/laws/ID-cosmetics.json`)
+
+**조사일 2026-09-06 · 법령 4건 · 액션 11건 · 1차 4 / 2차 0**
+(공용 파일의 할랄을 합치면 화면에는 5건이 뜬다)
+
+## ⚠ 데이터셋에서 가장 급한 날짜를 갱신했다 — D-27
+
+`PerBPOM 25/2025`(화장품 원료 기술요건)의 경과 기한이 **2026-10-03**이다. **D-27.**
+할랄(D-41)보다 2주 빠르다. **이 조합의 S1에는 D-27과 D-41이 나란히 뜬다.**
+
+## 채택
+
+### 1. `PerBPOM 25/2025` — 화장품 원료 기술요건
+`ID-2025-025` · 공포·시행 **2025-10-03** · **`deadline: 2026-10-03`** · CRITICAL · `official`
+
+- **<https://peraturan.bpk.go.id/Details/333277/peraturan-bpom-no-25-tahun-2025>**
+  — BPK 법령DB. **1차 출처다.** `Berlaku 03 Oktober 2025` · `Status Berlaku` ·
+  `Mencabut : PerBPOM No. 23 Tahun 2019` · `PerBPOM No. 17 Tahun 2022`
+- **<https://peraturan.bpk.go.id/Download/395521/peraturan-bpom-no-25-tahun-2025.pdf>**
+  — **원문 PDF 352쪽. 텍스트를 뽑아 조문을 직접 읽었다**
+- <https://standar-otskk.pom.go.id/kegiatan/sosialisasi-peraturan-bpom-no-25-tahun-2025-tentang-persyaratan-teknis-bahan-kosmetik>
+  (BPOM 표준화국 설명회)
+
+**경과 기한을 원문에서 읽었다.**
+
+```
+Pasal 15
+Pelaku Usaha yang telah memiliki nomor notifikasi Kosmetik sebelum berlakunya
+Peraturan Badan ini, harus menyesuaikan dengan ketentuan dalam Peraturan Badan ini
+paling lama 12 (dua belas) bulan terhitung sejak Peraturan Badan ini diundangkan.
+
+Pasal 17
+Peraturan Badan ini mulai berlaku pada tanggal diundangkan.
+```
+
+시행 전에 통보번호를 받은 사업자는 **공포일로부터 12개월** 안에 새 기준에 맞춰야 한다.
+공포일이 2025-10-03이므로 **2026-10-03**이다.
+
+**2차 출처 하나가 "2026-10-03부터 e-Notifikasi 시스템을 모두가 써야 한다"고 썼는데,
+원문이 말하는 것은 시스템이 아니라 원료 기준 적합이다.** §89가 가르친 대로
+2차 출처의 서술을 원문으로 확인했고, 그 결과 **기한의 성격이 달랐다.**
+데이터에는 원문이 말하는 것만 적었다.
+
+미이행 시 제재는 제13조에 있다 — 서면경고 → 최장 1년 유통 정지 → 회수 → 폐기 →
+**통보번호 취소** → CPKB 인증서 취소 → 통보 신청 온라인 접근 차단.
+
+**`ID-a-025-01`·`ID-a-025-02` 두 액션에 `dueDate: 2026-10-03`을 넣었다.**
+처방 대조와 적합 판정은 그 날짜 전에 끝나야 하는 일이다.
+
+### 2. `PerBPOM 21/2022` — 화장품 통보(notifikasi)
+`ID-2022-021` · 제정 2022-10-04 · 공포 **2022-10-05** · CRITICAL · `official`
+
+- **<https://standar-otskk.pom.go.id/regulasi/perbpom-no-21-tahun-2022-tentang-tentang-tata-cara-pengajuan-notifikasi-kosmetika>**
+  — BPOM 표준화국 규정 페이지. **1차 출처다**
+- <https://standar-otskk.pom.go.id/storage/uploads/f530cc78-7bfc-4d11-9eda-1ac465a9532a/Q&A-Sos-TCPNK.pdf>
+  (BPOM 설명회 Q&A)
+- <https://www.jogloabang.com/kesehatan/perbpom-21-2022-notifikasi-kosmetika>
+  (제정 2022-10-04 / 공포 2022-10-05, 7장 57조 + 부속서 5건, PerBPOM 12/2020 대체)
+
+**통보번호 없이는 인도네시아에서 화장품을 팔 수 없다.** 등록(registrasi)이 아니라
+통보(notifikasi)라 서류 심사 중심이지만, **통보권자는 인도네시아 법인이어야 하므로
+수출자가 먼저 권한 위임을 정리해야 한다.**
+
+### 3. `PerBPOM 18/2024` — 표시·프로모션·광고
+`ID-2024-018` · Berlaku **2024-11-28** · HIGH · `labeling` · `official`
+
+- **<https://peraturan.bpk.go.id/Details/309969/peraturan-bpom-no-18-tahun-2024>** — **1차 출처다.**
+  `Status Berlaku`
+- <https://www.pom.go.id/siaran-pers/bpom-tegaskan-aturan-penandaan-promosi-dan-iklan-kosmetik-wajib-dilaksanakan-pelaku-usaha>
+  (BPOM 보도자료 — 표시·프로모션·광고 의무)
+
+`PerBPOM 30/2020`(표시)과 `PerBPOM 32/2021`(광고)로 나뉘어 있던 것을 하나로 묶었다.
+**미백·주름·여드름 같은 클레임에는 과학적 근거가 있어야 한다** —
+JP `薬機法 第66条`(효능효과 56항목)와 성격이 비슷하지만, 일본이 **목록으로 제한**하는 데 비해
+인도네시아는 **근거를 요구**한다. 그래서 액션도 "문구를 목록에 맞춰라"가 아니라
+"클레임마다 시험 자료를 갖춰라"다.
+
+### 4. `PerBPOM 17/2023` — 제품정보파일(DIP)
+`ID-2023-017` · Berlaku **2023-08-02** · HIGH · `official`
+
+- **<https://peraturan.bpk.go.id/Details/284984/peraturan-bpom-no-17-tahun-2023>** — **1차 출처다.**
+  `Pedoman Dokumen Informasi Produk Kosmetik` · `Status Berlaku`
+
+통보를 마친 뒤에도 **처방·제조방법·안전성 평가·효능 근거를 묶은 DIP를 언제든 제출**할 수
+있어야 한다. EU의 PIF와 같은 구조다. 자료가 전부 한국 제조소에 있으므로
+**보관 위치와 제출 경로를 통보권자와 미리 합의**하는 것이 액션이다.
+
+## 제외 — 그리고 그 사유
+
+### `CPKB`(우수화장품제조기준) 인증
+
+**제외했다. 인도네시아 국내 제조소에 걸리는 요건이다.**
+
+`PerBPOM 25/2019`(개정 `31/2020`)가 정하는 CPKB 인증은 인도네시아 안에서 화장품을
+만드는 시설이 받는다. 한국 제조소는 대신 **본국의 GMP 증명(ISO 22716 등)** 을 통보
+서류로 낸다. 그 실질은 `PerBPOM 21/2022`의 통보 서류 액션에 들어 있다.
+
+다만 `PerBPOM 25/2025` 제13조의 제재 목록에 **CPKB 인증서 취소**가 들어 있어
+현지 위탁생산으로 전환하면 그때는 직접 걸린다. 그 사실을 여기 남긴다.
+
+## HS 차등 — 없다. 화장품 네 번째 조합에서도 같다
+
+법령 4건이 전부 화장품 전 범위다.
+VN(§83) · JP(§107) · US(§122)에 이어 **네 조합 모두 HS 차등이 없다.**
+§122가 정리한 이유가 인도네시아에서도 그대로다 —
+화장품 규제는 **어디에 바르는가 · 무엇을 표방하는가**로 갈리는데 HS는 **무엇인가**로 갈린다.
+
+## `originScope` — 없다
+
+BPOM 통보도 원료 기준도 출발국을 가리지 않는다.

@@ -1,4 +1,282 @@
 {
-  "laws": [],
-  "actions": []
+  "laws": [
+    {
+      "id": "ID-2025-025",
+      "officialRef": "PerBPOM 25/2025",
+      "title": "화장품 원료 기술요건 전면 개편 — 기존 통보번호도 2026.10.03까지 맞춰야 한다",
+      "country": "ID",
+      "category": "safety",
+      "itemCategories": [
+        "cosmetics"
+      ],
+      "hsPrefixes": [
+        "3303",
+        "3304",
+        "3305",
+        "3307",
+        "3401"
+      ],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "critical",
+      "effectiveDate": "2025-10-03",
+      "deadline": "2026-10-03",
+      "addedAt": "2026-09-06",
+      "transitionEndsAt": "2026-10-03",
+      "transitionNote": "제15조 — 시행 전에 통보번호를 받은 사업자는 공포일(2025.10.03)로부터 12개월 안에 이 규정에 맞춰야 한다",
+      "changes": [
+        {
+          "before": "원료 기술요건이 PerBPOM 23/2019, 개정 17/2022, 청장결정 479호 셋에 흩어져 있었다",
+          "after": "PerBPOM 25/2025가 셋을 폐지하고 하나로 통합 (본문 + 부속서 352쪽)"
+        },
+        {
+          "before": "기존 통보번호를 받은 제품은 종전 기준을 계속 적용",
+          "after": "2026.10.03까지 새 기준에 맞춰야 하고, 안 맞추면 통보번호 취소·유통 정지까지 간다"
+        }
+      ],
+      "affectedProductIds": [
+        "p-cos-1",
+        "p-cos-2",
+        "p-cos-3",
+        "p-cos-4"
+      ],
+      "actionIds": [
+        "ID-a-025-01",
+        "ID-a-025-02",
+        "ID-a-025-03"
+      ],
+      "source": {
+        "url": "https://peraturan.bpk.go.id/Details/333277/peraturan-bpom-no-25-tahun-2025",
+        "publisher": "인도네시아 식약청 (BPOM)",
+        "publishedAt": "2025-10-03",
+        "originalLang": "id",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "ID-2022-021",
+      "officialRef": "PerBPOM 21/2022",
+      "title": "화장품 통보(notifikasi) — 번호 없이는 인도네시아에 못 들어간다",
+      "country": "ID",
+      "category": "safety",
+      "itemCategories": [
+        "cosmetics"
+      ],
+      "hsPrefixes": [
+        "3303",
+        "3304",
+        "3305",
+        "3307",
+        "3401"
+      ],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "critical",
+      "effectiveDate": "2022-10-05",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [
+        {
+          "before": "PerBPOM 12/2020의 통보 절차",
+          "after": "PerBPOM 21/2022가 대체 — 7장 57조와 부속서 5건으로 절차를 재편"
+        }
+      ],
+      "affectedProductIds": [
+        "p-cos-1",
+        "p-cos-2",
+        "p-cos-3",
+        "p-cos-4"
+      ],
+      "actionIds": [
+        "ID-a-021-01",
+        "ID-a-021-02",
+        "ID-a-021-03"
+      ],
+      "source": {
+        "url": "https://standar-otskk.pom.go.id/regulasi/perbpom-no-21-tahun-2022-tentang-tentang-tata-cara-pengajuan-notifikasi-kosmetika",
+        "publisher": "인도네시아 식약청 (BPOM) 표준화국",
+        "publishedAt": "2022-10-05",
+        "originalLang": "id",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "ID-2024-018",
+      "officialRef": "PerBPOM 18/2024",
+      "title": "표시·프로모션·광고 통합 규정 — 클레임에 과학적 근거가 있어야 한다",
+      "country": "ID",
+      "category": "labeling",
+      "itemCategories": [
+        "cosmetics"
+      ],
+      "hsPrefixes": [
+        "3303",
+        "3304",
+        "3305",
+        "3307",
+        "3401"
+      ],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "high",
+      "effectiveDate": "2024-11-28",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [
+        {
+          "before": "표시는 PerBPOM 30/2020, 광고는 PerBPOM 32/2021로 나뉘어 있었다",
+          "after": "PerBPOM 18/2024가 표시·프로모션·광고를 하나로 묶었다"
+        }
+      ],
+      "affectedProductIds": [
+        "p-cos-1",
+        "p-cos-2",
+        "p-cos-3",
+        "p-cos-4"
+      ],
+      "actionIds": [
+        "ID-a-018-01",
+        "ID-a-018-02",
+        "ID-a-018-03"
+      ],
+      "source": {
+        "url": "https://peraturan.bpk.go.id/Details/309969/peraturan-bpom-no-18-tahun-2024",
+        "publisher": "인도네시아 식약청 (BPOM)",
+        "publishedAt": "2024-11-28",
+        "originalLang": "id",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "ID-2023-017",
+      "officialRef": "PerBPOM 17/2023",
+      "title": "제품정보파일(DIP) — 통보 후에도 언제든 제출할 수 있어야 한다",
+      "country": "ID",
+      "category": "safety",
+      "itemCategories": [
+        "cosmetics"
+      ],
+      "hsPrefixes": [
+        "3303",
+        "3304",
+        "3305",
+        "3307",
+        "3401"
+      ],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "high",
+      "effectiveDate": "2023-08-02",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [],
+      "affectedProductIds": [
+        "p-cos-1",
+        "p-cos-2",
+        "p-cos-3",
+        "p-cos-4"
+      ],
+      "actionIds": [
+        "ID-a-017-01",
+        "ID-a-017-02"
+      ],
+      "source": {
+        "url": "https://peraturan.bpk.go.id/Details/284984/peraturan-bpom-no-17-tahun-2023",
+        "publisher": "인도네시아 식약청 (BPOM)",
+        "publishedAt": "2023-08-02",
+        "originalLang": "id",
+        "lastVerified": "2026-09-06"
+      }
+    }
+  ],
+  "actions": [
+    {
+      "id": "ID-a-025-01",
+      "lawId": "ID-2025-025",
+      "title": "전 처방을 PerBPOM 25/2025 부속서(금지·제한·허용 목록)와 대조",
+      "owner": "품질팀",
+      "effort": "6주",
+      "dueDate": "2026-10-03"
+    },
+    {
+      "id": "ID-a-025-02",
+      "lawId": "ID-2025-025",
+      "title": "기존 통보번호 보유 제품의 적합 여부를 2026.10.03 이전에 판정",
+      "owner": "품질팀",
+      "effort": "4주",
+      "dueDate": "2026-10-03"
+    },
+    {
+      "id": "ID-a-025-03",
+      "lawId": "ID-2025-025",
+      "title": "기준 초과 성분이 나오면 인도네시아 수출용 대체 처방 확정",
+      "owner": "품질팀",
+      "effort": "8주",
+      "dueDate": null
+    },
+    {
+      "id": "ID-a-021-01",
+      "lawId": "ID-2022-021",
+      "title": "인도네시아 통보권자(수입자 또는 현지법인)를 정하고 권한 위임서 발급",
+      "owner": "경영",
+      "effort": "4주",
+      "dueDate": null
+    },
+    {
+      "id": "ID-a-021-02",
+      "lawId": "ID-2022-021",
+      "title": "제품별 통보 신청 — 처방·제조소 정보·라벨 도안을 함께 제출",
+      "owner": "품질팀",
+      "effort": "8주",
+      "dueDate": null
+    },
+    {
+      "id": "ID-a-021-03",
+      "lawId": "ID-2022-021",
+      "title": "통보번호 유효기간과 갱신 시점을 관리대장에 올린다",
+      "owner": "품질팀",
+      "effort": "1주",
+      "dueDate": null
+    },
+    {
+      "id": "ID-a-018-01",
+      "lawId": "ID-2024-018",
+      "title": "라벨 표시항목을 인도네시아어로 재작성 — 통보번호·배치번호·유효기간 포함",
+      "owner": "디자인",
+      "effort": "4주",
+      "dueDate": null
+    },
+    {
+      "id": "ID-a-018-02",
+      "lawId": "ID-2024-018",
+      "title": "미백·주름·여드름 등 클레임마다 뒷받침할 시험 자료를 갖춘다",
+      "owner": "마케팅",
+      "effort": "6주",
+      "dueDate": null
+    },
+    {
+      "id": "ID-a-018-03",
+      "lawId": "ID-2024-018",
+      "title": "현지 온라인 채널의 프로모션 문구까지 같은 기준으로 점검",
+      "owner": "마케팅",
+      "effort": "3주",
+      "dueDate": null
+    },
+    {
+      "id": "ID-a-017-01",
+      "lawId": "ID-2023-017",
+      "title": "제품정보파일(DIP) 구성 — 처방·제조방법·안전성 평가·효능 근거",
+      "owner": "품질팀",
+      "effort": "8주",
+      "dueDate": null
+    },
+    {
+      "id": "ID-a-017-02",
+      "lawId": "ID-2023-017",
+      "title": "DIP를 통보권자가 즉시 제출할 수 있는 위치에 두도록 보관 방식 합의",
+      "owner": "품질팀",
+      "effort": "2주",
+      "dueDate": null
+    }
+  ]
 }
