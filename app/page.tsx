@@ -1,6 +1,7 @@
 'use client';
 
 import { Badge } from '@/components/Badge';
+import { DotGeo } from '@/components/DotGeo';
 import { Label } from '@/components/Label';
 import { Mark, Ordinal } from '@/components/Mark';
 import { RiskText } from '@/components/RiskText';
@@ -62,10 +63,10 @@ export default function Home() {
         </p>
       </div>
 
-      {/* 지구본. 8단계에서 DotGeo를 얹는다. 자리를 먼저 잡아 세로 리듬을 고정한다.
-          원본 실측: 296×240, margin-right -36 으로 우측을 화면 밖으로 흘린다. */}
+      {/* 지구본. 296×240을 우측 정렬하고 margin-right -36으로 우측을 화면 밖으로
+          흘린다. 좌측에 여백이 남는 비대칭이 의도다 — 가운데 정렬하지 말 것. */}
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 4 }}>
-        <div style={{ width: 296, height: 240, marginRight: -36 }} />
+        <DotGeo mode="globe" style={{ width: 296, height: 240, marginRight: -36 }} />
       </div>
 
       {held.length > 0 && (

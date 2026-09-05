@@ -5,6 +5,7 @@
 
 import { useState } from 'react';
 import { Badge, FilterChip } from '@/components/Badge';
+import { DotGeo } from '@/components/DotGeo';
 import { Checkbox } from '@/components/Checkbox';
 import { ColorBlock } from '@/components/ColorBlock';
 import { Label } from '@/components/Label';
@@ -255,6 +256,13 @@ export default function KitchenSink() {
             <RowTitle as="span">{name}</RowTitle>
           </Row>
         ))}
+      </Section>
+
+      <Section title="DOTGEO — globe / asia 두 모드">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <DotGeo mode="globe" style={{ width: '100%', height: 240 }} />
+          <DotGeo mode="asia" style={{ width: '100%', height: 240 }} />
+        </div>
       </Section>
 
       <Section title="STATUS_COLOR 대조">
