@@ -1,13 +1,13 @@
 'use client';
 
 import { useEffect } from 'react';
-import { laws } from '@/lib/data';
+import { allLaws } from '@/lib/data';
 
 /**
  * 서비스워커 등록. 프로덕션에서만 한다 — dev에서 등록하면 Turbopack HMR과 캐시가 싸운다.
  *
  * 프리캐시할 라우트를 서비스워커에 알려주는 자리이기도 하다. public/sw.js는 정적 파일이라
- * data/laws.json을 임포트할 수 없고, 법률 5건의 id를 거기 박으면 파생값 원칙이 깨진다.
+ * data/laws/*.json을 임포트할 수 없고, 법률 id를 거기 박으면 파생값 원칙이 깨진다.
  * 법률이 늘면 이 목록도 같이 늘어난다.
  */
 
@@ -23,7 +23,9 @@ export function ServiceWorker() {
     if (process.env.NODE_ENV !== 'production') return;
     if (!('serviceWorker' in navigator)) return;
 
-    const urls = [...STATIC_ROUTES, ...laws.map((law) => `/laws/${law.id}`)];
+    // 12조합 전부의 법령을 담는다. 프로필을 바꾸면 다른 조합의 상세로 들어가는데,
+    // 지금 조합 것만 담아 두면 오프라인에서 그 화면이 비어 버린다.
+    const urls = [...STATIC_ROUTES, ...allLaws.map((law) => `/laws/${law.id}`)];
 
     const send = () => {
       navigator.serviceWorker.controller?.postMessage({

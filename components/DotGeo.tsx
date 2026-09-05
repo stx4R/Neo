@@ -39,8 +39,13 @@ const CFG = {
   asia: { step: 6.6, dot: 1.8, destSize: 6, bulge: 0.3 },
 } as const;
 
-const FROM: [number, number] = [129.0, 35.1]; // 부산
-const TO: [number, number] = [105.9, 20.9]; // 하이퐁
+/**
+ * 항로 기본값. 프로필이 없을 때만 쓰인다 —
+ * 실제 항로는 호출부가 프로필의 출발국·도착국 좌표를 넘긴다.
+ * 부산 → 하이퐁. 아트보드가 그린 항로다.
+ */
+const FROM: [number, number] = [129.0, 35.1];
+const TO: [number, number] = [105.9, 20.9];
 
 const FLOW_PERIOD_MS = 4200;
 const FLOW_COUNT = 3;
@@ -110,6 +115,8 @@ function buildScene(
   h: number,
   colors: { dot: string; route: string; dest: string },
   originMarker: boolean,
+  from: [number, number],
+  to: [number, number],
 ): Scene | null {
   const cfg = CFG[mode];
   const dpr = Math.min(2, window.devicePixelRatio || 1);
@@ -144,8 +151,8 @@ function buildScene(
     }
   }
 
-  const p0 = proj(FROM);
-  const p1 = proj(TO);
+  const p0 = proj(from);
+  const p1 = proj(to);
   if (!p0 || !p1) return null;
 
   // 곡선이 부풀 방향. 지구본은 중심 바깥쪽으로, 평면은 항로의 법선 방향으로.
@@ -238,6 +245,8 @@ export function DotGeo({
   routeColor = 'var(--text)',
   destColor = 'var(--risk-critical)',
   originMarker = true,
+  from = FROM,
+  to = TO,
   flow = true,
   onProject,
   style,
@@ -248,6 +257,10 @@ export function DotGeo({
   routeColor?: string;
   destColor?: string;
   originMarker?: boolean;
+  /** 항로 출발점 [경도, 위도]. 프로필의 출발국 좌표다. */
+  from?: [number, number];
+  /** 항로 도착점 [경도, 위도]. 프로필의 도착국 좌표다. */
+  to?: [number, number];
   flow?: boolean;
   /**
    * 투영을 밖으로 넘긴다. 원본이 'neo-ready' 이벤트로 하던 일이다.
@@ -259,6 +272,11 @@ export function DotGeo({
 }) {
   const hostRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  // 배열은 렌더마다 새 참조라 deps에 그대로 넣으면 매번 다시 그린다.
+  // 스칼라로 펴서 값이 실제로 바뀔 때만 다시 그리게 한다.
+  const [fromLng, fromLat] = from;
+  const [toLng, toLat] = to;
 
   // 콜백은 ref로 받는다. deps에 넣으면 인라인 함수를 넘긴 호출부에서
   // 렌더마다 지도를 새로 만들게 되고, setState까지 얽히면 순환한다.
@@ -303,6 +321,8 @@ export function DotGeo({
           dest: resolveColor(host, destColor),
         },
         originMarker,
+        [fromLng, fromLat],
+        [toLng, toLat],
       );
       if (scene) {
         paint(canvas, scene, flow ? 0 : null);
@@ -350,7 +370,19 @@ export function DotGeo({
       if (raf) cancelAnimationFrame(raf);
     };
     // attempt가 바뀌면 land를 다시 받는다 — '다시 시도' 버튼의 통로다.
-  }, [mode, dotColor, routeColor, destColor, originMarker, flow, attempt]);
+  }, [
+    mode,
+    dotColor,
+    routeColor,
+    destColor,
+    originMarker,
+    flow,
+    attempt,
+    fromLng,
+    fromLat,
+    toLng,
+    toLat,
+  ]);
 
   return (
     <div

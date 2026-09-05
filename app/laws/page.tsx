@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { Badge, FilterChip } from '@/components/Badge';
+import { ComboEmpty, ComboPending } from '@/components/ComboEmpty';
 import { EmptyState } from '@/components/EmptyState';
 import { Label } from '@/components/Label';
 import { Mark } from '@/components/Mark';
@@ -10,7 +11,7 @@ import { Row, RowMeta, RowTitle } from '@/components/Row';
 import { Screen } from '@/components/Screen';
 import { TabBar } from '@/components/TabBar';
 import { TopBar } from '@/components/TopBar';
-import { company, productsOfLaw } from '@/lib/data';
+import { useDataset } from '@/lib/dataset';
 import { REFERENCE_DATE, formatSyncTime } from '@/lib/dday';
 import {
   FILTER_PRESETS,
@@ -18,6 +19,7 @@ import {
   listBadge,
   markColor,
   openActionsOfLaw,
+  productsOfLaw,
   statusLine,
   visibleLaws,
   type FilterPreset,
@@ -33,8 +35,11 @@ export default function LawsPage() {
   const [query, setQuery] = useState('');
   const done = useActionsDone();
 
-  const rows = useMemo(() => visibleLaws(preset, sort, query), [preset, sort, query]);
-  const activeCountry = company.countries.find((c) => c.active);
+  const ds = useDataset();
+  const rows = useMemo(
+    () => (ds ? visibleLaws(ds, preset, sort, query) : []),
+    [ds, preset, sort, query],
+  );
 
   return (
     <Screen scrollPadBottom="var(--pad-tabbar)" footer={<TabBar />}>
@@ -51,10 +56,15 @@ export default function LawsPage() {
         <h1 className="t-h1" style={{ margin: 0, color: 'var(--text)' }}>
           법률
         </h1>
-        <p className="t-meta tnum" style={{ margin: '10px 0 0', color: 'var(--text-3)' }}>
-          {activeCountry ? `${activeCountry.code} ${activeCountry.name} · ` : ''}
-          {rows.length}건
-        </p>
+        {/* 국가 필터 칩은 없앴다 — 도착국은 프로필로 고정이라 거를 것이 없다.
+            대신 지금 조합을 여기 적는다. */}
+        {ds && (
+          <p className="t-meta tnum" style={{ margin: '10px 0 0', color: 'var(--text-3)' }}>
+            {ds.country ? `${ds.country.code} ${ds.country.nameKo} · ` : ''}
+            {ds.category ? `${ds.category.nameKo} · ` : ''}
+            {rows.length}건
+          </p>
+        )}
       </div>
 
       {/* 검색 — 박스가 아니다. 하단 1px 선만 남긴다. */}
@@ -133,7 +143,13 @@ export default function LawsPage() {
       </div>
 
       <div style={{ marginTop: 'var(--sec-gap)', padding: '0 var(--pad)' }}>
-        {rows.length === 0 && (
+        {!ds && <ComboPending />}
+        {ds?.empty && (
+          <ComboEmpty
+            combo={`${ds.country?.code ?? ds.profile.destinationCountry} ${ds.country?.nameKo ?? ''} · ${ds.category?.nameKo ?? ds.profile.itemCategory}`}
+          />
+        )}
+        {ds && !ds.empty && rows.length === 0 && (
           <EmptyState
             message="조건에 맞는 법률이 없습니다"
             actionLabel="필터 초기화"
@@ -166,12 +182,23 @@ export default function LawsPage() {
               <Label>{law.officialRef}</Label>
               <RowTitle>{law.title}</RowTitle>
               <RowMeta>
-                {statusLine(law)} · 제품 {productsOfLaw(law).length} · 미완{' '}
+                {statusLine(law)} · 제품 {productsOfLaw(ds!, law).length} · 미완{' '}
                 {openActionsOfLaw(law, done).length} · <RiskText level={law.riskLevel} />
               </RowMeta>
             </Row>
           );
         })}
+
+        {/* 출발국을 바꿨는데 아무것도 안 바뀐 척하지 않는다. 반대로 바뀐 척도 하지 않는다.
+            originScope 데이터는 KR 출발분만 채워져 있다. */}
+        {ds && ds.hiddenByOrigin > 0 && (
+          <p
+            className="t-meta"
+            style={{ margin: 'var(--sec-gap) 0 0', color: 'var(--text-3)' }}
+          >
+            출발국 KR 외에는 수출국별 요건 데이터가 아직 없습니다
+          </p>
+        )}
       </div>
     </Screen>
   );

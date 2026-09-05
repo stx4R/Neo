@@ -98,6 +98,15 @@ export function saveProfile(next: Profile): void {
   emit();
 }
 
+/**
+ * 제품 목록만 갈아 끼운다. S4에서 제품을 지울 때 쓴다.
+ * 국가·품목은 그대로이므로 완료 표시를 비우지 않는다.
+ */
+export function updateProducts(products: Profile['products']): void {
+  if (snapshot === null) return;
+  saveProfile({ ...snapshot, products, updatedAt: new Date().toISOString() });
+}
+
 /** 지금 저장된 프로필. 렌더 밖에서 읽을 때 쓴다(리다이렉트 판정 등). */
 export function readProfile(): Profile | null {
   return snapshot;

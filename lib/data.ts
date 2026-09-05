@@ -63,14 +63,44 @@ export function lawSetOf(country: CountryCode, category: ItemCategoryId): LawSet
 
 const EMPTY_SET: LawSet = { laws: [], actions: [] };
 
+/** 12조합 전부의 법령. `/laws/[id]` 정적 생성과 id 조회에만 쓴다. */
+export const allLaws: Law[] = Object.values(LAW_SETS).flatMap((set) => set.laws);
+const ALL_ACTIONS: Action[] = Object.values(LAW_SETS).flatMap((set) => set.actions);
+
+/**
+ * 법령 하나를 id로 찾는다. 조합을 가리지 않는다 —
+ * 법령 id(`<국가>-<연도>-<번호>`)가 이미 전역에서 유일하고, S3의 본문은
+ * 프로필과 무관하게 그 법령의 내용이기 때문이다. 프로필에 매인 것은
+ * 영향 제품과 하단 CTA뿐이라 그쪽만 클라이언트에서 그린다.
+ */
+export const lawById = (id: string) => allLaws.find((l) => l.id === id);
+export const actionById = (id: string) => ALL_ACTIONS.find((a) => a.id === id);
+
+/** 한 법률에 걸린 액션들. law.actionIds 순서를 지킨다. */
+export function actionsOfLaw(law: Law): Action[] {
+  return law.actionIds
+    .map((id) => actionById(id))
+    .filter((a): a is Action => a !== undefined);
+}
+
+/**
+ * 법령이 걸리는 제품. **id 목록이 아니라 HS 앞자리로 판정한다.**
+ *
+ * `affectedProductIds`는 품목 기본 세트를 가리키는데, 사용자가 /setup에서
+ * 제품을 편집하면 그 id는 더 이상 존재하지 않는다. HS코드는 사용자가 직접 넣는
+ * 값이라 언제나 대조할 수 있다. B2에서 두 기준이 VN 식품 5건 전부에 대해
+ * 같은 집합을 낸다는 것을 검산했다(DISCREPANCIES §54).
+ */
+export function productsMatching(law: Law, pool: readonly Product[]): Product[] {
+  return pool.filter((p) => {
+    const digits = p.hsCode.replace(/\D/g, '');
+    return law.hsPrefixes.some((prefix) => digits.startsWith(prefix));
+  });
+}
+
 // JSON 임포트는 리터럴 유니온을 잃고 string으로 넓어진다.
 // 참조무결성·값 범위는 scripts/check-data.mjs가 검증한다.
-//
-// 아래 laws·actions는 B3에서 프로필 셀렉터로 갈아탈 때까지 남는 고정 조합이다.
-// B2는 그릇만 바꾸는 단계라 화면이 보는 값이 이관 전과 같아야 한다.
-export const laws = (LAW_SETS['VN-food'] as LawSet).laws;
-export const actions = (LAW_SETS['VN-food'] as LawSet).actions;
-export const products = productsJson as unknown as Product[];
+export const seedProducts = productsJson as unknown as Product[];
 export const priorities = prioritiesJson as unknown as Priority[];
 export const notifications = notificationsJson as unknown as Notification[];
 export const company = companyJson as unknown as Company;
@@ -86,21 +116,3 @@ export const categoryById = (id: ItemCategoryId) =>
 export const originCountries = countries.filter((c) => c.origin);
 /** 도착국 목록. supported가 아닌 것도 남긴다 — 흐리게, 선택 불가로 그린다. */
 export const destinationCountries = countries.filter((c) => c.destination);
-
-export const lawById = (id: string) => laws.find((l) => l.id === id);
-export const actionById = (id: string) => actions.find((a) => a.id === id);
-export const productById = (id: string) => products.find((p) => p.id === id);
-
-/** 한 법률에 걸린 액션들. law.actionIds 순서를 지킨다. */
-export function actionsOfLaw(law: Law): Action[] {
-  return law.actionIds
-    .map((id) => actionById(id))
-    .filter((a): a is Action => a !== undefined);
-}
-
-/** 한 법률의 영향 제품들. law.affectedProductIds 순서를 지킨다. */
-export function productsOfLaw(law: Law): Product[] {
-  return law.affectedProductIds
-    .map((id) => productById(id))
-    .filter((p): p is Product => p !== undefined);
-}

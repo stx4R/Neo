@@ -1,4 +1,5 @@
-import { actionsOfLaw, laws, notifications, priorities, products, productsOfLaw } from '@/lib/data';
+import { actionsOfLaw, notifications, priorities, productsMatching } from '@/lib/data';
+import type { Dataset } from '@/lib/dataset';
 import {
   REFERENCE_DATE,
   countdown,
@@ -15,13 +16,22 @@ import {
   type Category,
   type Law,
   type Notification,
+  type Product,
   type RiskLevel,
 } from '@/types/neo';
 
 /**
  * 화면에 박힌 숫자는 전부 여기서 나온다.
  * '대응 필요 3건' 같은 값을 문자열로 박으면 액션을 하나 체크하는 순간 거짓말이 된다.
+ *
+ * 조합에 매인 함수는 Dataset을 첫 인자로 받는다. 모듈 레벨 laws를 보던 시절에는
+ * 화면이 프로필을 따라갈 수 없었다.
  */
+
+/** 이 법령의 영향 제품. 사용자의 제품 목록에서 HS 앞자리로 고른다. */
+export function productsOfLaw(ds: Dataset, law: Law): Product[] {
+  return productsMatching(law, ds.products);
+}
 
 export interface MustDo {
   law: Law;
@@ -34,8 +44,8 @@ export interface MustDo {
  * 순서는 laws.json 순서를 따르고, 배지는 액션의 dueDate가 아니라 법률의 deadline을 쓴다.
  * 액션이 전부 끝난 법률은 목록에서 빠진다.
  */
-export function mustDoNow(done: ReadonlySet<string>): MustDo[] {
-  return laws
+export function mustDoNow(ds: Dataset, done: ReadonlySet<string>): MustDo[] {
+  return ds.laws
     .filter((law) => law.deadline !== null)
     .map((law) => {
       const action = actionsOfLaw(law).find((a) => !done.has(a.id));
@@ -48,13 +58,13 @@ export function mustDoNow(done: ReadonlySet<string>): MustDo[] {
  * THIS WEEK — 마감이 아직 남아 있는 법률. 기한이 지난 것은 빠진다.
  * 순서는 laws.json 순서.
  */
-export function thisWeek(): Law[] {
-  return laws.filter((law) => law.deadline !== null && daysUntil(law.deadline) >= 0);
+export function thisWeek(ds: Dataset): Law[] {
+  return ds.laws.filter((law) => law.deadline !== null && daysUntil(law.deadline) >= 0);
 }
 
 /** 보류된 법률. S1 상단 상태 스트립에 쓴다. */
-export function heldLaws(): Law[] {
-  return laws.filter((law) => law.status === 'hold');
+export function heldLaws(ds: Dataset): Law[] {
+  return ds.laws.filter((law) => law.status === 'hold');
 }
 
 /** 한 법률에서 아직 끝나지 않은 액션. */
@@ -63,8 +73,8 @@ export function openActionsOfLaw(law: Law, done: ReadonlySet<string>): Action[] 
 }
 
 /** 전체에서 아직 끝나지 않은 액션 수. */
-export function openActionCount(done: ReadonlySet<string>): number {
-  return laws.flatMap(actionsOfLaw).filter((a) => !done.has(a.id)).length;
+export function openActionCount(ds: Dataset, done: ReadonlySet<string>): number {
+  return ds.laws.flatMap(actionsOfLaw).filter((a) => !done.has(a.id)).length;
 }
 
 /**
@@ -159,7 +169,7 @@ function matchesPreset(law: Law, preset: FilterPreset): boolean {
   }
 }
 
-function matchesQuery(law: Law, query: string): boolean {
+function matchesQuery(ds: Dataset, law: Law, query: string): boolean {
   const q = query.trim().toLowerCase();
   if (q === '') return true;
   // 액션 문구까지 본다. 이 앱은 법률이 아니라 할 일을 파는 앱이라,
@@ -167,7 +177,7 @@ function matchesQuery(law: Law, query: string): boolean {
   const haystack = [
     law.title,
     law.officialRef,
-    ...productsOfLaw(law).map((p) => p.name),
+    ...productsOfLaw(ds, law).map((p) => p.name),
     ...actionsOfLaw(law).map((a) => a.title),
   ];
   return haystack.some((s) => s.toLowerCase().includes(q));
@@ -187,9 +197,14 @@ function compareLaws(a: Law, b: Law, sort: SortKey): number {
   return a.deadline.localeCompare(b.deadline);
 }
 
-export function visibleLaws(preset: FilterPreset, sort: SortKey, query: string): Law[] {
-  return laws
-    .filter((law) => matchesPreset(law, preset) && matchesQuery(law, query))
+export function visibleLaws(
+  ds: Dataset,
+  preset: FilterPreset,
+  sort: SortKey,
+  query: string,
+): Law[] {
+  return ds.laws
+    .filter((law) => matchesPreset(law, preset) && matchesQuery(ds, law, query))
     .sort((a, b) => compareLaws(a, b, sort));
 }
 
@@ -203,10 +218,11 @@ export interface PriorityStat {
 }
 
 export function priorityStat(
+  ds: Dataset,
   category: Category,
   done: ReadonlySet<string>,
 ): PriorityStat {
-  const matched = laws.filter((law) => law.category === category);
+  const matched = ds.laws.filter((law) => law.category === category);
   return {
     lawCount: matched.length,
     openCount: matched.reduce((sum, law) => sum + openActionsOfLaw(law, done).length, 0),
@@ -215,21 +231,22 @@ export function priorityStat(
   };
 }
 
-/** 이 제품을 affectedProductIds에 담고 있는 법률 수. */
-export function lawCountForProduct(productId: string): number {
-  return laws.filter((law) => law.affectedProductIds.includes(productId)).length;
+/** 이 제품에 걸리는 법률 수. 판정은 HS 앞자리다. */
+export function lawCountForProduct(ds: Dataset, product: Product): number {
+  const digits = product.hsCode.replace(/\D/g, '');
+  return ds.laws.filter((law) => law.hsPrefixes.some((x) => digits.startsWith(x))).length;
 }
 
-/** 중복을 걷어낸 HS 코드. products.json 순서를 지킨다. */
-export function uniqueHsCodes(): string[] {
-  return [...new Set(products.map((p) => p.hsCode))];
+/** 중복을 걷어낸 HS 코드. 사용자의 제품 순서를 지킨다. */
+export function uniqueHsCodes(ds: Dataset): string[] {
+  return [...new Set(ds.products.map((p) => p.hsCode))];
 }
 
 // ── S5 Map ─────────────────────────────────────────────────────
 
 /** 한 국가의 법률. 시트가 국가 단위로 말하므로 여기서 거른다. */
-export function lawsOfCountry(code: string): Law[] {
-  return laws.filter((law) => law.country === code);
+export function lawsOfCountry(ds: Dataset, code: string): Law[] {
+  return ds.laws.filter((law) => law.country === code);
 }
 
 /**
@@ -238,8 +255,8 @@ export function lawsOfCountry(code: string): Law[] {
  * 아트보드의 HIGH는 목 데이터보다 먼저 그려진 값이라 쓰지 않는다.
  * 시트 H1 옆 배지와 지도 위 VN 마커 라벨이 같이 이 값을 본다.
  */
-export function countryRisk(code: string): RiskLevel | null {
-  return maxRisk(lawsOfCountry(code));
+export function countryRisk(ds: Dataset, code: string): RiskLevel | null {
+  return maxRisk(lawsOfCountry(ds, code));
 }
 
 /** 시트에 세우는 행 수. 아트보드 실측. */
@@ -250,8 +267,8 @@ export const SHEET_ROWS = 3;
  * 액션이 없는 보류(46)·휴면(15/2018)은 여기 들어오지 않는다. 그건 아래 링크가 받는다.
  * 액션을 전부 체크하면 0건이 되고, 그때는 행 대신 안내 한 줄만 남는다.
  */
-export function sheetLaws(code: string, done: ReadonlySet<string>): Law[] {
-  return lawsOfCountry(code)
+export function sheetLaws(ds: Dataset, code: string, done: ReadonlySet<string>): Law[] {
+  return lawsOfCountry(ds, code)
     .filter((law) => openActionsOfLaw(law, done).length > 0)
     .sort((a, b) => {
       // 마감 없는 법률은 뒤로. 지금 데이터엔 없지만 순서가 임의가 되면 안 된다.
@@ -264,8 +281,12 @@ export function sheetLaws(code: string, done: ReadonlySet<string>): Law[] {
 }
 
 /** 한 국가에서 아직 끝나지 않은 액션 수. */
-export function openActionCountOfCountry(code: string, done: ReadonlySet<string>): number {
-  return lawsOfCountry(code).reduce((sum, law) => sum + openActionsOfLaw(law, done).length, 0);
+export function openActionCountOfCountry(
+  ds: Dataset,
+  code: string,
+  done: ReadonlySet<string>,
+): number {
+  return lawsOfCountry(ds, code).reduce((sum, law) => sum + openActionsOfLaw(law, done).length, 0);
 }
 
 // ── S6 Notifications ───────────────────────────────────────────

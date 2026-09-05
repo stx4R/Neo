@@ -65,7 +65,11 @@ function Setup() {
   const [saved] = useState(() => readProfile());
   const editing = params.get('edit') === '1' && saved !== null;
 
-  const [step, setStep] = useState(0);
+  // ?step=4 는 S4의 "+ 제품 추가"가 쓰는 통로다. 제품 편집기를 두 벌 만들지 않는다.
+  const [step, setStep] = useState(() => {
+    const n = Number(params.get('step'));
+    return Number.isInteger(n) && n >= 1 && n <= TOTAL && saved !== null ? n - 1 : 0;
+  });
   const [origin, setOrigin] = useState<CountryCode | null>(saved?.originCountry ?? 'KR');
   const [destination, setDestination] = useState<CountryCode | null>(
     saved?.destinationCountry ?? null,

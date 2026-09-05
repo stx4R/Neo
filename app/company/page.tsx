@@ -1,14 +1,18 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
+import { ComboPending } from '@/components/ComboEmpty';
 import { EmptyState } from '@/components/EmptyState';
 import { Label } from '@/components/Label';
 import { Row, RowTitle } from '@/components/Row';
 import { Screen, Section } from '@/components/Screen';
 import { TabBar } from '@/components/TabBar';
 import { TopBar } from '@/components/TopBar';
-import { company, laws, products } from '@/lib/data';
-import { lawCountForProduct, priorityStat, uniqueHsCodes } from '@/lib/derive';
+import { countryByCode } from '@/lib/data';
+import { useDataset, type Dataset } from '@/lib/dataset';
+import { priorityStat, uniqueHsCodes } from '@/lib/derive';
+import { updateProducts } from '@/lib/useProfile';
 import { useActionsDone } from '@/lib/useActionsDone';
 import { addPriority, usePriorities } from '@/lib/usePriorities';
 import {
@@ -24,12 +28,14 @@ const ALL_CATEGORIES = Object.keys(CATEGORY_LABEL) as Category[];
 export default function CompanyPage() {
   const done = useActionsDone();
   const priorities = usePriorities();
+  const ds = useDataset();
 
-  const active = company.countries.filter((c) => c.active);
-  const planned = company.countries.length - active.length;
   const remaining = ALL_CATEGORIES.filter(
     (c) => !priorities.some((p) => p.category === c),
   );
+
+  const origin = ds ? countryByCode(ds.profile.originCountry) : undefined;
+  const dest = ds?.country;
 
   return (
     <Screen scrollPadBottom="var(--pad-tabbar)" footer={<TabBar />}>
@@ -44,33 +50,62 @@ export default function CompanyPage() {
       />
 
       <div style={{ padding: '12px var(--pad) 0' }}>
+        {/* 회사명은 선택 입력이다. 없으면 자리표시자를 넣지 않고 품목명이 제목이 된다 —
+            품목은 사용자가 실제로 고른 값이라 지어낸 말이 아니다. */}
         <h1 className="t-h1" style={{ margin: 0, color: 'var(--text)' }}>
-          {company.name}
+          {ds?.profile.companyName ?? ds?.category?.nameKo ?? ''}
         </h1>
-        <p className="t-meta" style={{ margin: '10px 0 0', color: 'var(--text-2)' }}>
-          {company.industry}
-        </p>
+        {ds?.profile.companyName && ds.category && (
+          <p className="t-meta" style={{ margin: '10px 0 0', color: 'var(--text-2)' }}>
+            {ds.category.nameKo}
+          </p>
+        )}
       </div>
 
+      {/* S9 PROFILE ROW — 국가·품목 변경 진입점. */}
+      {ds && (
+        <div style={{ marginTop: 20, padding: '0 var(--pad)' }}>
+          <div
+            style={{
+              height: 44,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 'var(--row-gap)',
+              borderTop: '1px solid var(--hairline)',
+              borderBottom: '1px solid var(--hairline)',
+            }}
+          >
+            <span className="t-body" style={{ flex: 1, minWidth: 0, color: 'var(--text)' }}>
+              {origin?.code ?? ds.profile.originCountry} &rarr;{' '}
+              {dest?.code ?? ds.profile.destinationCountry}
+              {ds.category ? ` · ${ds.category.nameKo}` : ''}
+            </span>
+            <Link href="/setup?edit=1" className="t-meta" style={{ flex: 'none' }}>
+              변경
+            </Link>
+          </div>
+        </div>
+      )}
+
       {/* 정보 테이블. 카드가 아니라 조판된 2열 블록이다. */}
-      <div style={{ marginTop: 20, padding: '0 var(--pad)' }}>
-        <InfoRow label="EXPORT">
-          {active.map((c) => `${c.code} ${c.name}`).join(' · ')}{' '}
-          {planned > 0 && (
-            <span style={{ color: 'var(--text-3)' }}>(+{planned}개국 예정)</span>
-          )}
-        </InfoRow>
-        <InfoRow label="HS CODE">{uniqueHsCodes().join(' · ')}</InfoRow>
-        <InfoRow label="PRODUCTS">{products.length}</InfoRow>
-        <InfoRow label="LAWS" last>
-          {laws.length}
-        </InfoRow>
-      </div>
+      {ds && (
+        <div style={{ marginTop: 20, padding: '0 var(--pad)' }}>
+          <InfoRow label="EXPORT">
+            {origin ? `${origin.code} ${origin.nameKo}` : ds.profile.originCountry} &rarr;{' '}
+            {dest ? `${dest.code} ${dest.nameKo}` : ds.profile.destinationCountry}
+          </InfoRow>
+          <InfoRow label="HS CODE">{uniqueHsCodes(ds).join(' · ')}</InfoRow>
+          <InfoRow label="PRODUCTS">{ds.products.length}</InfoRow>
+          <InfoRow label="LAWS" last>
+            {ds.laws.length}
+          </InfoRow>
+        </div>
+      )}
 
       <Section label={`PRIORITIES — ${priorities.length}`}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
           {priorities.map((p) => (
-            <PriorityTile key={p.id} priority={p} done={done} />
+            <PriorityTile key={p.id} priority={p} ds={ds} done={done} />
           ))}
           {remaining.length > 0 && <AddTile remaining={remaining} />}
         </div>
@@ -87,34 +122,56 @@ export default function CompanyPage() {
         )}
       </Section>
 
-      <Section label={`PRODUCTS — ${products.length}`}>
-        {products.map((product, i) => (
+      <Section label={`PRODUCTS — ${ds?.products.length ?? 0}`}>
+        {!ds && <ComboPending />}
+        {/* S9 PRODUCT ROW — 우측 ×로 지우고, 추가는 S8 입력 화면으로 보낸다.
+            제품 편집기를 두 벌 만들지 않는다. */}
+        {ds?.products.map((product, i) => (
           <Row
             key={product.id}
             height="short"
-            last={i === products.length - 1}
+            last={i === ds.products.length - 1}
             trailing={
               <>
                 <span className="t-meta tnum" style={{ flex: 'none', color: 'var(--text-3)' }}>
-                  {product.hsCode}
+                  HS {product.hsCode}
                 </span>
-                <span
-                  className="t-meta tnum"
+                <button
+                  type="button"
+                  aria-label={`${product.name} 지우기`}
+                  onClick={() =>
+                    updateProducts(ds.products.filter((p) => p.id !== product.id))
+                  }
+                  className="t-meta"
                   style={{
                     flex: 'none',
-                    width: 52,
+                    width: 'var(--mark-w)',
+                    padding: 0,
+                    border: 'none',
+                    background: 'transparent',
                     textAlign: 'right',
                     color: 'var(--text-3)',
+                    cursor: 'pointer',
                   }}
                 >
-                  법률 {lawCountForProduct(product.id)}
-                </span>
+                  &times;
+                </button>
               </>
             }
           >
             <RowTitle as="span">{product.name}</RowTitle>
           </Row>
         ))}
+        {ds && ds.products.length === 0 && (
+          <EmptyState size="meta" message="등록한 제품이 없습니다" />
+        )}
+        {ds && (
+          <div style={{ marginTop: 14 }}>
+            <Link href="/setup?edit=1&step=4" className="t-body">
+              + 제품 추가
+            </Link>
+          </div>
+        )}
       </Section>
 
       <div style={{ marginTop: 'var(--sec-gap)', padding: '0 var(--pad)' }}>
@@ -162,12 +219,18 @@ function InfoRow({
 
 function PriorityTile({
   priority,
+  ds,
   done,
 }: {
   priority: Priority;
+  ds: Dataset | null;
   done: ReadonlySet<string>;
 }) {
-  const { lawCount, openCount, risk } = priorityStat(priority.category, done);
+  // 타일 수치는 지금 조합의 법령에서 다시 계산한다.
+  const stat = ds
+    ? priorityStat(ds, priority.category, done)
+    : { lawCount: 0, openCount: 0, risk: null };
+  const { lawCount, openCount, risk } = stat;
 
   return (
     <div
@@ -192,9 +255,11 @@ function PriorityTile({
         <h2 className="t-h2" style={{ margin: 0, color: 'var(--text)' }}>
           {priority.name}
         </h2>
-        <span className="t-meta tnum" style={{ color: 'var(--text-3)' }}>
-          법률 {lawCount} · 미완 {openCount}
-        </span>
+        {ds && (
+          <span className="t-meta tnum" style={{ color: 'var(--text-3)' }}>
+            법률 {lawCount} · 미완 {openCount}
+          </span>
+        )}
         {risk && (
           <span className="t-label" style={{ marginTop: 'auto', color: RISK_COLOR[risk] }}>
             {RISK_LABEL[risk]}
