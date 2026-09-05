@@ -16,10 +16,10 @@
       "status": "active",
       "riskLevel": "high",
       "effectiveDate": "2026-01-23",
-      "deadline": "2028-01-22",
+      "deadline": "2028-01-23",
       "addedAt": "2026-09-01",
-      "transitionEndsAt": "2028-01-22",
-      "transitionNote": "기존 인쇄 포장재는 2028.01.22까지 소진 허용",
+      "transitionEndsAt": "2028-01-23",
+      "transitionNote": "시행일(2026.01.23) 전에 인쇄된 라벨·포장재는 시행일부터 2년을 넘기지 않는 범위에서 소진 허용 — 2028.01.23까지",
       "changes": [
         {
           "before": "라벨 규정이 Decree 43/2017과 Decree 111/2021로 나뉘어 있음",
@@ -31,7 +31,7 @@
         },
         {
           "before": "품목 구분 없이 동일한 표시 항목",
-          "after": "위험도 등급(저·중·고)에 따라 표시 항목이 달라짐"
+          "after": "저위험 상품은 필수 표시항목 전부를 전자라벨로 대체 가능하나, 중·고위험 상품은 상품명·책임자·원산지·경고문구를 반드시 물리적 라벨에 표시(제53조)"
         }
       ],
       "affectedProductIds": [],
@@ -43,7 +43,7 @@
         "VN-a-037-elec-01"
       ],
       "source": {
-        "url": "https://english.luatvietnam.vn/decreeno37-2026-nd-cpdatedjanuary232026ofthegovernmentdetailinganumberofarticlesandprovidingmeasurestoorganizeandguidetheimp-424821-doc1.html",
+        "url": "https://congbao.chinhphu.vn/van-ban/nghi-dinh-so-37-2026-nd-cp-468865.htm",
         "publisher": "베트남 정부",
         "publishedAt": "2026-01-23",
         "originalLang": "vi",

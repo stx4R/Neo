@@ -156,7 +156,8 @@ B6 전에 정해야 한다(§DISCREPANCIES에 남긴다).
 
 # VN — 식품·음료 (`data/laws/VN-food.json`)
 
-**1단계 시드에서 이관 · 법령 5건 · 액션 9건 · 1차 2 / 2차 3**
+**재검증 2026-09-06 · 법령 4건 · 액션 8건 · 1차 2 / 2차 2**
+(공용 파일의 `DECREE 37/2026` · `DECREE 110/2026`을 합치면 화면에는 6건이 뜬다)
 
 이 조합은 2차 작업 이전에 작성됐고 B2에서 새 스키마로 이관했다.
 B4에서 허구 `deadline`·`dueDate`를 폐기했다(DISCREPANCIES §71).
@@ -172,8 +173,192 @@ D-Day에 영향을 주므로 B6에서 원문으로 확정한다.
 
 > **B6 갱신**: 이 조합의 `DECREE 110/2026`(EPR)은 식품 전용이 아니라
 > 식품·화장품·전기전자에 모두 걸리는 법령이라 `VN-shared.json`으로 옮겼다.
-> 아래 「VN — 공용」 절을 본다. 나머지 3건(29/2023 · 46/2026 · 15/2018)의
-> 재검증은 아직 남아 있다.
+
+**위 인용문은 재검증 이전의 상태를 남긴 것이다.**
+경과 종료일은 원문으로 확정했고(「VN — 공용」 절), `29/2023`은 폐지됐다.
+아래 「재검증 2026-09-06」이 이 조합의 현재 내용이다.
+
+---
+
+## 재검증 2026-09-06 — 무엇이 바뀌었나
+
+| 법령 | 조치 |
+|---|---|
+| `CIRCULAR 29/2023` | **폐지 확인 → 데이터셋에서 뺐다.** `THÔNG TƯ 30/2026/TT-BYT`가 대체 |
+| `CIRCULAR 30/2026` | **신규.** 29/2023을 대체한 현행 영양성분 표시 통칙 |
+| `DECREE 46/2026` | 보류 유효 확인. 출처를 정부 문서포털로, `publishedAt`을 고침 |
+| `DECREE 15/2018` | 관보 원문 확보 → `secondary`에서 `official`로. 액션 2건 신설 |
+| `CIRCULAR 24/2019` | **신규.** 식품첨가물 허용목록·최대사용량 |
+
+### 1. `THÔNG TƯ 30/2026/TT-BYT` — 29/2023을 대체한다
+`VN-2026-030` · 공포 2026-07-09 · 시행 2026-07-10 · HIGH · `secondary`
+
+**이 조합에서 가장 값이 컸던 발견이다.** 시드 데이터의 `CIRCULAR 29/2023`은
+2026-07-10부로 효력을 잃었다. 그대로 뒀으면 폐지된 통칙을 현행 의무로 보여줬을 것이다.
+
+- <https://luatvietnam.vn/y-te/thong-tu-30-2026-tt-byt-huong-dan-ghi-thanh-phan-va-gia-tri-dinh-duong-tren-nhan-thuc-pham-440000-d1.html>
+  (공포 2026-07-09 / 시행 2026-07-10, 서명 Đỗ Xuân Tuyên 차관.
+  `Thông tư số 29/2023/TT-BYT … hết hiệu lực kể từ ngày Thông tư này có hiệu lực thi hành`)
+- <https://thuvienphapluat.vn/van-ban/Thuong-mai/Thong-tu-30-2026-TT-BYT-huong-dan-noi-dung-cach-ghi-thanh-phan-dinh-duong-tren-nhan-thuc-pham-713960.aspx>
+  (같은 공포일·시행일)
+- <https://suckhoedoisong.vn/bo-y-te-5-thong-tin-dinh-duong-bat-buoc-phai-ghi-tren-nhan-thuc-pham-169260712100544345.htm>
+  (보건부 기관지 — 필수 5종과 적용 제외 목록)
+- <https://luatvietnam.vn/tin-van-ban-moi/thong-tin-dinh-duong-bat-buoc-phai-ghi-tren-nhan-thuc-pham-186-110310-article.html>
+  (제5조 필수 5종, `thay thế Thông tư 29/2023/TT-BYT kể từ ngày 10/7/2026`)
+
+필수 5종은 **에너지 · 단백질 · 탄수화물 · 지방 · 나트륨**이고, 음료·가당 가공유·
+가당 식품은 총당류를, 튀김 식품은 포화지방을 더한다. 단위는 kcal / g / mg,
+기준은 100g·100ml 또는 1회 제공량이다.
+
+**이 조합에서 처음으로 HS 차등이 생겼다.** 통칙이 적용 제외를 명시한다 —
+단일 원료 식품, 천연광천수·병입음용수, 식용소금, 식초, 향미료, 식품효소,
+무첨가 차·커피, 건강보호식품, **주류**, 소규모 사업자 제품.
+그래서 `hsPrefixes`를 `["16","17","18","19","20","21","2202"]`로 적었다.
+22류를 통째로 넣지 않은 것은 `2201`(병입음용수)과 `2203`~`2208`(주류)이 명시적
+제외 대상이기 때문이다. 청량음료 `2202`만 남긴다.
+
+**시드의 `hsPrefixes: ["2008","2103"]`은 틀렸다.** 유자청(2007.99)이 빠져 있었는데
+잼·과일가공품은 단일 원료 식품이 아니라 적용 대상이다.
+
+`sourceTier`는 `secondary`다 — 보건부 통칙은 관보(`congbao.chinhphu.vn`)에 실리지 않고,
+소관 기관인 식품안전국(`vfa.gov.vn`)은 조사 시점에 접속되지 않았다(`ECONNREFUSED`).
+`vasep.com.vn`이 올린 원문 PDF는 받았으나 서브셋 폰트라 텍스트가 나오지 않았다.
+
+**액션 id `VN-a-08` · `VN-a-09`는 그대로 뒀다.** 법령이 바뀌어도 할 일의 종류
+(시험성적서 확보 · 라벨 반영)는 같고, `neo.actions.done`이 그 id를 담는다(§52 · §92).
+`lawId`만 `VN-2026-030`으로 돌리고 제목을 5종 기준으로 고쳤다.
+
+### 2. `DECREE 46/2026/ND-CP` — 보류가 아직 유효하다
+`VN-2026-046` · 공포·시행 2026-01-26 · MEDIUM · `official`
+
+- **<https://vanban.chinhphu.vn/?pageid=27160&docid=216827>** — 정부 문서포털.
+  서명본 원문 PDF(`datafiles.chinhphu.vn/cpp/files/vbpq/2026/01/46-ndcp.signed.pdf`)를 건다.
+  **1차 출처다**
+- <https://baochinhphu.vn/tiep-tuc-ap-dung-nghi-dinh-15-2018-nd-cp-ve-an-toan-thuc-pham-cho-den-khi-co-quy-dinh-moi-102260408123934123.htm>
+  (정부 전자신문 2026-04-08)
+- <https://nhandan.vn/tiep-tuc-tam-ngung-ap-dung-nghi-dinh-so-462026nd-cp-post954080.html>
+  (인민일보 2026-04-08)
+
+**`heldAt` `2026-04-06`은 실재 날짜였다.** 두 정부 매체가 일치한다 —
+`Nghị quyết 15/2026/NQ-CP ngày 06/4/2026`이 `Nghị định 46/2026/NĐ-CP`(2026-01-26)와
+`Nghị quyết 66.13/2026/NQ-CP`(2026-01-27)의 효력을 정지시켰다. 해제 시점은 날짜가
+아니라 조건이다 — `cho đến khi Luật An toàn thực phẩm (sửa đổi) và Nghị định
+hướng dẫn … có hiệu lực thi hành`. 개정 식품안전법과 그 시행령이 시행될 때까지다.
+
+앞선 `Nghị quyết 09/2026/NQ-CP`(2026-02-04)는 2026-04-15까지로 기한을 끊었는데
+`15/2026`이 그것을 대체하며 무기한으로 바꿨다. **2026-09-06 현재 보류 유효.**
+
+**고친 값**: `publishedAt`이 `2026-01-12`였는데 어느 출처와도 맞지 않는다 —
+시행령 자체가 `26/01/2026`자다. `2026-01-26`으로 고쳤다.
+`publisher` `"베트남 정부 관보"`도 `"베트남 정부"`로 바꿨다(§93).
+`hsPrefixes`는 `["20","21"]`에서 식품 전 범위로 넓혔다 — 식품안전법 시행령은
+품목을 가리지 않는다.
+
+**액션은 여전히 0건이다.** 효력이 정지된 시행령의 액션은 지금 할 일이 아니다(§73).
+재시행에 대비한 사전 준비를 액션으로 적으면 그건 우리가 지어낸 일이 된다.
+
+### 3. `DECREE 15/2018/ND-CP` — 관보 원문을 찾았다
+`VN-2018-015` · 공포·시행 2018-02-02 · MEDIUM · **`official`**
+
+- **<https://congbao.chinhphu.vn/van-ban/nghi-dinh-so-15-2018-nd-cp-25858.htm>**
+  — 관보 제375+376호(2018-02-15). PDF·DOC 원문 링크 보유. **1차 출처다**
+- 위 `46/2026`의 두 정부 매체가 `Nghị định số 15/2018/NĐ-CP … tiếp tục có hiệu lực`로
+  현행 유효를 확인한다
+
+**`sourceTier`를 `secondary`에서 `official`로 올렸다.** 시드는 URL이 `chemlinked.com`
+(상용 컴플라이언스 매체)인데 `publisher`가 `"베트남 정부 관보"`였다 — §93이 EPR에서
+지적한 것과 같은 위반이다. 이번엔 관보 원문을 확보했으므로 URL 쪽을 올렸다.
+
+**`riskLevel`을 `low`에서 `medium`으로 올렸다.** 46/2026이 보류된 지금 **이 시행령이
+베트남에 식품을 넣는 유일한 경로**다. 자가공표를 마치지 않으면 통관이 안 된다.
+보류 중인 46/2026이 `medium`인데 실제로 밟아야 하는 절차가 `low`인 것은 앞뒤가 안 맞았다.
+
+**액션 2건을 새로 붙였다.** 시드는 `actionIds: []`라 배지도 액션도 없는 휴면 법령이었다 —
+"현행 유지"라는 제목만 있고 사용자가 할 일이 없었다. 자가공표 서류 작성과
+등록공표 대상 판정은 실제로 해야 하는 일이다.
+
+`Nghị định 155/2018/NĐ-CP`(2018-11-12)가 이 시행령을 개정했으나 `changes`에 넣지 않았다.
+2018년 개정이라 "무엇이 바뀌었나"로 보여줄 최근 변경이 아니다(§B-3 규칙 6).
+
+### 4. `THÔNG TƯ 24/2019/TT-BYT` — 식품첨가물
+`VN-2019-024` · 공포 2019-08-30 · 시행 2019-10-16 · MEDIUM · `secondary`
+
+법령 3건으로는 목표(4~6)에 미달해 보충한 건이다. 소스·장류는 첨가물이 들어가는
+가공식품이라 이 조합에 실제로 걸린다.
+
+- <https://thuvienphapluat.vn/van-ban/The-thao-Y-te/Thong-tu-24-2019-TT-BYT-quy-dinh-ve-quan-ly-va-su-dung-phu-gia-thuc-pham-360857.aspx>
+  (공포 2019-08-30 / 시행 2019-10-16)
+- <https://english.luatvietnam.vn/y-te/circular-24-2019-tt-byt-prescribing-the-management-and-use-of-food-additives-176882-d1.html>
+  (같은 날짜, 영문)
+- <https://dms.gov.vn/tin-chi-tiet/-/chi-tiet/thong-tu-so-24-2019-tt-byt-400-loai-phu-gia-thuc-pham-%C4%91uoc-phep-su-dung-trong-thuc-pham-19253-1.html>
+  (시장관리국 — 허용 첨가물 400종)
+- <https://sonla.dms.gov.vn/en/tin-chi-tiet/-/chi-tiet/thong-tu-17-2023-tt-byt-sua-%C4%91oi-va-bai-bo-mot-so-van-ban-ve-an-toan-thuc-pham-70001-2607.html>
+  (개정 통칙 `17/2023/TT-BYT` 2023-09-25 — 부록 2B에 18종 추가, 제3조 8항·제5조 4항 개정,
+  제5조 5·6항 신설)
+
+`changes`는 `17/2023`의 개정분만 적었다. **허용 첨가물 400종의 구체 목록과
+품목별 최대사용량(ML) 수치는 넣지 않았다** — 부록을 원문으로 열지 못했고,
+숫자는 틀리면 바로 실무 사고가 난다(전기전자 `01/2026`에서 한계치를 비운 것과 같다).
+
+`sourceTier: secondary`. 보건부 통칙이라 관보에 없고 `vfa.gov.vn`이 접속되지 않았다.
+
+## 제외 — 그리고 그 사유
+
+### `Luật An toàn thực phẩm (sửa đổi)` — 개정 식품안전법
+
+**제외했다. 2026-09-06 현재 국회 제출 전 초안이다.**
+
+`46/2026`의 보류를 푸는 열쇠가 이 법인데, 2026-07-09에 기초안 개요(khung)가
+통과됐을 뿐이고 제16대 국회 첫 회기 통과를 목표로 입법계획에 올라 있는 단계다.
+시행일이 없으므로 `scheduled`로도 넣을 수 없다.
+
+- <https://suckhoedoisong.vn/hoan-thien-luat-an-toan-thuc-pham-sua-doi-day-manh-phan-cap-chuyen-doi-so-cat-giam-thu-tuc-hanh-chinh-169260723200850983.htm>
+- <https://baochinhphu.vn/bo-sung-du-an-luat-an-toan-thuc-pham-sua-doi-vao-chuong-trinh-lap-phap-nam-2026-102260116173546446.htm>
+
+VN-cosmetics에서 화장품 관리 시행령 초안을 뺀 것과 같은 이유다.
+
+### `THÔNG TƯ 11/2026/TT-BCT` · `THÔNG TƯ 31/2026/TT-BCT` — 식품 이력추적
+
+**둘 다 제외했다. 우리 제품이 적용 대상인지 원문으로 확인하지 못했다.**
+
+경과가 복잡하다. 산업무역부가 `11/2026/TT-BCT`(2026-02-27 공포 / 2026-04-16 시행)로
+식품 이력추적을 규정했다가 `Quyết định 906/QĐ-BCT`(2026-04-15)로 2026-07-01까지
+효력을 정지시켰고, 그 사이 `31/2026/TT-BCT`(2026-06-11 공포 / 2026-07-01 시행)가 나왔다.
+31/2026의 적용 범위는 **`sản phẩm, hàng hóa có mức độ rủi ro cao thuộc phạm vi
+quản lý của Bộ Công Thương`** — 산업무역부 소관 **고위험** 품목이다.
+
+빼기로 한 이유 둘:
+
+1. **31/2026이 11/2026을 폐지하는지 2차 출처가 말하지 않는다.** 어느 쪽이 살아 있는지
+   확정하지 못했다
+2. **소스·장류·조미김이 산업무역부 소관 고위험 목록에 드는지 확인하지 못했다.**
+   베트남 식품 관할은 보건부·산업무역부·농업부로 갈리고 소스류의 소관이 갈린다.
+   부속서를 확보해야 하는데 `datafiles.chinhphu.vn`의 원문 PDF 두 건
+   (`2026/6/31-bct.pdf` · `2026/3/11-bct.pdf`)이 **전부 스캔 이미지라 텍스트가 나오지 않았다.**
+   `36/2026`에서 통했던 zlib 추출이 여기서는 통하지 않는다
+
+§89가 가르친 것의 뒤집힌 적용이다. 그때는 2차 출처가 범위를 **좁게** 말해 원문으로
+넓혔다. 여기서는 원문을 못 열었으므로 **넓게 넣지 않는다.** 이력추적 의무에는
+실재 기한(생산시설 2026-12-01 · 수입시설 2027-03-01, `11/2026` 기준)이 붙어 있어
+넣었으면 화면에 D-Day가 떴을 것이다. 그게 우리 제품의 날짜인지 모르는 채로 넣으면
+§91이 폐기한 것과 같은 종류의 거짓말이 된다.
+
+- <https://vanban.chinhphu.vn/?pageid=27160&docid=218415> (`31/2026`, 서명본 PDF)
+- <https://vanban.chinhphu.vn/?docid=217126&pageid=27160> (`11/2026`, 서명본 PDF)
+- <https://moit.gov.vn/tin-tuc/bo-cong-thuong-ban-hanh-thong-tu-quy-dinh-truy-xuat-nguon-goc-thuc-pham.html>
+- <https://thuvienphapluat.vn/chinh-sach-phap-luat-moi/vn/ho-tro-phap-luat/chinh-sach-moi/110749/tam-ngung-hieu-luc-thong-tu-11-2026-tt-bct-truy-xuat-nguon-goc-thuc-pham-den-ngay-01-7-2026>
+
+**다음 작업자에게**: 원문 PDF에 OCR을 걸거나 `thuvienphapluat.vn`의 `van-ban` 페이지
+(WebFetch가 403을 받는다)를 다른 경로로 열면 부속서를 확인할 수 있다.
+확인되면 이 조합에 실재 D-Day가 생긴다.
+
+## `originScope` — 이 조합에도 없다
+
+기본 제품 넷 중 동물성 식품이 없다. 수출국 정부 발행 위생증명서와 수출시설 등록은
+동물성 원료 식품에 걸리는데 소스·장류·조미김·유자청은 전부 식물성이다.
+채울 근거가 없다. 3차 지시서가 예상한 대로 **미국 식품(FSVP·시설등록)** 쪽에서
+나올 가능성이 높다.
+
 
 ---
 
@@ -386,7 +571,7 @@ ExtendMax가 제시한 로드맵(2023-07-01 / 2024-07-01)이 이미 지났는데
 
 # VN — 공용 (`data/laws/VN-shared.json`)
 
-**법령 2건 · 액션 12건 · 1차 1 / 2차 1**
+**법령 2건 · 액션 12건 · 1차 1 / 2차 1** (`37/2026`은 2026-09-06 관보 원문으로 재확인)
 
 ## `DECREE 110/2026/ND-CP` — EPR을 공용으로 옮겼다
 
@@ -432,6 +617,59 @@ ExtendMax가 제시한 로드맵(2023-07-01 / 2024-07-01)이 이미 지났는데
 `VN-a-037-elec-01`(정격전압·소비전력·안전경고 베트남어 보조라벨)을 붙였다.
 식품·화장품에 이어 세 품목이 다 찼다.
 
-**경과 종료일 2028-01-22 vs 2028-01-23은 아직 확정하지 못했다.** 3차 지시서가
-지목한 항목이고 `english.luatvietnam.vn` 원문에서 확인해야 한다.
-남은 조합 작업에서 이어 처리한다.
+## `DECREE 37/2026/ND-CP` — 경과 종료일을 원문으로 확정했다 (2026-09-06)
+
+**2028-01-22가 아니라 2028-01-23이다.** D-503에서 D-504로 하루 움직였다.
+
+관보 원문을 열어 조문을 직접 읽었다.
+
+- **<https://congbao.chinhphu.vn/van-ban/nghi-dinh-so-37-2026-nd-cp-468865.htm>**
+  — 관보 제93호(2026-02-09). PDF·DOCX 원문 링크 보유. **1차 출처다.**
+  `sourceTier: official`이 이제 실제로 성립한다
+- <https://vanban.chinhphu.vn/?pageid=27160&docid=216764> — 정부 문서포털.
+  서명본 `37-1.signed.pdf`와 부속서 `37-pl.pdf`
+
+**서명본 PDF는 스캔 이미지라 텍스트가 나오지 않았다.** 관보의 DOCX를 받아
+zip 로컬 헤더를 훑고 `word/document.xml`을 `inflateRawSync`로 풀어 266,344자를 얻었다.
+전기전자에서 쓴 PDF zlib 추출이 막힐 때의 우회로다 — 관보는 DOCX를 같이 올린다.
+
+읽은 조문 둘:
+
+```
+Điều 97. Hiệu lực thi hành
+1. Nghị định này có hiệu lực thi hành kể từ ngày ký ban hành.
+
+Điều 98. Quy định chuyển tiếp
+4. Nhãn hàng hóa, bao bì thương phẩm … đã được sản xuất, in ấn trước thời điểm
+   Nghị định này có hiệu lực được tiếp tục sử dụng, nhưng không quá 02 năm
+   kể từ ngày Nghị định này có hiệu lực thi hành.
+```
+
+시행일은 **서명일 그날**(2026-01-23)이고, 경과규정은 **달력 날짜를 적지 않는다** —
+"시행일부터 2년을 넘기지 않는다"뿐이다. 그래서 2차 출처가 갈렸다.
+`mondial.vn`은 `Cách tính hiện tại là không quá 23/01/2028`로 23일을 적고,
+`luatvietan.vn`은 `đến tháng 01/2028`로 뭉갠다.
+
+**2028-01-23을 택한 근거**: 평이한 독법으로 2026-01-23의 2년 뒤가 2028-01-23이고,
+"không quá 02 năm"(2년을 넘지 않는다)이므로 그날까지는 아직 2년 안이다.
+민법(2015) 제147조 2항이 첫날을 세지 않아 기산일이 2026-01-24가 되고,
+제148조 3항으로 마지막 해의 대응일에 끝나는 계산도 같은 날에 닿는다.
+**시드의 2028-01-22는 하루를 두 번 뺀 값이다.**
+
+`transitionNote`도 고쳤다. 달력 날짜만 적으면 그 날짜가 법령에 쓰여 있는 것처럼
+읽히므로, 법이 실제로 뭐라고 쓰는지(시행일부터 2년)를 앞에 두고 계산 결과를 뒤에 붙였다.
+
+**`changes`의 세 번째 항목을 원문에 맞게 조였다.** "위험도 등급에 따라 표시 항목이
+달라짐"이라고만 적혀 있었는데, 제53조가 정하는 것은 더 구체적이다.
+
+```
+Điều 53. Nội dung ghi trong nhãn điện tử
+1. 저위험 상품 — 제42조 1항의 필수 표시항목 전부를 전자라벨로 대체할 수 있다
+2. 중·고위험 상품 — 다음은 반드시 물리적 라벨(nhãn vật lý)에 표시한다:
+   a) 상품명  b) 책임 조직·개인의 명칭과 주소  c) 원산지  d) 경고 정보
+   đ) 나머지 필수 항목은 전자라벨로 표시할 수 있다
+```
+
+수출자에게 이것이 실제 차이다 — "전자라벨이 허용된다"가 아니라
+**"우리 제품 위험도에서는 네 항목을 여전히 인쇄해야 한다"**가 실행 정보다.
+같은 원문에서 최소 글자 크기 `0,9 mm`(제52조 3항)도 확인했다.

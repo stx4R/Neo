@@ -1,59 +1,79 @@
 {
   "laws": [
     {
-      "id": "VN-2023-029",
-      "officialRef": "CIRCULAR 29/2023",
-      "title": "영양성분 표시 의무화",
+      "id": "VN-2026-030",
+      "officialRef": "CIRCULAR 30/2026",
+      "title": "영양성분 표시 통칙 교체 — 필수 5종으로 재정의",
       "country": "VN",
       "category": "labeling",
       "itemCategories": [
         "food"
       ],
       "hsPrefixes": [
-        "2008",
-        "2103"
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "2202"
       ],
       "sourceTier": "secondary",
       "status": "active",
       "riskLevel": "high",
-      "effectiveDate": "2026-01-01",
+      "effectiveDate": "2026-07-10",
       "deadline": null,
-      "addedAt": "2026-09-01",
+      "addedAt": "2026-09-06",
       "changes": [
         {
-          "before": "영양성분 표시 자율",
-          "after": "사전포장 식품에 에너지·단백질·당류 표시 의무"
+          "before": "Thông tư 29/2023/TT-BYT가 영양성분 표시를 규율",
+          "after": "Thông tư 30/2026/TT-BYT가 2026.07.10부로 대체"
+        },
+        {
+          "before": "표시 대상 영양성분이 조문마다 흩어져 있었음",
+          "after": "에너지·단백질·탄수화물·지방·나트륨 5종을 필수로 명시. 음료·가당 가공유·가당 식품은 총당류, 튀김 식품은 포화지방을 추가"
+        },
+        {
+          "before": "적용 제외 대상이 명확하지 않았음",
+          "after": "단일 원료 식품·천연광천수·병입음용수·식용소금·식초·향미료·식품효소·무첨가 차/커피·건강보호식품·주류·소규모 사업자 제품을 적용 대상에서 제외"
         }
       ],
       "affectedProductIds": [
         "p-kimchi-sauce",
         "p-seasoned-laver",
-        "p-gochujang"
+        "p-gochujang",
+        "p-yuja"
       ],
       "actionIds": [
         "VN-a-08",
-        "VN-a-09"
+        "VN-a-09",
+        "VN-a-030-01"
       ],
       "source": {
-        "url": "https://www.eurofins.vn/en/news/knowledge-of-testing-industry/nutrition-labeling-compliance-under-circular-29/",
+        "url": "https://luatvietnam.vn/y-te/thong-tu-30-2026-tt-byt-huong-dan-ghi-thanh-phan-va-gia-tri-dinh-duong-tren-nhan-thuc-pham-440000-d1.html",
         "publisher": "베트남 보건부",
-        "publishedAt": "2023-12-30",
+        "publishedAt": "2026-07-09",
         "originalLang": "vi",
-        "lastVerified": "2026-09-01"
+        "lastVerified": "2026-09-06"
       }
     },
     {
       "id": "VN-2026-046",
       "officialRef": "DECREE 46/2026",
-      "title": "식품안전법 시행령 개정",
+      "title": "식품안전법 시행령 개정 — 자가공표를 인증으로 대체",
       "country": "VN",
       "category": "safety",
       "itemCategories": [
         "food"
       ],
       "hsPrefixes": [
+        "16",
+        "17",
+        "18",
+        "19",
         "20",
-        "21"
+        "21",
+        "22"
       ],
       "sourceTier": "official",
       "status": "hold",
@@ -63,7 +83,7 @@
       "heldAt": "2026-04-06",
       "statusChangedAt": "2026-04-06",
       "addedAt": "2026-09-01",
-      "transitionNote": "Resolution 15/2026/NQ-CP로 효력 정지. 개정 식품안전법 시행 시까지 Decree 15/2018 절차 유지",
+      "transitionNote": "Nghị quyết 15/2026/NQ-CP(2026.04.06)로 효력 정지. 개정 식품안전법과 그 시행령이 시행될 때까지 Decree 15/2018 절차를 그대로 쓴다",
       "changes": [
         {
           "before": "자가공표(self-declaration)로 갈음",
@@ -82,33 +102,38 @@
       ],
       "actionIds": [],
       "source": {
-        "url": "https://vietanlaw.com/vietnam-decree-46-2026-nd-cp-key-food-safety-updates-compliance-guide/",
-        "publisher": "베트남 정부 관보",
-        "publishedAt": "2026-01-12",
+        "url": "https://vanban.chinhphu.vn/?pageid=27160&docid=216827",
+        "publisher": "베트남 정부",
+        "publishedAt": "2026-01-26",
         "originalLang": "vi",
-        "lastVerified": "2026-09-01"
+        "lastVerified": "2026-09-06"
       }
     },
     {
       "id": "VN-2018-015",
       "officialRef": "DECREE 15/2018",
-      "title": "자가공표 절차 (현행 유지)",
+      "title": "자가공표 절차 — 46/2026 보류로 이것이 유일한 경로다",
       "country": "VN",
       "category": "safety",
       "itemCategories": [
         "food"
       ],
       "hsPrefixes": [
+        "16",
+        "17",
+        "18",
+        "19",
         "20",
-        "21"
+        "21",
+        "22"
       ],
-      "sourceTier": "secondary",
+      "sourceTier": "official",
       "status": "active",
-      "riskLevel": "low",
+      "riskLevel": "medium",
       "effectiveDate": "2018-02-02",
       "deadline": null,
       "addedAt": "2026-09-01",
-      "transitionNote": "Decree 46/2026 보류로 당분간 계속 적용",
+      "transitionNote": "Decree 46/2026 보류로 당분간 계속 적용. 보류 이전에 접수된 서류도 이 시행령으로 처리된다",
       "changes": [],
       "affectedProductIds": [
         "p-kimchi-sauce",
@@ -116,31 +141,135 @@
         "p-gochujang",
         "p-yuja"
       ],
-      "actionIds": [],
+      "actionIds": [
+        "VN-a-015-01",
+        "VN-a-015-02"
+      ],
       "source": {
-        "url": "https://food.chemlinked.com/news/food-news/vietnam-to-amend-decree-152018-regulations-on-the-implementation-of-the-food-safety-law",
-        "publisher": "베트남 정부 관보",
+        "url": "https://congbao.chinhphu.vn/van-ban/nghi-dinh-so-15-2018-nd-cp-25858.htm",
+        "publisher": "베트남 정부",
         "publishedAt": "2018-02-02",
         "originalLang": "vi",
-        "lastVerified": "2026-09-01"
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "VN-2019-024",
+      "officialRef": "CIRCULAR 24/2019",
+      "title": "식품첨가물 허용목록·최대사용량 — 2023년 개정으로 18종 추가",
+      "country": "VN",
+      "category": "safety",
+      "itemCategories": [
+        "food"
+      ],
+      "hsPrefixes": [
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22"
+      ],
+      "sourceTier": "secondary",
+      "status": "active",
+      "riskLevel": "medium",
+      "effectiveDate": "2019-10-16",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [
+        {
+          "before": "Thông tư 24/2019/TT-BYT 부록 2B의 첨가물 목록",
+          "after": "Thông tư 17/2023/TT-BYT가 부록 2B에 첨가물 18종을 추가"
+        },
+        {
+          "before": "제3조 8항·제5조 4항의 사용 조건",
+          "after": "17/2023이 두 조항을 개정하고 제5조에 5·6항을 신설"
+        }
+      ],
+      "affectedProductIds": [
+        "p-kimchi-sauce",
+        "p-seasoned-laver",
+        "p-gochujang",
+        "p-yuja"
+      ],
+      "actionIds": [
+        "VN-a-024-01",
+        "VN-a-024-02",
+        "VN-a-024-03"
+      ],
+      "source": {
+        "url": "https://thuvienphapluat.vn/van-ban/The-thao-Y-te/Thong-tu-24-2019-TT-BYT-quy-dinh-ve-quan-ly-va-su-dung-phu-gia-thuc-pham-360857.aspx",
+        "publisher": "베트남 보건부",
+        "publishedAt": "2019-08-30",
+        "originalLang": "vi",
+        "lastVerified": "2026-09-06"
       }
     }
   ],
   "actions": [
     {
       "id": "VN-a-08",
-      "lawId": "VN-2023-029",
-      "title": "영양성분 시험성적서 확보",
+      "lawId": "VN-2026-030",
+      "title": "필수 5종(에너지·단백질·탄수화물·지방·나트륨) 시험성적서 확보",
       "owner": "품질팀",
       "effort": "4주",
       "dueDate": null
     },
     {
       "id": "VN-a-09",
-      "lawId": "VN-2023-029",
-      "title": "라벨 영양성분표 디자인 반영",
+      "lawId": "VN-2026-030",
+      "title": "영양성분표를 100g/100ml 또는 1회 제공량 기준으로 재작성",
       "owner": "디자인",
       "effort": "2주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-030-01",
+      "lawId": "VN-2026-030",
+      "title": "가당 제품·튀김 제품 해당 여부 판정 — 총당류·포화지방 추가 표시 대상 확인",
+      "owner": "품질팀",
+      "effort": "1주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-015-01",
+      "lawId": "VN-2018-015",
+      "title": "제품별 자가공표 서류(제품정보·시험성적서) 작성해 수입자에 전달",
+      "owner": "품질팀",
+      "effort": "3주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-015-02",
+      "lawId": "VN-2018-015",
+      "title": "등록공표 대상(건강보호식품·특수영양식품·36개월 미만 유아식) 해당 여부 판정",
+      "owner": "품질팀",
+      "effort": "1주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-024-01",
+      "lawId": "VN-2019-024",
+      "title": "제품에 쓴 첨가물을 24/2019 허용목록과 대조 — 17/2023 추가분 포함",
+      "owner": "품질팀",
+      "effort": "3주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-024-02",
+      "lawId": "VN-2019-024",
+      "title": "첨가물 사용량이 식품군별 최대사용량(ML) 이내인지 검산",
+      "owner": "품질팀",
+      "effort": "2주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-024-03",
+      "lawId": "VN-2019-024",
+      "title": "라벨 원재료명에 첨가물 기능류명과 INS 번호 표기",
+      "owner": "디자인",
+      "effort": "1주",
       "dueDate": null
     }
   ]
