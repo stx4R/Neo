@@ -97,7 +97,7 @@ export default function MapPage() {
       <div style={{ padding: '10px var(--pad) 0' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <h1 className="t-h1" style={{ margin: 0, color: 'var(--text)' }}>
-            {focus.name}.
+            {focus.name}
           </h1>
           {risk && <Badge tone={RISK_COLOR[risk]}>{RISK_LABEL[risk]}</Badge>}
         </div>

@@ -49,7 +49,7 @@ export default function LawsPage() {
 
       <div style={{ padding: '12px var(--pad) 0' }}>
         <h1 className="t-h1" style={{ margin: 0, color: 'var(--text)' }}>
-          법률.
+          법률
         </h1>
         <p className="t-meta tnum" style={{ margin: '10px 0 0', color: 'var(--text-3)' }}>
           {activeCountry ? `${activeCountry.code} ${activeCountry.name} · ` : ''}

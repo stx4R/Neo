@@ -56,7 +56,7 @@ export default async function LawDetail({ params }: PageProps<'/laws/[id]'>) {
       <div style={{ padding: '12px var(--pad) 0' }}>
         <Label>{law.officialRef}</Label>
         <h1 className="t-h1" style={{ margin: '8px 0 0', color: 'var(--text)' }}>
-          {law.title}.
+          {law.title}
         </h1>
         <p className="t-meta tnum" style={{ margin: '10px 0 0', color: 'var(--text-2)' }}>
           {activeCountry ? `${activeCountry.code} ${activeCountry.name} · ` : ''}

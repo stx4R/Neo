@@ -67,7 +67,7 @@ export default function Home() {
           }}
         >
           <h1 className="t-h1" style={{ margin: 0, color: 'var(--on-color)' }}>
-            대응 필요 <span className="tnum">{must.length}</span>건.
+            대응 필요 <span className="tnum">{must.length}</span>건
           </h1>
         </div>
         <p className="t-meta" style={{ margin: '10px 0 0', color: 'var(--text-2)' }}>

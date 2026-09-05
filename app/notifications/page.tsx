@@ -59,7 +59,7 @@ export default function NotificationsPage() {
 
       <div style={{ padding: '12px var(--pad) 0' }}>
         <h1 className="t-h1" style={{ margin: 0, color: 'var(--text)' }}>
-          알림.
+          알림
         </h1>
         <p className="t-meta tnum" style={{ margin: '10px 0 0', color: 'var(--text-3)' }}>
           읽지 않음 {unread}

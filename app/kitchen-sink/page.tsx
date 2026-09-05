@@ -61,15 +61,15 @@ export default function KitchenSink() {
       />
 
       <div style={{ padding: '12px var(--pad) 0' }}>
-        <ColorBlock tone={RISK_COLOR.critical}>대응 필요 3건.</ColorBlock>
+        <ColorBlock tone={RISK_COLOR.critical}>대응 필요 3건</ColorBlock>
       </div>
 
       <Section title="COLORBLOCK — 색면 4종">
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <ColorBlock tone="var(--accent)">시안 색면.</ColorBlock>
-          <ColorBlock tone={RISK_COLOR.high}>주의 색면.</ColorBlock>
-          <ColorBlock tone={RISK_COLOR.medium}>경고 색면.</ColorBlock>
-          <ColorBlock tone="var(--hold)">보류 색면.</ColorBlock>
+          <ColorBlock tone="var(--accent)">시안 색면</ColorBlock>
+          <ColorBlock tone={RISK_COLOR.high}>주의 색면</ColorBlock>
+          <ColorBlock tone={RISK_COLOR.medium}>경고 색면</ColorBlock>
+          <ColorBlock tone="var(--hold)">보류 색면</ColorBlock>
         </div>
       </Section>
 

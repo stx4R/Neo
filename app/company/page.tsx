@@ -45,7 +45,7 @@ export default function CompanyPage() {
 
       <div style={{ padding: '12px var(--pad) 0' }}>
         <h1 className="t-h1" style={{ margin: 0, color: 'var(--text)' }}>
-          {company.name}.
+          {company.name}
         </h1>
         <p className="t-meta" style={{ margin: '10px 0 0', color: 'var(--text-2)' }}>
           {company.industry}
