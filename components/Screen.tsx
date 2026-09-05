@@ -20,6 +20,13 @@ import { useOnline } from '@/lib/useOnline';
  * 좌우에 검은 띠가 남고 하단 탭바 배경도 화면 끝까지 가지 않는다.
  * 화면 '안'의 콘텐츠는 규칙대로 전부 좌측 정렬이다 — 프레임 배치와는 다른 얘기다.
  *
+ * 높이는 100dvh가 아니라 position: fixed + inset: 0으로 잡는다.
+ * dvh는 '레이아웃 값'이라 iOS Safari가 하단 툴바를 접을 때 따라오지 않는다.
+ * 이 앱은 문서가 스크롤되지 않으므로(html·body가 overflow: hidden) 툴바가 접혀도
+ * 리레이아웃이 걸리지 않고, 프레임이 접히기 전 높이에 굳은 채 남는다.
+ * 그러면 탭바 아래로 툴바가 비운 만큼 배경색 띠가 생긴다 — 실기기에서 나온 증상이다.
+ * fixed 요소는 브라우저가 툴바 상태에 맞춰 직접 옮겨 주므로 그 틈이 생기지 않는다.
+ *
  * 오프라인 바가 여기 있는 이유: 여섯 화면이 전부 Screen을 쓰므로 한 곳만 고치면 된다.
  * 바가 뜨면 스크롤 영역을 그만큼 아래로 민다 — 겹쳐서 상단바를 가리지 않는다.
  * 그래서 'use client'가 붙는다. 페이지들은 이미 전부 클라이언트다.
@@ -41,13 +48,21 @@ export function Screen({
   const online = useOnline();
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', background: 'var(--bg)' }}>
+    <div
+      style={{
+        position: 'fixed',
+        inset: 0,
+        display: 'flex',
+        justifyContent: 'center',
+        background: 'var(--bg)',
+      }}
+    >
       <div
         style={{
           position: 'relative',
           width: '100%',
           maxWidth: 'var(--frame-max)',
-          height: '100dvh',
+          height: '100%',
           overflow: 'hidden',
           background: 'var(--bg)',
         }}
