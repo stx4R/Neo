@@ -1,4 +1,288 @@
 {
-  "laws": [],
-  "actions": []
+  "laws": [
+    {
+      "id": "ID-2023-028",
+      "officialRef": "PerBPOM 28/2023",
+      "title": "수입 감독 — 유통허가(izin edar)와 수입증명(SKI) 없이는 통관이 없다",
+      "country": "ID",
+      "category": "customs",
+      "itemCategories": [
+        "food"
+      ],
+      "hsPrefixes": [
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22"
+      ],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "critical",
+      "effectiveDate": "2023-11-08",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [
+        {
+          "before": "PerBPOM 27/2022의 정의와 수입 서류 규정",
+          "after": "PerBPOM 28/2023이 의약품·식품의 정의, 수입 서류, 수입승인 신청 주체를 손질"
+        }
+      ],
+      "affectedProductIds": [
+        "p-kimchi-sauce",
+        "p-seasoned-laver",
+        "p-gochujang",
+        "p-yuja"
+      ],
+      "actionIds": [
+        "ID-a-028-01",
+        "ID-a-028-02",
+        "ID-a-028-03",
+        "ID-a-028-04"
+      ],
+      "source": {
+        "url": "https://peraturan.bpk.go.id/Details/285056/perka-bpom-no-28-tahun-2023",
+        "publisher": "인도네시아 식약청 (BPOM)",
+        "publishedAt": "2023-11-08",
+        "originalLang": "id",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "ID-2018-031",
+      "officialRef": "PerBPOM 31/2018",
+      "title": "가공식품 라벨 — 인도네시아어 표기와 영양성분표가 의무다",
+      "country": "ID",
+      "category": "labeling",
+      "itemCategories": [
+        "food"
+      ],
+      "hsPrefixes": [
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22"
+      ],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "high",
+      "effectiveDate": "2018-10-19",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [
+        {
+          "before": "라벨 규정이 PerBPOM 27/2017(가공식품 등록) 안에 섞여 있었음",
+          "after": "PerBPOM 31/2018이 라벨 부분을 떼어내 독립 규정으로 만들었다"
+        },
+        {
+          "before": "PerBPOM 31/2018 원안",
+          "after": "PerBPOM 20/2021로 1차 개정, PerBPOM 6/2024로 2차 개정"
+        }
+      ],
+      "affectedProductIds": [
+        "p-kimchi-sauce",
+        "p-seasoned-laver",
+        "p-gochujang",
+        "p-yuja"
+      ],
+      "actionIds": [
+        "ID-a-031-01",
+        "ID-a-031-02",
+        "ID-a-031-03"
+      ],
+      "source": {
+        "url": "https://peraturan.bpk.go.id/Details/219910/peraturan-bpom-no-31-tahun-2018",
+        "publisher": "인도네시아 식약청 (BPOM)",
+        "publishedAt": "2018-10-19",
+        "originalLang": "id",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "ID-2023-022",
+      "officialRef": "PerBPOM 22/2023",
+      "title": "금지 원료·금지 첨가물 — 한국에서 쓰던 첨가물이 목록에 있을 수 있다",
+      "country": "ID",
+      "category": "safety",
+      "itemCategories": [
+        "food"
+      ],
+      "hsPrefixes": [
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22"
+      ],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "high",
+      "effectiveDate": "2023-08-15",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [
+        {
+          "before": "PerBPOM 7/2018이 가공식품 금지 원료만 규정",
+          "after": "PerBPOM 22/2023이 이를 대체하며 식품첨가물로 쓸 수 없는 물질까지 함께 규정"
+        }
+      ],
+      "affectedProductIds": [
+        "p-kimchi-sauce",
+        "p-seasoned-laver",
+        "p-gochujang",
+        "p-yuja"
+      ],
+      "actionIds": [
+        "ID-a-022-01",
+        "ID-a-022-02"
+      ],
+      "source": {
+        "url": "https://peraturan.bpk.go.id/Details/284990/peraturan-bpom-no-22-tahun-2023",
+        "publisher": "인도네시아 식약청 (BPOM)",
+        "publishedAt": "2023-08-15",
+        "originalLang": "id",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "ID-2023-013",
+      "officialRef": "PerBPOM 13/2023",
+      "title": "식품 카테고리 — 어느 칸에 등록하느냐가 허용 첨가물과 표시를 정한다",
+      "country": "ID",
+      "category": "safety",
+      "itemCategories": [
+        "food"
+      ],
+      "hsPrefixes": [
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22"
+      ],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "medium",
+      "effectiveDate": "2023-06-06",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [],
+      "affectedProductIds": [
+        "p-kimchi-sauce",
+        "p-seasoned-laver",
+        "p-gochujang",
+        "p-yuja"
+      ],
+      "actionIds": [
+        "ID-a-013-01",
+        "ID-a-013-02"
+      ],
+      "source": {
+        "url": "https://peraturan.bpk.go.id/Details/263247/peraturan-bpom-no-13-tahun-2023",
+        "publisher": "인도네시아 식약청 (BPOM)",
+        "publishedAt": "2023-06-06",
+        "originalLang": "id",
+        "lastVerified": "2026-09-06"
+      }
+    }
+  ],
+  "actions": [
+    {
+      "id": "ID-a-028-01",
+      "lawId": "ID-2023-028",
+      "title": "인도네시아 수입자를 원산지 회사 명의로 지정 — 등록 신청 자격이 여기서 생긴다",
+      "owner": "영업",
+      "effort": "3주",
+      "dueDate": null
+    },
+    {
+      "id": "ID-a-028-02",
+      "lawId": "ID-2023-028",
+      "title": "제품별 유통허가(izin edar ML)를 e-registration으로 취득 — 위험도에 따라 30~180일",
+      "owner": "품질팀",
+      "effort": "12주",
+      "dueDate": null
+    },
+    {
+      "id": "ID-a-028-03",
+      "lawId": "ID-2023-028",
+      "title": "선적별 수입증명(SKI)을 e-BPOM에서 신청하도록 수입자와 절차 합의",
+      "owner": "영업",
+      "effort": "2주",
+      "dueDate": null
+    },
+    {
+      "id": "ID-a-028-04",
+      "lawId": "ID-2023-028",
+      "title": "유통허가 5년 만료일을 관리대장에 올리고 재등록 시점 확보",
+      "owner": "품질팀",
+      "effort": "1주",
+      "dueDate": null
+    },
+    {
+      "id": "ID-a-031-01",
+      "lawId": "ID-2018-031",
+      "title": "라벨 전체를 인도네시아어로 재작성 — 영문 병기로 갈음되지 않는다",
+      "owner": "디자인",
+      "effort": "4주",
+      "dueDate": null
+    },
+    {
+      "id": "ID-a-031-02",
+      "lawId": "ID-2018-031",
+      "title": "영양성분표(ING)를 인도네시아 서식과 1회 제공량 기준으로 작성",
+      "owner": "품질팀",
+      "effort": "3주",
+      "dueDate": null
+    },
+    {
+      "id": "ID-a-031-03",
+      "lawId": "ID-2018-031",
+      "title": "PerBPOM 20/2021·6/2024 개정분이 현행 라벨에 반영됐는지 대조",
+      "owner": "품질팀",
+      "effort": "2주",
+      "dueDate": null
+    },
+    {
+      "id": "ID-a-022-01",
+      "lawId": "ID-2023-022",
+      "title": "원료와 첨가물을 금지 목록과 대조 — 금지 원료와 금지 첨가물 두 목록을 따로 본다",
+      "owner": "품질팀",
+      "effort": "3주",
+      "dueDate": null
+    },
+    {
+      "id": "ID-a-022-02",
+      "lawId": "ID-2023-022",
+      "title": "걸리는 성분이 나오면 인도네시아 수출용 대체 배합 확정",
+      "owner": "품질팀",
+      "effort": "8주",
+      "dueDate": null
+    },
+    {
+      "id": "ID-a-013-01",
+      "lawId": "ID-2023-013",
+      "title": "제품별 식품 카테고리 번호를 확정 — 등록 서류와 라벨이 여기서 갈린다",
+      "owner": "품질팀",
+      "effort": "2주",
+      "dueDate": null
+    },
+    {
+      "id": "ID-a-013-02",
+      "lawId": "ID-2023-013",
+      "title": "확정한 카테고리에서 허용되는 첨가물 범위를 다시 검산",
+      "owner": "품질팀",
+      "effort": "3주",
+      "dueDate": null
+    }
+  ]
 }

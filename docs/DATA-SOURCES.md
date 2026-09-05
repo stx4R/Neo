@@ -1777,3 +1777,146 @@ JP-electronics(§112)에 이어 두 번째로 차등이 실재하는 전기전�
 
 FCC도 DOE도 PHMSA도 CPSC도 출발국을 가리지 않는다.
 이 조합의 `originScope`는 공용 파일의 `KORUS FTA` 하나뿐이다.
+
+---
+
+# ID — 식품·음료 (`data/laws/ID-food.json`) · ID — 공용 (`data/laws/ID-shared.json`)
+
+**조사일 2026-09-06 · 조합 4건 / 액션 11건 · 공용 1건 / 액션 5건 · 전부 1차 출처**
+
+## ⚠ 데이터셋에서 가장 급한 날짜가 여기 있다 — D-41
+
+**할랄 인증 의무의 수입품 기한이 2026-10-17이다.** 기준일 2026-09-06에서 **D-41**.
+S1의 MUST DO NOW 첫 화면에 뜬다.
+
+3차 지시서가 `ID` 공용 후보로 지목한 **할랄 인증 의무(JPH법)** 가 그대로 나왔고,
+예상대로 **식품과 화장품 둘 다에 걸린다.**
+
+## `PP 42/2024` — 할랄제품보증 시행령 (공용)
+`ID-2024-042` · JPH 의무 개시 2019-10-17 · **`deadline: 2026-10-17`** · CRITICAL · `official`
+
+- **<https://bpjph.halal.go.id/read/bpjph-17-oktober-2026-produk-makanan-minuman-umk-harus-sudah-bersertifikat-halal-bagaimana-dengan-produk-luar-negeri>**
+  — 할랄제품보증청(BPJPH) 공식 기사. **1차 출처다.**
+  `PP Nomor 42 Tahun 2024 … Pasal 160`이 **수입품(produk luar negeri)** 과
+  소상공인(UMK)의 기한을 **2026-10-17**로 정한다
+- **<https://bpjph.halal.go.id/detail/bpjph-produk-kosmetik-wajib-bersertifikat-halal-pada-oktober-2026/>**
+  — BPJPH — 화장품도 2026-10-17
+- <https://bpjph.halal.go.id/read/tak-hanya-makanan-minuman-ini-jenis-produk-yang-wajib-bersertifikat-halal-mulai-18-oktober-2026>
+  (의약품·화장품·화학제품·유전자변형제품·사용재)
+- <https://mui.or.id/baca/halal/sertifikasi-halal-obat-2026-apakah-semua-obat-wajib-bersertifikat-halal-begini-penjelasannya>
+  (인도네시아 울라마협의회 — 단계별 시한)
+
+**국내분과 수입분의 시한이 다르다는 것이 핵심이다.** 인도네시아 국내 대·중견 식품기업은
+2024-10-17에 이미 의무가 시작됐지만, **수입 식품·음료는 상호인정협정(MRA) 진행을
+고려해 2026-10-17로 미뤄졌다.** 우리 사용자는 한국에서 내보내는 수출자이므로
+**식품이든 화장품이든 같은 2026-10-17**이다.
+
+**그래서 공용 파일 하나로 담을 수 있었다.** 만약 국내 기준(식품 2024 / 화장품 2026)을
+따라야 했다면 한 법령에 두 날짜가 필요해 이 스키마로는 표현할 수 없었다.
+수입분 기한이 하나로 모인 덕에 `deadline` 하나가 두 품목에 모두 참이다.
+
+**`itemCategories`는 `["food","cosmetics"]` 둘뿐이다.** 전기전자는 넣지 않았다 —
+2단계 대상은 `barang gunaan`(사용재)으로 의류·신발·주방용품처럼 동물유래 소재가 닿는
+물품이고, 전기밥솥·이어폰·배터리·LED가 거기 든다는 근거를 찾지 못했다.
+
+액션 다섯 중 둘에 `itemCategories`를 달았다(§85) — 식품은 제조라인 교차오염,
+화장품은 동물유래 원료(콜라겐·글리세린·스쿠알렌) 출처 확인이다. 같은 법령이지만
+할 일이 다르다.
+
+**`ID-a-042-01`에 `dueDate: 2026-10-17`을 넣었다.** `US-a-225-01`에 이어 두 번째
+비-null `dueDate`다(§116) — 인증 취득 자체의 마감이지 법령 기한을 복사한 것이 아니다.
+
+## 채택 — 조합 법령
+
+인도네시아는 **BPK 법령DB(`peraturan.bpk.go.id`)** 가 시행일·폐지·개정 관계를 구조화해
+제공한다. 이 조합의 날짜는 전부 거기서 확인했다.
+
+### 1. `PerBPOM 28/2023` — 수입 감독
+`ID-2023-028` · Berlaku **2023-11-08** · CRITICAL · `customs` · `official`
+
+- **<https://peraturan.bpk.go.id/Details/285056/perka-bpom-no-28-tahun-2023>** — **1차 출처다.**
+  `mulai berlaku pada tanggal 08 November 2023`
+- <https://exim.pom.go.id/> (e-BPOM 수입증명 창구)
+- <https://www.pom.go.id/berita/tata-cara-permohonan-surat-keterangan-impor-(ski)-secara-elektronik-di-badan-pengawas-obat-dan-makanan>
+
+`PerBPOM 27/2022`(의약품·식품 수입 감독)을 개정한다.
+**유통허가(izin edar ML)와 선적별 수입증명(SKI)** 두 관문이 여기 걸린다.
+
+**등록 신청은 수입자가 하되, 그 수입자는 원산지 회사가 지정해야 한다.**
+그래서 첫 액션이 "수입자 지정"이다 — 수출자가 먼저 움직이지 않으면 등록이 시작되지 않는다.
+
+### 2. `PerBPOM 31/2018` — 가공식품 라벨
+`ID-2018-031` · Berlaku **2018-10-19** · HIGH · `official`
+
+- **<https://peraturan.bpk.go.id/Details/219910/peraturan-bpom-no-31-tahun-2018>** — **1차 출처다.**
+  `Status Berlaku` · `Mencabut : PerBPOM 27/2017 sepanjang mengatur mengenai label` ·
+  **`Diubah dengan : PerBPOM No. 6 Tahun 2024`**
+
+**BPK가 개정 이력을 구조화해 준 덕에 2차 개정(PerBPOM 6/2024)까지 잡았다.**
+1차 개정은 `PerBPOM 20/2021`이다. `changes`에 둘 다 적었고,
+액션에 "개정분이 현행 라벨에 반영됐는지 대조"를 넣었다.
+
+라벨은 **전체가 인도네시아어**여야 한다. 영문 병기로 갈음되지 않는다.
+
+### 3. `PerBPOM 22/2023` — 금지 원료·금지 첨가물
+`ID-2023-022` · Berlaku **2023-08-15** · HIGH · `official`
+
+- **<https://peraturan.bpk.go.id/Details/284990/peraturan-bpom-no-22-tahun-2023>** — **1차 출처다.**
+  `Mencabut : PerBPOM No. 7 Tahun 2018 tentang Bahan Baku yang Dilarang dalam Pangan Olahan`
+
+**목록이 둘이다** — 가공식품에 쓸 수 없는 **원료**와, 식품첨가물로 쓸 수 없는 **물질**.
+액션에서 둘을 따로 대조하게 했다.
+
+### 4. `PerBPOM 13/2023` — 식품 카테고리
+`ID-2023-013` · Berlaku **2023-06-06** · MEDIUM · `official`
+
+- **<https://peraturan.bpk.go.id/Details/263247/peraturan-bpom-no-13-tahun-2023>** — **1차 출처다**
+
+**등록할 때 제품을 어느 카테고리로 신고하느냐가 허용 첨가물과 표시 요건을 정한다.**
+고추장·김치양념 소스가 소스류인지 조미료인지에 따라 뒤따르는 규정이 달라지므로
+독립 법령으로 세웠다.
+
+## 확인했으나 넣지 못한 것 — `PerBPOM 23/2023`(가공식품 등록)
+
+**이 규정이 `PerBPOM 27/2017`과 그 개정 `PerBPOM 7/2021`을 폐지·대체했다는 사실은
+확인했다. 그런데 시행일을 정부 출처에서 확인하지 못해 법령으로 넣지 않았다.**
+
+- <https://jdih.pom.go.id/view/slide/1518/23/2023/07811dc6c422334ce36a09ff5cd6fe71> (BPOM JDIH)
+- <https://www.hukumonline.com/pusatdata/detail/lt651bbcc265807/peraturan-badan-pengawas-obat-dan-makanan-nomor-23-tahun-2023/analysis/>
+  (폐지·대체 관계, 제9조 — 수입 가공식품 등록은 **원산지 회사가 지정한 수입자**가 신청)
+- 관보 `BN 2023 (708)`. `PerBPOM 21/2023`이 `BN 2023 (622)`로 2023-08-14,
+  `PerBPOM 24/2023`이 `BN 2023 (741)`로 2023-09-18이므로 **2023년 8~9월 사이**인 것은
+  분명하나 날짜가 특정되지 않는다
+
+BPK 법령DB에서 이 규정의 항목을 찾지 못했고(키워드 검색·인접 id 탐색 모두 실패),
+BPOM 표준식품국이 올린 PDF URL은 HTML로 리다이렉트됐다.
+**`effectiveDate`를 지어내느니 법령을 비우고 의무를 액션에 담았다** —
+`ID-a-028-01`(수입자 지정)이 제9조의 실질이다.
+
+**다음 재검증에서**: BPK DB에 항목이 생겼는지, 또는 `jdih.pom.go.id`가 살아났는지 본다.
+`jdih.pom.go.id`는 조사 시점에 접속되지 않았다(curl `000`).
+
+## 제외 — 그리고 그 사유
+
+### `SNI 의무 인증`
+
+**제외했다. 우리 제품군이 의무 SNI 대상이 아니다.**
+밀가루·설탕·소금·코코아 등 일부 품목만 SNI wajib이고 소스·조미김·장류·과일가공품은 아니다.
+
+### 주(州)·지방정부 규제
+
+인도네시아는 중앙 규제가 강해 이 조합에서는 문제되지 않았다.
+
+## HS 차등 — 없다
+
+법령 4건이 전부 식품 전 범위다. 인도네시아 식품 규제는 **식품 카테고리 체계**
+(`PerBPOM 13/2023`)로 제품을 가르는데, 그 카테고리는 HS 코드와 다른 축이다.
+US-화장품·JP-화장품에서 본 것과 같은 구조다(§107 · §122) —
+**차등은 있으나 `hsPrefixes`가 담을 수 있는 차등이 아니다.**
+
+## `originScope` — 없다
+
+BPOM 규정도 할랄도 출발국을 가리지 않는다. 다만 **할랄은 상호인정협정(MRA) 체결
+여부에 따라 실무 절차가 달라진다** — 한국 인증기관이 BPJPH와 MRA를 맺고 있으면
+한국에서 받은 할랄 인증이 인정된다. 그건 `originScope`(적용 여부)가 아니라
+절차의 차이라 액션에 적었다.

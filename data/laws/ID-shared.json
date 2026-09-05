@@ -1,4 +1,101 @@
 {
-  "laws": [],
-  "actions": []
+  "laws": [
+    {
+      "id": "ID-2024-042",
+      "officialRef": "PP 42/2024 (JPH)",
+      "title": "할랄 인증 의무 — 수입 식품·화장품은 2026.10.17까지다",
+      "country": "ID",
+      "category": "safety",
+      "itemCategories": [
+        "food",
+        "cosmetics"
+      ],
+      "hsPrefixes": [],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "critical",
+      "effectiveDate": "2019-10-17",
+      "deadline": "2026-10-17",
+      "addedAt": "2026-09-06",
+      "transitionEndsAt": "2026-10-17",
+      "transitionNote": "PP 42/2024 제160조가 수입품(produk luar negeri)과 소상공인(UMK)의 기한을 2026.10.17로 정했다. 상호인정협정(MRA) 진행 상황을 고려한 완화 조치다",
+      "changes": [
+        {
+          "before": "국내 대·중견기업 식품은 2024.10.17까지, 수입품은 기한 미정",
+          "after": "PP 42/2024가 수입 식품·음료와 소상공인 제품의 기한을 2026.10.17로 확정"
+        },
+        {
+          "before": "화장품·의약품·화학제품은 의무 대상 밖",
+          "after": "2026.10.17 이후 화장품·의약품·화학제품·유전자변형제품·사용재도 할랄 인증 의무"
+        },
+        {
+          "before": "미인증 제품에 대한 제재가 불명확",
+          "after": "경고에서 시작해 유통 제품 회수까지 단계적 제재"
+        }
+      ],
+      "affectedProductIds": [],
+      "actionIds": [
+        "ID-a-042-01",
+        "ID-a-042-02",
+        "ID-a-042-03",
+        "ID-a-042-04",
+        "ID-a-042-05"
+      ],
+      "source": {
+        "url": "https://bpjph.halal.go.id/read/bpjph-17-oktober-2026-produk-makanan-minuman-umk-harus-sudah-bersertifikat-halal-bagaimana-dengan-produk-luar-negeri",
+        "publisher": "인도네시아 할랄제품보증청 (BPJPH)",
+        "publishedAt": "2024-09-17",
+        "originalLang": "id",
+        "lastVerified": "2026-09-06"
+      }
+    }
+  ],
+  "actions": [
+    {
+      "id": "ID-a-042-01",
+      "lawId": "ID-2024-042",
+      "title": "BPJPH 등록과 할랄심사기관(LPH) 지정 — 해외 제조소는 상호인정(MRA) 가능 여부부터 확인",
+      "owner": "경영",
+      "effort": "8주",
+      "dueDate": "2026-10-17"
+    },
+    {
+      "id": "ID-a-042-02",
+      "lawId": "ID-2024-042",
+      "title": "전 원부재료의 할랄 상태 문서화 — 동물유래·알코올·효소 계열을 먼저 본다",
+      "owner": "품질팀",
+      "effort": "8주",
+      "dueDate": null
+    },
+    {
+      "id": "ID-a-042-03",
+      "lawId": "ID-2024-042",
+      "title": "할랄 표시를 인도네시아어 포장 도안에 반영",
+      "owner": "디자인",
+      "effort": "3주",
+      "dueDate": null
+    },
+    {
+      "id": "ID-a-042-04",
+      "lawId": "ID-2024-042",
+      "title": "제조라인 교차오염 차단 절차 수립 — 비할랄 원료와 설비를 공유하지 않는다",
+      "owner": "품질팀",
+      "effort": "6주",
+      "dueDate": null,
+      "itemCategories": [
+        "food"
+      ]
+    },
+    {
+      "id": "ID-a-042-05",
+      "lawId": "ID-2024-042",
+      "title": "동물유래 화장품 원료(콜라겐·글리세린·스쿠알렌 등)의 출처 확인서 확보",
+      "owner": "품질팀",
+      "effort": "6주",
+      "dueDate": null,
+      "itemCategories": [
+        "cosmetics"
+      ]
+    }
+  ]
 }
