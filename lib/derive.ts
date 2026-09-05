@@ -135,6 +135,13 @@ export type SortKey = (typeof SORT_OPTIONS)[number]['key'];
 
 const RISK_RANK: Record<RiskLevel, number> = { critical: 3, high: 2, medium: 1, low: 0 };
 
+/** 묶음의 최대 위험도. 비어 있으면 null. S4 타일과 S5 국가가 같이 쓴다. */
+function maxRisk(group: Law[]): RiskLevel | null {
+  return group.length
+    ? group.reduce((a, b) => (RISK_RANK[a.riskLevel] >= RISK_RANK[b.riskLevel] ? a : b)).riskLevel
+    : null;
+}
+
 function matchesPreset(law: Law, preset: FilterPreset): boolean {
   switch (preset) {
     case '내 우선순위':
@@ -204,10 +211,7 @@ export function priorityStat(
     lawCount: matched.length,
     openCount: matched.reduce((sum, law) => sum + openActionsOfLaw(law, done).length, 0),
     // 해당 법률 중 가장 높은 위험도. 라벨과 상단 4px 바가 같이 이 값을 쓴다.
-    risk: matched.length
-      ? matched.reduce((a, b) => (RISK_RANK[a.riskLevel] >= RISK_RANK[b.riskLevel] ? a : b))
-          .riskLevel
-      : null,
+    risk: maxRisk(matched),
   };
 }
 
@@ -219,6 +223,49 @@ export function lawCountForProduct(productId: string): number {
 /** 중복을 걷어낸 HS 코드. products.json 순서를 지킨다. */
 export function uniqueHsCodes(): string[] {
   return [...new Set(products.map((p) => p.hsCode))];
+}
+
+// ── S5 Map ─────────────────────────────────────────────────────
+
+/** 한 국가의 법률. 시트가 국가 단위로 말하므로 여기서 거른다. */
+export function lawsOfCountry(code: string): Law[] {
+  return laws.filter((law) => law.country === code);
+}
+
+/**
+ * 국가 위험도. 그 국가 법률의 최대 위험도다 — S4 우선순위 타일과 같은 규칙.
+ * VN은 DECREE 110/2026이 critical이라 CRITICAL이 된다.
+ * 아트보드의 HIGH는 목 데이터보다 먼저 그려진 값이라 쓰지 않는다.
+ * 시트 H1 옆 배지와 지도 위 VN 마커 라벨이 같이 이 값을 본다.
+ */
+export function countryRisk(code: string): RiskLevel | null {
+  return maxRisk(lawsOfCountry(code));
+}
+
+/** 시트에 세우는 행 수. 아트보드 실측. */
+export const SHEET_ROWS = 3;
+
+/**
+ * S5 시트의 법률 행 — 미완 액션이 있는 법률을 마감 임박순으로 상위 3건.
+ * 액션이 없는 보류(46)·휴면(15/2018)은 여기 들어오지 않는다. 그건 아래 링크가 받는다.
+ * 액션을 전부 체크하면 0건이 되고, 그때는 행 대신 안내 한 줄만 남는다.
+ */
+export function sheetLaws(code: string, done: ReadonlySet<string>): Law[] {
+  return lawsOfCountry(code)
+    .filter((law) => openActionsOfLaw(law, done).length > 0)
+    .sort((a, b) => {
+      // 마감 없는 법률은 뒤로. 지금 데이터엔 없지만 순서가 임의가 되면 안 된다.
+      if (a.deadline === null || b.deadline === null) {
+        return Number(a.deadline === null) - Number(b.deadline === null);
+      }
+      return a.deadline.localeCompare(b.deadline);
+    })
+    .slice(0, SHEET_ROWS);
+}
+
+/** 한 국가에서 아직 끝나지 않은 액션 수. */
+export function openActionCountOfCountry(code: string, done: ReadonlySet<string>): number {
+  return lawsOfCountry(code).reduce((sum, law) => sum + openActionsOfLaw(law, done).length, 0);
 }
 
 // ── S6 Notifications ───────────────────────────────────────────

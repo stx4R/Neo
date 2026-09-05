@@ -22,6 +22,9 @@ import type { FeatureCollection, Geometry } from 'geojson';
 
 export type GeoMode = 'globe' | 'asia';
 
+/** 경위도를 이 박스 안의 픽셀로 옮기는 함수. 투영 밖이면 null. */
+export type Projector = (coord: [number, number]) => [number, number] | null;
+
 /** 원본 실측값. 건드리지 말 것. */
 const CFG = {
   globe: { step: 5.4, dot: 1.6, destSize: 4, bulge: 0.34 },
@@ -48,6 +51,8 @@ interface Arc {
 
 interface Scene {
   bg: HTMLCanvasElement;
+  /** 마커를 점 위에 얹으려면 밖에서도 같은 투영이 필요하다. */
+  proj: GeoProjection;
   arc: Arc;
   width: number;
   height: number;
@@ -174,7 +179,7 @@ function buildScene(
   b.fillStyle = colors.dest;
   b.fillRect(Math.round(arc.p1[0] - ds / 2), Math.round(arc.p1[1] - ds / 2), ds, ds);
 
-  return { bg, arc, width: w, height: h, dpr, routeColor: colors.route };
+  return { bg, proj, arc, width: w, height: h, dpr, routeColor: colors.route };
 }
 
 /** 2차 베지에 위의 점. */
@@ -219,6 +224,7 @@ export function DotGeo({
   destColor = 'var(--risk-critical)',
   originMarker = true,
   flow = true,
+  onProject,
   style,
 }: {
   mode: GeoMode;
@@ -228,10 +234,23 @@ export function DotGeo({
   destColor?: string;
   originMarker?: boolean;
   flow?: boolean;
+  /**
+   * 투영을 밖으로 넘긴다. 원본이 'neo-ready' 이벤트로 하던 일이다.
+   * S5가 국가 마커를 점 위에 얹는 데 쓴다. 리사이즈로 다시 그릴 때마다 불리므로
+   * 마커가 점을 따라간다.
+   */
+  onProject?: (project: Projector, size: { w: number; h: number }) => void;
   style?: CSSProperties;
 }) {
   const hostRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  // 콜백은 ref로 받는다. deps에 넣으면 인라인 함수를 넘긴 호출부에서
+  // 렌더마다 지도를 새로 만들게 되고, setState까지 얽히면 순환한다.
+  const onProjectRef = useRef(onProject);
+  useEffect(() => {
+    onProjectRef.current = onProject;
+  });
 
   useEffect(() => {
     const host = hostRef.current;
@@ -265,7 +284,10 @@ export function DotGeo({
         },
         originMarker,
       );
-      if (scene) paint(canvas, scene, flow ? 0 : null);
+      if (scene) {
+        paint(canvas, scene, flow ? 0 : null);
+        onProjectRef.current?.(scene.proj, { w, h });
+      }
     };
 
     const observer = new ResizeObserver(rebuild);
