@@ -1,4 +1,248 @@
 {
-  "laws": [],
-  "actions": []
+  "laws": [
+    {
+      "id": "JP-1961-234",
+      "officialRef": "電気用品安全法",
+      "title": "PSE 마크 없이는 못 판다 — 밥솥·LED전구·보조배터리가 대상이다",
+      "country": "JP",
+      "category": "safety",
+      "itemCategories": [
+        "electronics"
+      ],
+      "hsPrefixes": [
+        "8507",
+        "8516",
+        "8539"
+      ],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "critical",
+      "effectiveDate": "2001-04-01",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [],
+      "affectedProductIds": [
+        "p-elec-2",
+        "p-elec-3",
+        "p-elec-4"
+      ],
+      "actionIds": [
+        "JP-a-234-01",
+        "JP-a-234-02",
+        "JP-a-234-03",
+        "JP-a-234-04"
+      ],
+      "source": {
+        "url": "https://www.meti.go.jp/policy/consumer/seian/denan/non_specified_electrical.html",
+        "publisher": "일본 경제산업성",
+        "publishedAt": "2001-04-01",
+        "originalLang": "ja",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "JP-1950-131",
+      "officialRef": "電波法 (技適)",
+      "title": "기적마크 — 무선 이어폰은 인증 없이 반입 자체가 안 된다",
+      "country": "JP",
+      "category": "safety",
+      "itemCategories": [
+        "electronics"
+      ],
+      "hsPrefixes": [
+        "8518"
+      ],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "critical",
+      "effectiveDate": "1950-06-01",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [],
+      "affectedProductIds": [
+        "p-elec-1"
+      ],
+      "actionIds": [
+        "JP-a-131-01",
+        "JP-a-131-02",
+        "JP-a-131-03"
+      ],
+      "source": {
+        "url": "https://www.tele.soumu.go.jp/j/adm/monitoring/summary/qa/giteki_mark/",
+        "publisher": "일본 총무성 전파이용포털",
+        "publishedAt": "1950-06-01",
+        "originalLang": "ja",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "JP-1979-049",
+      "officialRef": "省エネ法 (トップランナー)",
+      "title": "에너지소비효율 기준·표시 의무 — 밥솥과 LED전구가 대상 기기다",
+      "country": "JP",
+      "category": "labeling",
+      "itemCategories": [
+        "electronics"
+      ],
+      "hsPrefixes": [
+        "8516",
+        "8539"
+      ],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "high",
+      "effectiveDate": "1999-04-01",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [],
+      "affectedProductIds": [
+        "p-elec-3",
+        "p-elec-4"
+      ],
+      "actionIds": [
+        "JP-a-049-01",
+        "JP-a-049-02",
+        "JP-a-049-03"
+      ],
+      "source": {
+        "url": "https://www.enecho.meti.go.jp/category/saving_and_new/saving/enterprise/equipment/",
+        "publisher": "일본 자원에너지청",
+        "publishedAt": "1999-04-01",
+        "originalLang": "ja",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "JP-1962-104",
+      "officialRef": "家庭用品品質表示法",
+      "title": "전기밥솥 품질표시 9항목 — 취반용량부터 대기전력까지 적어야 한다",
+      "country": "JP",
+      "category": "labeling",
+      "itemCategories": [
+        "electronics"
+      ],
+      "hsPrefixes": [
+        "8516"
+      ],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "medium",
+      "effectiveDate": "1962-10-01",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [],
+      "affectedProductIds": [
+        "p-elec-3"
+      ],
+      "actionIds": [
+        "JP-a-104-01",
+        "JP-a-104-02"
+      ],
+      "source": {
+        "url": "https://www.caa.go.jp/policies/policy/representation/household_goods/law/law_06/",
+        "publisher": "일본 소비자청",
+        "publishedAt": "1962-10-01",
+        "originalLang": "ja",
+        "lastVerified": "2026-09-06"
+      }
+    }
+  ],
+  "actions": [
+    {
+      "id": "JP-a-234-01",
+      "lawId": "JP-1961-234",
+      "title": "일본 수입자의 전안법 제3조 사업신고 완료 여부 확인 — 구분별로 따로 낸다",
+      "owner": "영업",
+      "effort": "2주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-234-02",
+      "lawId": "JP-1961-234",
+      "title": "제품별 기술기준 적합 확인 — 보조배터리는 J62368-1(2023) 또는 J62133-2(2021)",
+      "owner": "품질팀",
+      "effort": "6주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-234-03",
+      "lawId": "JP-1961-234",
+      "title": "외관·출력전압 전수검사를 한국 라인에 구축하고 기록을 3년 보존",
+      "owner": "품질팀",
+      "effort": "4주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-234-04",
+      "lawId": "JP-1961-234",
+      "title": "원형 PSE 마크와 신고사업자명을 제품 각인·라벨에 반영",
+      "owner": "디자인",
+      "effort": "3주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-131-01",
+      "lawId": "JP-1950-131",
+      "title": "등록증명기관에서 공사설계인증 취득 — 양산 전에 끝나야 한다",
+      "owner": "품질팀",
+      "effort": "10주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-131-02",
+      "lawId": "JP-1950-131",
+      "title": "기적마크와 인증번호를 본체·충전케이스 또는 화면 표시로 넣도록 설계 반영",
+      "owner": "디자인",
+      "effort": "3주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-131-03",
+      "lawId": "JP-1950-131",
+      "title": "블루투스 모듈 변경 시 재인증 필요 여부를 설계변경 절차에 명문화",
+      "owner": "품질팀",
+      "effort": "2주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-049-01",
+      "lawId": "JP-1979-049",
+      "title": "제품 구분별 에너지소비효율을 산정해 톱러너 기준 충족 여부 판정",
+      "owner": "품질팀",
+      "effort": "4주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-049-02",
+      "lawId": "JP-1979-049",
+      "title": "에너지소비효율을 본체와 카탈로그에 표시",
+      "owner": "디자인",
+      "effort": "2주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-049-03",
+      "lawId": "JP-1979-049",
+      "title": "기준 미달이면 목표연도까지의 사양 개선 계획 수립",
+      "owner": "경영",
+      "effort": "6주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-104-01",
+      "lawId": "JP-1962-104",
+      "title": "밥솥 표시 9항목 측정 — 최대취반용량·구분명·증발수량·연간소비전력량 등",
+      "owner": "품질팀",
+      "effort": "4주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-104-02",
+      "lawId": "JP-1962-104",
+      "title": "표시자명·주소를 포함한 일본어 품질표시 라벨 작성",
+      "owner": "디자인",
+      "effort": "2주",
+      "dueDate": null
+    }
+  ]
 }
