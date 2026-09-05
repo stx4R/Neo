@@ -2,7 +2,9 @@
 
 import { geoMercator, geoOrthographic, geoPath, type GeoProjection } from 'd3-geo';
 import type { CSSProperties } from 'react';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { EmptyState } from '@/components/EmptyState';
+import { Skeleton } from '@/components/Skeleton';
 import { loadLand } from '@/lib/geo';
 import type { FeatureCollection, Geometry } from 'geojson';
 
@@ -21,6 +23,12 @@ import type { FeatureCollection, Geometry } from 'geojson';
  */
 
 export type GeoMode = 'globe' | 'asia';
+
+/**
+ * 지리 데이터 상태. 앱에서 실제로 비동기인 것은 /geo/land-110m.json 하나뿐이라
+ * 스켈레톤과 에러 자리도 이 컴포넌트 안에만 있다.
+ */
+type GeoState = 'loading' | 'ready' | 'error';
 
 /** 경위도를 이 박스 안의 픽셀로 옮기는 함수. 투영 밖이면 null. */
 export type Projector = (coord: [number, number]) => [number, number] | null;
@@ -42,6 +50,13 @@ const FLOW_SIZE = 3;
 
 /** 알파 임계값. 마스크에서 이 값 미만이면 바다로 본다. */
 const LAND_ALPHA = 120;
+
+/**
+ * 스켈레톤을 띄우기 전에 기다리는 시간.
+ * land는 lib/geo.ts가 모듈 레벨 Promise로 캐싱하므로 두 번째 마운트부터 즉시 끝난다.
+ * 게이트가 없으면 그때마다 블록이 한 프레임 깜빡인다.
+ */
+const SKELETON_DELAY_MS = 250;
 
 interface Arc {
   p0: [number, number];
@@ -252,6 +267,11 @@ export function DotGeo({
     onProjectRef.current = onProject;
   });
 
+  // 스켈레톤·에러를 호출부(S1·S5) 두 곳에서 반복하지 않고 여기서 겹친다.
+  const [state, setState] = useState<GeoState>('loading');
+  const [showSkeleton, setShowSkeleton] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+
   useEffect(() => {
     const host = hostRef.current;
     const canvas = canvasRef.current;
@@ -293,15 +313,26 @@ export function DotGeo({
     const observer = new ResizeObserver(rebuild);
     observer.observe(host);
 
-    // 데이터를 받기 전에는 빈 캔버스를 유지한다. 플레이스홀더를 그리지 않는다.
+    // 250ms를 넘겨야 스켈레톤을 띄운다. 캐시에서 즉시 오면 깜빡임이 된다.
+    const gate = window.setTimeout(() => {
+      if (!disposed) setShowSkeleton(true);
+    }, SKELETON_DELAY_MS);
+
     loadLand()
       .then((f) => {
         if (disposed) return;
         land = f;
         rebuild();
+        setState('ready');
       })
       .catch((err) => {
         console.warn('DotGeo: 지리 데이터를 불러오지 못했습니다', err);
+        if (disposed) return;
+        setState('error');
+      })
+      .finally(() => {
+        window.clearTimeout(gate);
+        if (!disposed) setShowSkeleton(false);
       });
 
     if (flow) {
@@ -315,20 +346,43 @@ export function DotGeo({
     return () => {
       disposed = true;
       observer.disconnect();
+      window.clearTimeout(gate);
       if (raf) cancelAnimationFrame(raf);
     };
-  }, [mode, dotColor, routeColor, destColor, originMarker, flow]);
+    // attempt가 바뀌면 land를 다시 받는다 — '다시 시도' 버튼의 통로다.
+  }, [mode, dotColor, routeColor, destColor, originMarker, flow, attempt]);
 
   return (
     <div
       ref={hostRef}
-      aria-hidden="true"
       style={{ position: 'relative', width: '100%', height: '100%', ...style }}
     >
+      {/* aria-hidden은 캔버스에만 준다. 아래 에러 문구와 '다시 시도'는 읽혀야 한다. */}
       <canvas
         ref={canvasRef}
+        aria-hidden="true"
         style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block' }}
       />
+
+      {state === 'error' && (
+        <div style={{ position: 'absolute', inset: 0 }}>
+          <EmptyState
+            message="지도를 불러오지 못했습니다"
+            size="meta"
+            actionLabel="다시 시도"
+            onAction={() => {
+              setState('loading');
+              setAttempt((n) => n + 1);
+            }}
+          />
+        </div>
+      )}
+
+      {state === 'loading' && showSkeleton && (
+        <div style={{ position: 'absolute', inset: 0 }}>
+          <Skeleton height="100%" />
+        </div>
+      )}
     </div>
   );
 }

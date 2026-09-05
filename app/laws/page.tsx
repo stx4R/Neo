@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { Badge, FilterChip } from '@/components/Badge';
+import { EmptyState } from '@/components/EmptyState';
 import { Label } from '@/components/Label';
 import { Mark } from '@/components/Mark';
 import { RiskText } from '@/components/RiskText';
@@ -132,6 +133,17 @@ export default function LawsPage() {
       </div>
 
       <div style={{ marginTop: 'var(--sec-gap)', padding: '0 var(--pad)' }}>
+        {rows.length === 0 && (
+          <EmptyState
+            message="조건에 맞는 법률이 없습니다"
+            actionLabel="필터 초기화"
+            // 정렬은 건드리지 않는다 — 결과를 0건으로 만드는 건 필터와 검색뿐이다.
+            onAction={() => {
+              setPreset('전체');
+              setQuery('');
+            }}
+          />
+        )}
         {rows.map((law, i) => {
           const badge = listBadge(law);
           return (

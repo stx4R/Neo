@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { EmptyState } from '@/components/EmptyState';
 import { Label } from '@/components/Label';
 import { Row, RowTitle } from '@/components/Row';
 import { Screen, Section } from '@/components/Screen';
@@ -73,6 +74,17 @@ export default function CompanyPage() {
           ))}
           {remaining.length > 0 && <AddTile remaining={remaining} />}
         </div>
+        {/* 우선순위 제거 기능이 없으므로 기본값 3건에서 0으로 내려갈 길은
+            neo.priorities에 빈 배열이 저장된 경우뿐이다. 그래도 타일 격자만 남고
+            아무 말이 없는 화면이 되면 무엇을 해야 하는지 알 수 없다. */}
+        {priorities.length === 0 && (
+          <div style={{ marginTop: 'var(--lbl-gap)' }}>
+            <EmptyState
+              size="meta"
+              message="관심 규제 영역을 추가하면 맞춤 분석이 시작됩니다"
+            />
+          </div>
+        )}
       </Section>
 
       <Section label={`PRODUCTS — ${products.length}`}>
