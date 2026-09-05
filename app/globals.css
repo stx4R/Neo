@@ -98,6 +98,12 @@
   /* 지오그래피 */
   --geo-dot:       #3A3A3A;
 
+  /* 기기 안전영역. viewport-fit=cover로 화면 끝까지 그리므로 노치와 홈
+     인디케이터를 여기서 받는다. env()를 읽는 곳은 이 두 줄뿐이다.
+     브라우저 탭에는 그런 것이 없어 0이 맞다 — 없는 상태바를 흉내 내지 않는다. */
+  --safe-top:    env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+
   /* 레이아웃 */
   --pad:      20px;   /* 좌우 패딩 */
   --topbar:   40px;
@@ -148,11 +154,39 @@
 * { box-shadow: none; border-radius: 0; }
 .is-checkbox { border-radius: 999px; }  /* 유일한 예외 */
 
+/* 스크롤바를 숨긴다. 앱은 스크롤 막대를 그리지 않는다 —
+   390 폭 안에서 세로선 하나가 레이아웃을 밀고, 그 선은 디자인에 없다. */
+* { scrollbar-width: none; }
+*::-webkit-scrollbar { width: 0; height: 0; display: none; }
+
+/* 화면 밖으로 당겨지지 않게 한다. 프레임 뒤에는 아무것도 없고,
+   고무줄처럼 늘어나며 흰 바탕이 드러나면 앱이 웹페이지로 보인다. */
+html, body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
 body {
   background: var(--bg);
   color: var(--text);
   margin: 0;
   font: 500 15px/22px Pretendard, sans-serif;
   -webkit-font-smoothing: antialiased;
+
+  /* 앱처럼 다룬다 — 더블탭 확대, 길게 눌러 뜨는 선택·복사 메뉴를 막는다.
+     touch-action: manipulation은 탭 지연 300ms도 같이 없앤다. */
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
+
+/* 입력만은 예외다. 검색창(S2)에서 선택도 복사도 못 하면 입력이 아니다. */
+input, textarea {
+  -webkit-touch-callout: default;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
 a { color: var(--accent); text-decoration: underline; }

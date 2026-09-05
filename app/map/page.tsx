@@ -185,7 +185,7 @@ export default function MapPage() {
 
       {/* 지도. 330×366을 우측 밖으로 흘린다 — S1 지구본과 같은 어법이다.
           가운데 정렬하지 않는다. 좌측에 여백이 남는 비대칭이 의도다.
-          아트보드의 top:60은 화면 좌표다. Screen이 상단 44px을 이미 잡으므로
+          아트보드의 top:60은 화면 좌표다. Screen이 상단 상태바 자리를 이미 잡으므로
           콘텐츠 좌표로는 16px이 된다. */}
       <div style={{ position: 'absolute', top: 16, right: -36, width: 330, height: 366 }}>
         <DotGeo mode="asia" dotColor="var(--geo-dot)" onProject={handleProject} />

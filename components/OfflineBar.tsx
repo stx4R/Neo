@@ -1,7 +1,7 @@
 import { REFERENCE_DATE, formatSyncTime } from '@/lib/dday';
 
 /**
- * 오프라인 바. 프레임 상단 44px 자리 바로 아래에 앉는다.
+ * 오프라인 바. 프레임 상단 상태바 자리(--safe-top) 바로 아래에 앉는다.
  *
  * 보일지 말지는 Screen이 판단한다 — 같은 값으로 스크롤 영역 top도 밀어야 하므로
  * 판단이 두 곳에 있으면 어긋난다. 여기는 모양만 안다.
@@ -16,7 +16,7 @@ export function OfflineBar() {
       className="t-label tnum"
       style={{
         position: 'absolute',
-        top: 44,
+        top: 'var(--safe-top)',
         left: 0,
         right: 0,
         height: 'var(--badge-h)',

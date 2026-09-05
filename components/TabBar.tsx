@@ -10,7 +10,8 @@ import { usePathname } from 'next/navigation';
  * 탭 라벨만은 가운데 정렬이다 — 디자인 원본이 justify-content:center 로 그려져 있다.
  * "전부 좌측 정렬" 규칙은 화면 콘텐츠에 적용되고 탭바에는 적용되지 않는다.
  *
- * 하단 34px은 iOS 홈 인디케이터 자리. 원본 실측값이라 그대로 둔다.
+ * 하단 여백은 iOS 홈 인디케이터 자리다. 아트보드 실측 34px이 아니라 --safe-bottom을
+ * 쓴다 — 기기가 알려주는 값이라야 인디케이터가 탭 라벨을 가리지 않는다.
  */
 const TABS = [
   { href: '/', label: 'HOME' },
@@ -30,7 +31,7 @@ export function TabBar() {
         right: 0,
         bottom: 0,
         zIndex: 5,
-        paddingBottom: 34,
+        paddingBottom: 'var(--safe-bottom)',
         background: 'var(--bg)',
         borderTop: '1px solid var(--hairline)',
       }}
