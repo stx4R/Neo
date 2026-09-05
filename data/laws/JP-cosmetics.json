@@ -1,4 +1,318 @@
 {
-  "laws": [],
-  "actions": []
+  "laws": [
+    {
+      "id": "JP-2000-331",
+      "officialRef": "化粧品基準",
+      "title": "배합금지·배합제한 성분 기준 — 한국 처방 그대로는 못 넣는다",
+      "country": "JP",
+      "category": "safety",
+      "itemCategories": [
+        "cosmetics"
+      ],
+      "hsPrefixes": [
+        "3303",
+        "3304",
+        "3305",
+        "3307",
+        "3401"
+      ],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "critical",
+      "effectiveDate": "2001-04-01",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [],
+      "affectedProductIds": [
+        "p-cos-1",
+        "p-cos-2",
+        "p-cos-3",
+        "p-cos-4"
+      ],
+      "actionIds": [
+        "JP-a-331-01",
+        "JP-a-331-02",
+        "JP-a-331-03"
+      ],
+      "source": {
+        "url": "https://www.mhlw.go.jp/content/000491511.pdf",
+        "publisher": "일본 후생노동성",
+        "publishedAt": "2000-09-29",
+        "originalLang": "ja",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "JP-1960-013",
+      "officialRef": "薬機法 第13条の3",
+      "title": "외국제조업자 신고 — 한국 공장이 등록돼야 일본에서 팔린다",
+      "country": "JP",
+      "category": "safety",
+      "itemCategories": [
+        "cosmetics"
+      ],
+      "hsPrefixes": [
+        "3303",
+        "3304",
+        "3305",
+        "3307",
+        "3401"
+      ],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "critical",
+      "effectiveDate": "2014-11-25",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [],
+      "affectedProductIds": [
+        "p-cos-1",
+        "p-cos-2",
+        "p-cos-3",
+        "p-cos-4"
+      ],
+      "actionIds": [
+        "JP-a-013-01",
+        "JP-a-013-02",
+        "JP-a-013-03"
+      ],
+      "source": {
+        "url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iyakuhin/keshouhin/index.html",
+        "publisher": "일본 후생노동성",
+        "publishedAt": "2014-11-25",
+        "originalLang": "ja",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "JP-1966-030",
+      "officialRef": "厚生省令30号 (法定色素)",
+      "title": "타르색소 83종만 허용 — 립 제품은 쓸 수 있는 색소가 더 좁다",
+      "country": "JP",
+      "category": "safety",
+      "itemCategories": [
+        "cosmetics"
+      ],
+      "hsPrefixes": [
+        "3303",
+        "3304",
+        "3305",
+        "3307",
+        "3401"
+      ],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "high",
+      "effectiveDate": "1966-08-31",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [],
+      "affectedProductIds": [
+        "p-cos-1",
+        "p-cos-2",
+        "p-cos-3",
+        "p-cos-4"
+      ],
+      "actionIds": [
+        "JP-a-030-01",
+        "JP-a-030-02"
+      ],
+      "source": {
+        "url": "https://laws.e-gov.go.jp/law/341M50000100030",
+        "publisher": "일본 정부 (e-Gov 법령검색)",
+        "publishedAt": "1966-08-31",
+        "originalLang": "ja",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "JP-1960-061",
+      "officialRef": "薬機法 第61条",
+      "title": "전성분 일본어 표시 — 한국 성분명을 그대로 옮길 수 없다",
+      "country": "JP",
+      "category": "labeling",
+      "itemCategories": [
+        "cosmetics"
+      ],
+      "hsPrefixes": [
+        "3303",
+        "3304",
+        "3305",
+        "3307",
+        "3401"
+      ],
+      "sourceTier": "secondary",
+      "status": "active",
+      "riskLevel": "high",
+      "effectiveDate": "2001-04-01",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [],
+      "affectedProductIds": [
+        "p-cos-1",
+        "p-cos-2",
+        "p-cos-3",
+        "p-cos-4"
+      ],
+      "actionIds": [
+        "JP-a-061-01",
+        "JP-a-061-02",
+        "JP-a-061-03"
+      ],
+      "source": {
+        "url": "https://www.tmiph.metro.tokyo.lg.jp/k_yakuji/i-kanshi/c_label/",
+        "publisher": "도쿄도 건강안전연구센터",
+        "publishedAt": "2001-04-01",
+        "originalLang": "ja",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "JP-1960-066",
+      "officialRef": "薬機法 第66条",
+      "title": "효능효과 56항목 밖 표현 금지 — 한국 마케팅 문구가 위법이 된다",
+      "country": "JP",
+      "category": "labeling",
+      "itemCategories": [
+        "cosmetics"
+      ],
+      "hsPrefixes": [
+        "3303",
+        "3304",
+        "3305",
+        "3307",
+        "3401"
+      ],
+      "sourceTier": "secondary",
+      "status": "active",
+      "riskLevel": "medium",
+      "effectiveDate": "2014-11-25",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [],
+      "affectedProductIds": [
+        "p-cos-1",
+        "p-cos-2",
+        "p-cos-3",
+        "p-cos-4"
+      ],
+      "actionIds": [
+        "JP-a-066-01",
+        "JP-a-066-02"
+      ],
+      "source": {
+        "url": "https://www.pref.kyoto.jp/yakumu/koukoku/yakihoujyoubun.html",
+        "publisher": "교토부 약무과",
+        "publishedAt": "2014-11-25",
+        "originalLang": "ja",
+        "lastVerified": "2026-09-06"
+      }
+    }
+  ],
+  "actions": [
+    {
+      "id": "JP-a-331-01",
+      "lawId": "JP-2000-331",
+      "title": "전 처방을 화장품기준 배합금지 목록(네거티브리스트)과 대조",
+      "owner": "품질팀",
+      "effort": "4주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-331-02",
+      "lawId": "JP-2000-331",
+      "title": "방부제·자외선흡수제 배합량이 별표 상한 이내인지 검산 — 점막용·씻어내는 제품은 상한이 다르다",
+      "owner": "품질팀",
+      "effort": "3주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-331-03",
+      "lawId": "JP-2000-331",
+      "title": "기준 초과 성분이 나오면 일본 수출용 대체 처방 확정",
+      "owner": "품질팀",
+      "effort": "8주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-013-01",
+      "lawId": "JP-1960-013",
+      "title": "한국 제조소를 PMDA 경유 외국제조업자로 신고 — 제조소별로 따로 낸다",
+      "owner": "경영",
+      "effort": "6주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-013-02",
+      "lawId": "JP-1960-013",
+      "title": "일본 수입자의 화장품 제조판매업 허가 보유 여부 확인",
+      "owner": "영업",
+      "effort": "1주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-013-03",
+      "lawId": "JP-1960-013",
+      "title": "품목별 화장품 제조판매 신고에 필요한 처방·제조공정 자료를 수입자에 제공",
+      "owner": "품질팀",
+      "effort": "3주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-030-01",
+      "lawId": "JP-1966-030",
+      "title": "사용 색소를 법정색소 83종과 대조 — 한국 허용 색소가 일본에 없을 수 있다",
+      "owner": "품질팀",
+      "effort": "3주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-030-02",
+      "lawId": "JP-1966-030",
+      "title": "립 제품의 색소를 점막 사용 가능 범위로 좁혀 재확인 — 적색219호·황색204호는 모발·손톱 전용",
+      "owner": "품질팀",
+      "effort": "2주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-061-01",
+      "lawId": "JP-1960-061",
+      "title": "전성분을 일본화장품공업회 표시명칭 목록의 일본어명으로 변환",
+      "owner": "품질팀",
+      "effort": "4주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-061-02",
+      "lawId": "JP-1960-061",
+      "title": "성분 배열을 배합량 내림차순으로 재정렬 — 1% 이하와 착색제는 순서 자유",
+      "owner": "디자인",
+      "effort": "2주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-061-03",
+      "lawId": "JP-1960-061",
+      "title": "제조판매업자명·주소, 제조번호, 판매명을 직접 용기에 넣도록 라벨 재설계",
+      "owner": "디자인",
+      "effort": "3주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-066-01",
+      "lawId": "JP-1960-066",
+      "title": "제품 문구·상세페이지를 효능효과 56항목 범위로 재작성",
+      "owner": "마케팅",
+      "effort": "4주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-066-02",
+      "lawId": "JP-1960-066",
+      "title": "\"건조에 의한 잔주름을 눈에 띄지 않게\" 표방 시 효능평가 시험 실시 여부 결정",
+      "owner": "마케팅",
+      "effort": "2주",
+      "dueDate": null
+    }
+  ]
 }

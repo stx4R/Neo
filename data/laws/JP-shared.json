@@ -1,4 +1,111 @@
 {
-  "laws": [],
-  "actions": []
+  "laws": [
+    {
+      "id": "JP-1991-048",
+      "officialRef": "資源有効利用促進法 (識別表示)",
+      "title": "포장재 식별마크 의무 — 프라마크·종이마크를 인쇄해야 한다",
+      "country": "JP",
+      "category": "packaging",
+      "itemCategories": [
+        "food",
+        "cosmetics",
+        "electronics"
+      ],
+      "hsPrefixes": [],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "high",
+      "effectiveDate": "2001-04-01",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [],
+      "affectedProductIds": [],
+      "actionIds": [
+        "JP-a-048-01",
+        "JP-a-048-02",
+        "JP-a-048-03"
+      ],
+      "source": {
+        "url": "https://www.meti.go.jp/policy/recycle/main/admin_info/law/02/faq.html",
+        "publisher": "일본 경제산업성",
+        "publishedAt": "2001-04-01",
+        "originalLang": "ja",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "JP-1995-112",
+      "officialRef": "容器包装リサイクル法",
+      "title": "재상품화 의무 — 의무자는 일본 수입자지만 자료는 수출자가 낸다",
+      "country": "JP",
+      "category": "packaging",
+      "itemCategories": [
+        "food",
+        "cosmetics",
+        "electronics"
+      ],
+      "hsPrefixes": [],
+      "sourceTier": "secondary",
+      "status": "active",
+      "riskLevel": "medium",
+      "effectiveDate": "2000-04-01",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [],
+      "affectedProductIds": [],
+      "actionIds": [
+        "JP-a-112-01",
+        "JP-a-112-02"
+      ],
+      "source": {
+        "url": "https://www.jcpra.or.jp/law/duty/specified/",
+        "publisher": "일본용기포장리사이클협회 (지정법인)",
+        "publishedAt": "2000-04-01",
+        "originalLang": "ja",
+        "lastVerified": "2026-09-06"
+      }
+    }
+  ],
+  "actions": [
+    {
+      "id": "JP-a-048-01",
+      "lawId": "JP-1991-048",
+      "title": "포장재별 재질을 판정해 프라마크·종이마크 표시 대상 확정",
+      "owner": "품질팀",
+      "effort": "2주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-048-02",
+      "lawId": "JP-1991-048",
+      "title": "식별마크를 포장 도안에 넣고 크기·위치 규격 충족 확인",
+      "owner": "디자인",
+      "effort": "3주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-048-03",
+      "lawId": "JP-1991-048",
+      "title": "여러 재질이 섞인 포장은 중량비 기준으로 마크와 재질명 병기",
+      "owner": "디자인",
+      "effort": "2주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-112-01",
+      "lawId": "JP-1995-112",
+      "title": "포장재 재질별 중량표를 작성해 수입자에 제공 — 유리·PET·종이·플라스틱을 나눈다",
+      "owner": "품질팀",
+      "effort": "3주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-112-02",
+      "lawId": "JP-1995-112",
+      "title": "재상품화 위탁비용 분담을 수입자와 계약서에 반영",
+      "owner": "영업",
+      "effort": "2주",
+      "dueDate": null
+    }
+  ]
 }
