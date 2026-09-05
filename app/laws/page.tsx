@@ -28,6 +28,7 @@ import {
   type SortKey,
 } from '@/lib/derive';
 import { useActionsDone } from '@/lib/useActionsDone';
+import { usePriorities } from '@/lib/usePriorities';
 
 // S2 Laws.
 // 필터·정렬·검색은 전부 useState. localStorage로 옮기는 건 6단계다.
@@ -36,12 +37,13 @@ export default function LawsPage() {
   const [sort, setSort] = useState<SortKey>('date');
   const [query, setQuery] = useState('');
   const done = useActionsDone();
+  const priorities = usePriorities();
 
   const ds = useDataset();
   const asOf = ds ? dataAsOf(ds) : null;
   const rows = useMemo(
-    () => (ds ? visibleLaws(ds, preset, sort, query) : []),
-    [ds, preset, sort, query],
+    () => (ds ? visibleLaws(ds, preset, sort, query, priorities) : []),
+    [ds, preset, sort, query, priorities],
   );
 
   return (

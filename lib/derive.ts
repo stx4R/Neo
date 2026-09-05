@@ -1,4 +1,4 @@
-import { priorities, productsMatching } from '@/lib/data';
+import { productsMatching } from '@/lib/data';
 import type { Dataset } from '@/lib/dataset';
 import {
   countdown,
@@ -16,6 +16,7 @@ import {
   type Category,
   type Law,
   type Notification,
+  type Priority,
   type Product,
   type RiskLevel,
 } from '@/types/neo';
@@ -230,10 +231,15 @@ function maxRisk(group: Law[]): RiskLevel | null {
     : null;
 }
 
-function matchesPreset(law: Law, preset: FilterPreset, today: string): boolean {
+function matchesPreset(
+  law: Law,
+  preset: FilterPreset,
+  today: string,
+  mine: readonly Priority[],
+): boolean {
   switch (preset) {
     case '내 우선순위':
-      return priorities.some((p) => p.category === law.category);
+      return mine.some((p) => p.category === law.category);
     case '전체':
       return true;
 
@@ -274,14 +280,19 @@ function compareLaws(a: Law, b: Law, sort: SortKey): number {
   return a.deadline.localeCompare(b.deadline);
 }
 
+/**
+ * `mine`은 사용자가 S4에서 편집한 우선순위다. 시드 상수를 쓰면
+ * S4에서 '통관·관세'를 추가해도 S2의 '내 우선순위'가 그대로라 화면이 어긋난다.
+ */
 export function visibleLaws(
   ds: Dataset,
   preset: FilterPreset,
   sort: SortKey,
   query: string,
+  mine: readonly Priority[],
 ): Law[] {
   return ds.laws
-    .filter((law) => matchesPreset(law, preset, ds.today) && matchesQuery(ds, law, query))
+    .filter((law) => matchesPreset(law, preset, ds.today, mine) && matchesQuery(ds, law, query))
     .sort((a, b) => compareLaws(a, b, sort));
 }
 

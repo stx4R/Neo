@@ -1,4 +1,372 @@
 {
-  "laws": [],
-  "actions": []
+  "laws": [
+    {
+      "id": "JP-2026-034",
+      "officialRef": "内閣府令34/2026",
+      "title": "食品表示基準 개정 — 카슈넛이 특정원재료가 됐다",
+      "country": "JP",
+      "category": "labeling",
+      "itemCategories": [
+        "food"
+      ],
+      "hsPrefixes": [
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22"
+      ],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "high",
+      "effectiveDate": "2026-04-01",
+      "deadline": "2028-03-31",
+      "addedAt": "2026-09-06",
+      "transitionEndsAt": "2028-03-31",
+      "transitionNote": "알레르겐 표시 개정분은 2028.03.31까지 경과조치. 개별품목 표시규칙 개정분은 2030.03.31까지로 따로 간다",
+      "changes": [
+        {
+          "before": "특정원재료(표시 의무) 8품목 — 새우·게·호두·밀·메밀·달걀·유·땅콩",
+          "after": "카슈넛을 더해 9품목. 피스타치오는 특정원재료에 준하는 것(표시 권장)으로 추가돼 권장 20품목"
+        },
+        {
+          "before": "개별품목별 표시규칙이 별표마다 흩어져 있었음",
+          "after": "통조림·토마토가공품·농산물절임 등 42품목의 개별규정을 개정하거나 삭제해 횡단적 규칙으로 통일"
+        },
+        {
+          "before": "냉동식품의 동결 전 가열 여부를 임의 위치에 표시",
+          "after": "\"냉동식품\" 표시에 근접한 위치에 표시하도록 지정"
+        }
+      ],
+      "affectedProductIds": [
+        "p-kimchi-sauce",
+        "p-seasoned-laver",
+        "p-gochujang",
+        "p-yuja"
+      ],
+      "actionIds": [
+        "JP-a-034-01",
+        "JP-a-034-02",
+        "JP-a-034-03",
+        "JP-a-034-04"
+      ],
+      "source": {
+        "url": "https://www.caa.go.jp/policies/policy/food_labeling/food_labeling_act/assets/food_labeling_cms201_260401_34.pdf",
+        "publisher": "일본 소비자청",
+        "publishedAt": "2026-04-01",
+        "originalLang": "ja",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "JP-1947-012",
+      "officialRef": "食品衛生法 第12条",
+      "title": "지정첨가물 외 사용 금지 — 목록에 없으면 통관에서 막힌다",
+      "country": "JP",
+      "category": "safety",
+      "itemCategories": [
+        "food"
+      ],
+      "hsPrefixes": [
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22"
+      ],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "critical",
+      "effectiveDate": "2020-06-01",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [],
+      "affectedProductIds": [
+        "p-kimchi-sauce",
+        "p-seasoned-laver",
+        "p-gochujang",
+        "p-yuja"
+      ],
+      "actionIds": [
+        "JP-a-012-01",
+        "JP-a-012-02",
+        "JP-a-012-03"
+      ],
+      "source": {
+        "url": "https://www.caa.go.jp/policies/policy/standards_evaluation/food_additives",
+        "publisher": "일본 소비자청",
+        "publishedAt": "2020-06-01",
+        "originalLang": "ja",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "JP-2018-046",
+      "officialRef": "器具・容器包装PL制度",
+      "title": "합성수지 포장재 포지티브리스트 완전시행 — 경과조치가 끝났다",
+      "country": "JP",
+      "category": "packaging",
+      "itemCategories": [
+        "food"
+      ],
+      "hsPrefixes": [
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22"
+      ],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "high",
+      "effectiveDate": "2025-06-01",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "transitionEndsAt": "2025-05-31",
+      "transitionNote": "2020.06.01 도입 후 5년 경과조치가 2025.05.31로 끝났다. 지금은 완전시행 상태다",
+      "changes": [
+        {
+          "before": "경과조치 기간에는 시행 전과 같은 원재료를 계속 쓸 수 있었음 (기록 보존 의무만)",
+          "after": "2025.06.01부터 별표 제1에 수록된 물질만 사용 가능"
+        },
+        {
+          "before": "포장재 성분 정보 전달이 관행에 맡겨져 있었음",
+          "after": "제조·수입 사업자에 정보전달 의무 — 적합성을 증명하는 문서를 갖춰야 한다"
+        }
+      ],
+      "affectedProductIds": [
+        "p-kimchi-sauce",
+        "p-seasoned-laver",
+        "p-gochujang",
+        "p-yuja"
+      ],
+      "actionIds": [
+        "JP-a-046-01",
+        "JP-a-046-02",
+        "JP-a-046-03"
+      ],
+      "source": {
+        "url": "https://www.caa.go.jp/policies/policy/standards_evaluation/appliance/positive_list_new",
+        "publisher": "일본 소비자청",
+        "publishedAt": "2025-06-01",
+        "originalLang": "ja",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "JP-2005-499",
+      "officialRef": "告示499号 (残留農薬PL)",
+      "title": "잔류농약 포지티브리스트 — 기준 없는 농약은 0.01ppm이 상한이다",
+      "country": "JP",
+      "category": "safety",
+      "itemCategories": [
+        "food"
+      ],
+      "hsPrefixes": [
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22"
+      ],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "high",
+      "effectiveDate": "2006-05-29",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [],
+      "affectedProductIds": [
+        "p-kimchi-sauce",
+        "p-seasoned-laver",
+        "p-gochujang",
+        "p-yuja"
+      ],
+      "actionIds": [
+        "JP-a-499-01",
+        "JP-a-499-02",
+        "JP-a-499-03"
+      ],
+      "source": {
+        "url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/shokuhin/zanryu/index.html",
+        "publisher": "일본 후생노동성",
+        "publishedAt": "2005-11-29",
+        "originalLang": "ja",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "JP-1947-027",
+      "officialRef": "食品衛生法 第27条",
+      "title": "수입신고 — 원재료표·제조공정표를 수출자가 만들어야 한다",
+      "country": "JP",
+      "category": "customs",
+      "itemCategories": [
+        "food"
+      ],
+      "hsPrefixes": [
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22"
+      ],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "medium",
+      "effectiveDate": "2020-06-01",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [],
+      "affectedProductIds": [
+        "p-kimchi-sauce",
+        "p-seasoned-laver",
+        "p-gochujang",
+        "p-yuja"
+      ],
+      "actionIds": [
+        "JP-a-027-01",
+        "JP-a-027-02"
+      ],
+      "source": {
+        "url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000144562.html",
+        "publisher": "일본 후생노동성",
+        "publishedAt": "2020-06-01",
+        "originalLang": "ja",
+        "lastVerified": "2026-09-06"
+      }
+    }
+  ],
+  "actions": [
+    {
+      "id": "JP-a-034-01",
+      "lawId": "JP-2026-034",
+      "title": "카슈넛 함유·혼입 가능성 점검 — 원료와 제조라인 전수 확인",
+      "owner": "품질팀",
+      "effort": "3주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-034-02",
+      "lawId": "JP-2026-034",
+      "title": "일본어 라벨의 특정원재료 표기를 9품목 기준으로 갱신",
+      "owner": "디자인",
+      "effort": "2주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-034-03",
+      "lawId": "JP-2026-034",
+      "title": "피스타치오 권장표시 반영 여부 결정",
+      "owner": "마케팅",
+      "effort": "1주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-034-04",
+      "lawId": "JP-2026-034",
+      "title": "2028.03.31 이전 인쇄분 소진 계획과 신규 라벨 전환 시점 확정",
+      "owner": "영업",
+      "effort": "2주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-012-01",
+      "lawId": "JP-1947-012",
+      "title": "제품별 첨가물을 지정첨가물·기존첨가물 목록과 대조",
+      "owner": "품질팀",
+      "effort": "4주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-012-02",
+      "lawId": "JP-1947-012",
+      "title": "미지정 첨가물이 나오면 일본 수출용 대체 배합 확정",
+      "owner": "품질팀",
+      "effort": "8주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-012-03",
+      "lawId": "JP-1947-012",
+      "title": "첨가물 사용기준(대상 식품·사용량) 충족 여부 검산",
+      "owner": "품질팀",
+      "effort": "2주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-046-01",
+      "lawId": "JP-2018-046",
+      "title": "포장재 공급사에서 포지티브리스트 적합 확인서 수령",
+      "owner": "구매",
+      "effort": "4주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-046-02",
+      "lawId": "JP-2018-046",
+      "title": "합성수지 포장재의 기재(폴리머)와 첨가제가 별표 제1에 있는지 확인",
+      "owner": "품질팀",
+      "effort": "3주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-046-03",
+      "lawId": "JP-2018-046",
+      "title": "적합 확인 문서를 수입신고 첨부자료로 정리",
+      "owner": "품질팀",
+      "effort": "1주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-499-01",
+      "lawId": "JP-2005-499",
+      "title": "원료 농산물별 잔류농약 시험 — 일본 기준이 없는 농약은 0.01ppm",
+      "owner": "품질팀",
+      "effort": "6주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-499-02",
+      "lawId": "JP-2005-499",
+      "title": "원료 산지에서 실제 사용한 농약 목록 확보",
+      "owner": "구매",
+      "effort": "4주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-499-03",
+      "lawId": "JP-2005-499",
+      "title": "일률기준 초과 위험 농약을 재배 단계에서 배제하도록 계약에 반영",
+      "owner": "구매",
+      "effort": "3주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-027-01",
+      "lawId": "JP-1947-027",
+      "title": "원재료표·제조공정표를 일본어로 작성해 수입자에 제공",
+      "owner": "품질팀",
+      "effort": "3주",
+      "dueDate": null
+    },
+    {
+      "id": "JP-a-027-02",
+      "lawId": "JP-1947-027",
+      "title": "수입자와 검역소 신고 일정 확정 — 도착 예정일 7일 전부터 접수",
+      "owner": "영업",
+      "effort": "1주",
+      "dueDate": null
+    }
+  ]
 }
