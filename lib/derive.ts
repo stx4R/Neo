@@ -213,7 +213,9 @@ export function headerBadge(law: Law, today: string): BadgeSpec {
 // ── S2 필터·정렬 ───────────────────────────────────────────────
 
 // 국가 칩은 없앴다 — 도착국은 프로필로 고정이라 거를 것이 없다.
-export const FILTER_PRESETS = ['내 우선순위', '전체', 'HIGH+', '시행 임박'] as const;
+// '저장됨'은 S3 우상단 저장 토글이 만든 neo.laws.saved를 본다.
+// 맨 뒤에 두는 이유: 앞의 넷은 데이터가 정하는 묶음이고 이것만 사용자가 만든 묶음이다.
+export const FILTER_PRESETS = ['내 우선순위', '전체', 'HIGH+', '시행 임박', '저장됨'] as const;
 export type FilterPreset = (typeof FILTER_PRESETS)[number];
 
 export const SORT_OPTIONS = [
@@ -236,12 +238,15 @@ function matchesPreset(
   preset: FilterPreset,
   today: string,
   mine: readonly Priority[],
+  saved: ReadonlySet<string>,
 ): boolean {
   switch (preset) {
     case '내 우선순위':
       return mine.some((p) => p.category === law.category);
     case '전체':
       return true;
+    case '저장됨':
+      return saved.has(law.id);
 
     case 'HIGH+':
       return law.riskLevel === 'critical' || law.riskLevel === 'high';
@@ -290,9 +295,13 @@ export function visibleLaws(
   sort: SortKey,
   query: string,
   mine: readonly Priority[],
+  saved: ReadonlySet<string>,
 ): Law[] {
   return ds.laws
-    .filter((law) => matchesPreset(law, preset, ds.today, mine) && matchesQuery(ds, law, query))
+    .filter(
+      (law) =>
+        matchesPreset(law, preset, ds.today, mine, saved) && matchesQuery(ds, law, query),
+    )
     .sort((a, b) => compareLaws(a, b, sort));
 }
 

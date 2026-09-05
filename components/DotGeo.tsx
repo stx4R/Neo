@@ -241,7 +241,7 @@ function paint(canvas: HTMLCanvasElement, scene: Scene, t: number | null): void 
 
 export function DotGeo({
   mode,
-  dotColor = 'var(--text-3)',
+  dotColor = 'var(--geo-dot)',
   routeColor = 'var(--text)',
   destColor = 'var(--risk-critical)',
   originMarker = true,
@@ -252,7 +252,11 @@ export function DotGeo({
   style,
 }: {
   mode: GeoMode;
-  /** 육지 점 색. 원본은 --text-3 이고 S5 명세는 --geo-dot 이다. */
+  /**
+   * 육지 점 색. **호출부가 반드시 명시한다** — 두 화면이 다른 값을 쓰기 때문이다.
+   * S1 지구본은 --geo-dot-globe, S5 지도는 --geo-dot다. 이유는 globals.css에 적었다.
+   * 기본값은 어두운 쪽(--geo-dot)이다. 라벨을 얹는 화면에서 안전한 쪽이다.
+   */
   dotColor?: string;
   routeColor?: string;
   destColor?: string;

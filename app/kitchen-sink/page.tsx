@@ -260,8 +260,9 @@ export default function KitchenSink() {
 
       <Section title="DOTGEO — globe / asia 두 모드">
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <DotGeo mode="globe" style={{ width: '100%', height: 240 }} />
-          <DotGeo mode="asia" style={{ width: '100%', height: 240 }} />
+          {/* 화면과 같은 색을 쓴다 — 여기가 두 값을 나란히 보는 자리다. */}
+          <DotGeo mode="globe" dotColor="var(--geo-dot-globe)" style={{ width: '100%', height: 240 }} />
+          <DotGeo mode="asia" dotColor="var(--geo-dot)" style={{ width: '100%', height: 240 }} />
         </div>
       </Section>
 

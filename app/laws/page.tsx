@@ -28,6 +28,7 @@ import {
   type SortKey,
 } from '@/lib/derive';
 import { useActionsDone } from '@/lib/useActionsDone';
+import { useLawsSaved } from '@/lib/useLawsSaved';
 import { usePriorities } from '@/lib/usePriorities';
 
 // S2 Laws.
@@ -38,12 +39,13 @@ export default function LawsPage() {
   const [query, setQuery] = useState('');
   const done = useActionsDone();
   const priorities = usePriorities();
+  const saved = useLawsSaved();
 
   const ds = useDataset();
   const asOf = ds ? dataAsOf(ds) : null;
   const rows = useMemo(
-    () => (ds ? visibleLaws(ds, preset, sort, query, priorities) : []),
-    [ds, preset, sort, query, priorities],
+    () => (ds ? visibleLaws(ds, preset, sort, query, priorities, saved) : []),
+    [ds, preset, sort, query, priorities, saved],
   );
 
   return (
@@ -158,7 +160,13 @@ export default function LawsPage() {
         )}
         {ds && !ds.empty && rows.length === 0 && (
           <EmptyState
-            message="조건에 맞는 법률이 없습니다"
+            // '저장됨'만 문구를 따로 준다. 나머지는 조건을 좁혀서 0건이지만
+            // 이건 사용자가 아직 아무것도 저장하지 않은 것이라 원인이 다르다.
+            message={
+              preset === '저장됨'
+                ? '저장한 법률이 없습니다. 법률 상세 우상단에서 저장합니다'
+                : '조건에 맞는 법률이 없습니다'
+            }
             actionLabel="필터 초기화"
             // 정렬은 건드리지 않는다 — 결과를 0건으로 만드는 건 필터와 검색뿐이다.
             onAction={() => {

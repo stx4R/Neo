@@ -58,6 +58,17 @@ function withRo(word: string): string {
   return jong === 0 || jong === 8 ? `${word}로` : `${word}으로`;
 }
 
+/**
+ * 국가 검색 판정. 코드(`VN`)·한국어명(`베트남`)·영문명(`Viet Nam`) 셋 다 본다.
+ * 사용자가 무엇을 칠지 모른다 — 지도에 보이는 것은 코드뿐이지만 머리에 있는 것은
+ * 한국어 이름이다. 빈 검색어는 전부 통과시킨다.
+ */
+function matchesCountry(c: CountryInfo, query: string): boolean {
+  const q = query.trim().toLowerCase();
+  if (q === '') return true;
+  return [c.code, c.nameKo, c.nameEn].some((s) => s.toLowerCase().includes(q));
+}
+
 export default function MapPage() {
   const done = useActionsDone();
   const ds = useDataset();
@@ -67,6 +78,9 @@ export default function MapPage() {
   const [points, setPoints] = useState<([number, number] | null)[]>([]);
   // 지원 국가 마커를 탭했을 때 "도착국을 바꿀까요"를 묻는 상대. 모달이 아니다.
   const [ask, setAsk] = useState<CountryInfo | null>(null);
+  // 국가 검색어. 마커만 거른다 — 지도와 항로는 그대로 둔다.
+  // 검색으로 지형이 사라지면 어디를 보고 있는지 알 수 없다.
+  const [query, setQuery] = useState('');
   // 시트는 프로필의 도착국 하나를 말한다.
   const focus = ds?.country;
   const origin = ds ? countryByCode(ds.profile.originCountry) : undefined;
@@ -284,8 +298,9 @@ export default function MapPage() {
             </span>
           }
         />
-        {/* 검색 — 비기능이다. 지원 국가가 VN 하나뿐이라 거를 것이 없다.
-            아트보드도 span이고 cursor를 주지 않는다. */}
+        {/* 검색. 4차에서 실기능이 됐다 — 지원 국가가 VN 하나였을 때는 거를 것이
+            없었지만 지금은 넷이고 마커는 열셋이다. S2 검색과 같은 어법이다:
+            박스가 아니라 하단 1px 선만 남긴다. */}
         <div style={{ padding: '0 var(--pad)' }}>
           <div
             style={{
@@ -295,9 +310,21 @@ export default function MapPage() {
               borderBottom: '1px solid var(--hairline)',
             }}
           >
-            <span className="t-body" style={{ color: 'var(--text-3)' }}>
-              국가 검색
-            </span>
+            <input
+              className="t-body"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="국가 검색"
+              aria-label="국가 검색"
+              style={{
+                width: '100%',
+                border: 'none',
+                outline: 'none',
+                background: 'transparent',
+                color: 'var(--text)',
+                padding: 0,
+              }}
+            />
           </div>
         </div>
       </div>
@@ -317,6 +344,9 @@ export default function MapPage() {
         {markers.map((m, i) => {
           const xy = points[i];
           if (!xy) return null;
+          // 검색은 여기서 거른다. markers 배열 자체를 줄이면 points의 인덱스가
+          // 어긋나 마커가 엉뚱한 좌표에 붙는다 — 좌표는 DotGeo가 markers 순서대로 준다.
+          if (!matchesCountry(m.country, query)) return null;
           const selectable =
             m.country.supported && m.country.code !== ds?.profile.destinationCountry;
           return (

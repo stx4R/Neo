@@ -120,6 +120,7 @@ export default function Home() {
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 4 }}>
         <DotGeo
           mode="globe"
+          dotColor="var(--geo-dot-globe)"
           from={origin ? [origin.lng, origin.lat] : undefined}
           to={dest ? [dest.lng, dest.lat] : undefined}
           style={{ width: 296, height: 240, marginRight: -36 }}

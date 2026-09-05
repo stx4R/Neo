@@ -39,15 +39,9 @@ export default function CompanyPage() {
 
   return (
     <Screen scrollPadBottom="var(--pad-tabbar)" footer={<TabBar />}>
-      <TopBar
-        left={<Label color="var(--text)">NEO</Label>}
-        right={
-          // 동작 미정. 자리만 잡는다.
-          <span className="t-meta" style={{ color: 'var(--text-3)' }}>
-            설정
-          </span>
-        }
-      />
+      {/* 우상단 '설정'을 지웠다. 열 화면이 없는 컨트롤이었고, 눌러도 아무 일 없는
+          자리표시자가 넷이면 화면이 프로토타입으로 읽힌다(4차 B7-3, 사용자 확정). */}
+      <TopBar left={<Label color="var(--text)">NEO</Label>} />
 
       <div style={{ padding: '12px var(--pad) 0' }}>
         {/* 회사명은 선택 입력이다. 없으면 자리표시자를 넣지 않고 품목명이 제목이 된다 —
@@ -174,15 +168,8 @@ export default function CompanyPage() {
         )}
       </Section>
 
-      <div style={{ marginTop: 'var(--sec-gap)', padding: '0 var(--pad)' }}>
-        {/* 동작 미정. 버튼이 아니라 텍스트 링크다. */}
-        <span
-          className="t-body"
-          style={{ color: 'var(--accent)', textDecoration: 'underline', cursor: 'pointer' }}
-        >
-          맞춤 분석 다시 실행
-        </span>
-      </div>
+      {/* '맞춤 분석 다시 실행'을 지웠다. 재실행할 분석이 없다 — 화면은 프로필이 바뀌면
+          이미 즉시 따라간다. 없는 계산을 있는 것처럼 보이게 하는 링크였다(4차 B7-3). */}
     </Screen>
   );
 }

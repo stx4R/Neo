@@ -9,6 +9,7 @@ import { Affected } from './Affected';
 import { HeaderBadge } from './HeaderBadge';
 import { MustDoList } from './MustDoList';
 import { OpenActionsBar } from './OpenActionsBar';
+import { SaveToggle } from './SaveToggle';
 
 // 12조합 전부의 법령을 정적 생성한다. 프로필을 바꾸면 다른 조합의 상세로 들어간다.
 export function generateStaticParams() {
@@ -50,12 +51,7 @@ export default async function LawDetail({ params }: PageProps<'/laws/[id]'>) {
             ←
           </Link>
         }
-        right={
-          // TODO 6단계: 저장 동작. 지금은 자리만 잡는다.
-          <span className="t-meta" style={{ color: 'var(--text-3)', cursor: 'pointer' }}>
-            저장
-          </span>
-        }
+        right={<SaveToggle lawId={law.id} />}
       />
 
       <div style={{ padding: '12px var(--pad) 0' }}>
