@@ -1,11 +1,20 @@
-import { actionsOfLaw, laws, priorities, productsOfLaw } from '@/lib/data';
-import { countdown, daysUntil, formatDate, type Countdown } from '@/lib/dday';
+import { actionsOfLaw, laws, notifications, priorities, products, productsOfLaw } from '@/lib/data';
+import {
+  REFERENCE_DATE,
+  countdown,
+  daysUntil,
+  formatDate,
+  formatMonthDay,
+  type Countdown,
+} from '@/lib/dday';
 import {
   RISK_COLOR,
   RISK_LABEL,
   STATUS_COLOR,
   type Action,
+  type Category,
   type Law,
+  type Notification,
   type RiskLevel,
 } from '@/types/neo';
 
@@ -175,4 +184,74 @@ export function visibleLaws(preset: FilterPreset, sort: SortKey, query: string):
   return laws
     .filter((law) => matchesPreset(law, preset) && matchesQuery(law, query))
     .sort((a, b) => compareLaws(a, b, sort));
+}
+
+// ── S4 Company ─────────────────────────────────────────────────
+
+/** 우선순위 타일 한 장의 수치. 해당 category 법률이 없으면 risk는 null이다. */
+export interface PriorityStat {
+  lawCount: number;
+  openCount: number;
+  risk: RiskLevel | null;
+}
+
+export function priorityStat(
+  category: Category,
+  done: ReadonlySet<string>,
+): PriorityStat {
+  const matched = laws.filter((law) => law.category === category);
+  return {
+    lawCount: matched.length,
+    openCount: matched.reduce((sum, law) => sum + openActionsOfLaw(law, done).length, 0),
+    // 해당 법률 중 가장 높은 위험도. 라벨과 상단 4px 바가 같이 이 값을 쓴다.
+    risk: matched.length
+      ? matched.reduce((a, b) => (RISK_RANK[a.riskLevel] >= RISK_RANK[b.riskLevel] ? a : b))
+          .riskLevel
+      : null,
+  };
+}
+
+/** 이 제품을 affectedProductIds에 담고 있는 법률 수. */
+export function lawCountForProduct(productId: string): number {
+  return laws.filter((law) => law.affectedProductIds.includes(productId)).length;
+}
+
+/** 중복을 걷어낸 HS 코드. products.json 순서를 지킨다. */
+export function uniqueHsCodes(): string[] {
+  return [...new Set(products.map((p) => p.hsCode))];
+}
+
+// ── S6 Notifications ───────────────────────────────────────────
+
+export type NotificationGroup = 'TODAY' | 'THIS WEEK' | 'EARLIER';
+
+/** 기준일과의 달력 일수 차. 경과 시간이 아니라 날짜 차다. */
+function daysAgo(at: string): number {
+  return -daysUntil(at);
+}
+
+/**
+ * 시간 라벨. 24시간 미만은 시간으로, 5일까지는 일로, 그 뒤는 날짜로 적는다.
+ * 기준은 언제나 REFERENCE_DATE다 — new Date()를 쓰면 그룹과 라벨이 전부 어긋난다.
+ */
+export function notificationTime(at: string): string {
+  const hours = (Date.parse(REFERENCE_DATE) - Date.parse(at)) / 3_600_000;
+  if (hours < 24) return `${Math.max(0, Math.round(hours))}시간 전`;
+  const days = daysAgo(at);
+  if (days <= 5) return `${days}일 전`;
+  return formatMonthDay(at);
+}
+
+/** 알림을 TODAY / THIS WEEK / EARLIER 로 묶는다. 빈 그룹은 내보내지 않는다. */
+export function groupedNotifications(): { group: NotificationGroup; items: Notification[] }[] {
+  const order: NotificationGroup[] = ['TODAY', 'THIS WEEK', 'EARLIER'];
+  const of = (at: string): NotificationGroup => {
+    const days = daysAgo(at);
+    if (days <= 0) return 'TODAY';
+    if (days <= 5) return 'THIS WEEK';
+    return 'EARLIER';
+  };
+  return order
+    .map((group) => ({ group, items: notifications.filter((n) => of(n.at) === group) }))
+    .filter(({ items }) => items.length > 0);
 }

@@ -95,6 +95,13 @@ export const RISK_LABEL = {
   low: 'LOW',
 } as const satisfies Record<RiskLevel, string>;
 
+export const CATEGORY_LABEL = {
+  labeling: '라벨링·표시',
+  safety: '식품안전·인증',
+  packaging: '포장·환경',
+  customs: '통관·관세',
+} as const satisfies Record<Category, string>;
+
 export const NOTIFICATION_LABEL = {
   deadline: '시행 임박',
   status: '상태 변경',

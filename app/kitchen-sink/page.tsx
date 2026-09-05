@@ -54,7 +54,7 @@ export default function KitchenSink() {
             <span className="t-meta tnum" style={{ color: 'var(--text-3)' }}>
               09.03 08:12
             </span>
-            <UnreadDot count={3} />
+            <UnreadDot count={3} href="/notifications" />
           </>
         }
       />

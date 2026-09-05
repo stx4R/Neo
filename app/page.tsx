@@ -11,8 +11,8 @@ import { TopBar, UnreadDot } from '@/components/TopBar';
 import { company, notifications, productsOfLaw } from '@/lib/data';
 import { REFERENCE_DATE, formatDate, formatMonthDay, formatSyncTime } from '@/lib/dday';
 import { heldLaws, markColor, mustDoNow, thisWeek } from '@/lib/derive';
-import { INITIAL_READ_NOTIFICATIONS } from '@/lib/store-defaults';
 import { useActionsDone } from '@/lib/useActionsDone';
+import { useNotificationsRead } from '@/lib/useNotificationsRead';
 import { RISK_COLOR } from '@/types/neo';
 
 // S1 Home.
@@ -22,9 +22,8 @@ export default function Home() {
   const must = mustDoNow(done);
   const week = thisWeek();
   const held = heldLaws();
-  const unread = notifications.filter(
-    (n) => !INITIAL_READ_NOTIFICATIONS.includes(n.id),
-  ).length;
+  const read = useNotificationsRead();
+  const unread = notifications.filter((n) => !read.has(n.id)).length;
 
   const activeCountry = company.countries.find((c) => c.active);
   const sector = company.industry.split(' · ')[0];
@@ -38,7 +37,7 @@ export default function Home() {
             <span className="t-meta tnum" style={{ color: 'var(--text-3)' }}>
               {formatSyncTime(REFERENCE_DATE)}
             </span>
-            <UnreadDot count={unread} />
+            {unread > 0 && <UnreadDot count={unread} href="/notifications" />}
           </>
         }
       />
