@@ -9,8 +9,10 @@ build/
 .vercel
 *.tsbuildinfo
 next-env.d.ts
-public/sw*.js
-public/workbox-*.js
+
+# public/sw*.js 와 public/workbox-*.js 를 무시하던 줄을 지웠다.
+# Serwist·next-pwa가 생성하는 산출물을 걸러내려던 규칙인데, 4단계 판정에서
+# 서비스워커를 직접 쓰기로 했다. public/sw.js는 생성물이 아니라 소스다.
 
 # create-next-app 기본값에서 병합
 /coverage

@@ -2,6 +2,7 @@
 
 import { Badge } from '@/components/Badge';
 import { DotGeo } from '@/components/DotGeo';
+import { INSTALL_BANNER_H, InstallBanner } from '@/components/InstallBanner';
 import { Label } from '@/components/Label';
 import { Mark, Ordinal } from '@/components/Mark';
 import { RiskText } from '@/components/RiskText';
@@ -13,6 +14,7 @@ import { company, notifications, productsOfLaw } from '@/lib/data';
 import { REFERENCE_DATE, formatDate, formatMonthDay, formatSyncTime } from '@/lib/dday';
 import { heldLaws, markColor, mustDoNow, thisWeek } from '@/lib/derive';
 import { useActionsDone } from '@/lib/useActionsDone';
+import { useInstallPrompt } from '@/lib/useInstallPrompt';
 import { useNotificationsRead } from '@/lib/useNotificationsRead';
 import { RISK_COLOR } from '@/types/neo';
 
@@ -25,12 +27,23 @@ export default function Home() {
   const held = heldLaws();
   const read = useNotificationsRead();
   const unread = notifications.filter((n) => !read.has(n.id)).length;
+  // 설치 배너는 계획서대로 / 에만 둔다. 2회차 방문부터 뜬다.
+  const installPrompt = useInstallPrompt();
 
   const activeCountry = company.countries.find((c) => c.active);
   const sector = company.industry.split(' · ')[0];
 
   return (
-    <Screen scrollPadBottom={130} footer={<TabBar />}>
+    <Screen
+      // 배너가 뜨면 마지막 행이 그 뒤로 들어가지 않게 여백을 같이 민다.
+      scrollPadBottom={installPrompt ? 130 + INSTALL_BANNER_H : 130}
+      footer={
+        <>
+          {installPrompt && <InstallBanner />}
+          <TabBar />
+        </>
+      }
+    >
       <TopBar
         left={<Label color="var(--text)">NEO</Label>}
         right={

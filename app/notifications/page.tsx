@@ -98,9 +98,20 @@ function PushBanner({ onClose }: { onClose: () => void }) {
           background: 'var(--accent)',
         }}
       >
-        {/* TODO 11단계: 실제 권한 요청. 지금은 렌더만 한다. */}
+        {/* 권한 요청까지만 한다. 발송 서버는 만들지 않는다 — V6 범위 밖이다.
+            구독(pushManager.subscribe)도 보낼 곳이 없어 만들지 않는다. */}
         <button
           type="button"
+          onClick={async () => {
+            try {
+              if ('Notification' in window) await Notification.requestPermission();
+            } catch {
+              // 일부 브라우저는 이 자리에서 throw 한다. 그래도 블록은 닫는다.
+            }
+            // 허용이든 거부든 닫는다 — 허용했으면 다시 권할 이유가 없고,
+            // 거부는 브라우저가 다시 묻지 않는다.
+            onClose();
+          }}
           style={{
             flex: 1,
             minWidth: 0,
