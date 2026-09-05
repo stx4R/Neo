@@ -17,7 +17,7 @@
       "status": "active",
       "riskLevel": "high",
       "effectiveDate": "2026-01-23",
-      "deadline": "2026-10-18",
+      "deadline": "2028-01-22",
       "addedAt": "2026-09-01",
       "transitionEndsAt": "2028-01-22",
       "transitionNote": "기존 인쇄 포장재는 2028.01.22까지 소진 허용",
@@ -68,7 +68,7 @@
       "status": "active",
       "riskLevel": "critical",
       "effectiveDate": "2026-05-25",
-      "deadline": "2026-09-17",
+      "deadline": null,
       "addedAt": "2026-09-01",
       "changes": [
         {
@@ -116,7 +116,7 @@
       "status": "active",
       "riskLevel": "high",
       "effectiveDate": "2026-01-01",
-      "deadline": "2026-08-15",
+      "deadline": null,
       "addedAt": "2026-09-01",
       "changes": [
         {
@@ -232,7 +232,7 @@
       "title": "라벨 시안에 원산지 영문표기 반영",
       "owner": "품질팀",
       "effort": "2주",
-      "dueDate": "2026-10-15"
+      "dueDate": null
     },
     {
       "id": "VN-a-02",
@@ -264,7 +264,7 @@
       "title": "포장재 중량 산정 자료 제출",
       "owner": "품질팀",
       "effort": "2주",
-      "dueDate": "2026-09-17"
+      "dueDate": null
     },
     {
       "id": "VN-a-06",
@@ -272,7 +272,7 @@
       "title": "재활용 계획 등록 또는 분담금 납부 결정",
       "owner": "경영",
       "effort": "1주",
-      "dueDate": "2026-09-17"
+      "dueDate": null
     },
     {
       "id": "VN-a-07",
@@ -288,7 +288,7 @@
       "title": "영양성분 시험성적서 확보",
       "owner": "품질팀",
       "effort": "4주",
-      "dueDate": "2026-08-15"
+      "dueDate": null
     },
     {
       "id": "VN-a-09",
@@ -296,7 +296,7 @@
       "title": "라벨 영양성분표 디자인 반영",
       "owner": "디자인",
       "effort": "2주",
-      "dueDate": "2026-08-15"
+      "dueDate": null
     }
   ]
 }

@@ -12,10 +12,12 @@ import { Screen } from '@/components/Screen';
 import { TabBar } from '@/components/TabBar';
 import { TopBar } from '@/components/TopBar';
 import { useDataset } from '@/lib/dataset';
-import { REFERENCE_DATE, formatSyncTime } from '@/lib/dday';
+import { formatDate } from '@/lib/dday';
+
 import {
   FILTER_PRESETS,
   SORT_OPTIONS,
+  dataAsOf,
   listBadge,
   markColor,
   openActionsOfLaw,
@@ -36,6 +38,7 @@ export default function LawsPage() {
   const done = useActionsDone();
 
   const ds = useDataset();
+  const asOf = ds ? dataAsOf(ds) : null;
   const rows = useMemo(
     () => (ds ? visibleLaws(ds, preset, sort, query) : []),
     [ds, preset, sort, query],
@@ -46,9 +49,11 @@ export default function LawsPage() {
       <TopBar
         left={<Label color="var(--text)">NEO</Label>}
         right={
-          <span className="t-meta tnum" style={{ color: 'var(--text-3)' }}>
-            {formatSyncTime(REFERENCE_DATE)}
-          </span>
+          asOf && (
+            <span className="t-meta tnum" style={{ color: 'var(--text-3)' }}>
+              {formatDate(asOf)} 확인
+            </span>
+          )
         }
       />
 
@@ -161,7 +166,7 @@ export default function LawsPage() {
           />
         )}
         {rows.map((law, i) => {
-          const badge = listBadge(law);
+          const badge = listBadge(law, ds!.today);
           return (
             <Row
               key={law.id}

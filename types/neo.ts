@@ -187,7 +187,9 @@ export const CATEGORY_LABEL = {
 export const NOTIFICATION_LABEL = {
   deadline: '시행 임박',
   status: '상태 변경',
-  new: '신규 규제',
+  // '신규 규제'가 아니다. addedAt은 법이 제정된 날이 아니라 우리 데이터셋에
+  // 들어온 날이다. 2018년 법령을 "신규 규제"라고 부르면 거짓말이 된다.
+  new: '신규 등록',
   done: '액션 완료',
 } as const;
 

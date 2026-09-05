@@ -11,10 +11,18 @@ import { Row, RowMeta, RowTitle } from '@/components/Row';
 import { Screen, Section } from '@/components/Screen';
 import { TabBar } from '@/components/TabBar';
 import { TopBar, UnreadDot } from '@/components/TopBar';
-import { countryByCode, notifications } from '@/lib/data';
+import { countryByCode } from '@/lib/data';
 import { useDataset } from '@/lib/dataset';
-import { REFERENCE_DATE, formatDate, formatMonthDay, formatSyncTime } from '@/lib/dday';
-import { heldLaws, markColor, mustDoNow, productsOfLaw, thisWeek } from '@/lib/derive';
+import { formatDate, formatMonthDay } from '@/lib/dday';
+import {
+  dataAsOf,
+  derivedNotifications,
+  heldLaws,
+  markColor,
+  mustDoNow,
+  productsOfLaw,
+  thisWeek,
+} from '@/lib/derive';
 import { useActionsDone } from '@/lib/useActionsDone';
 import { useInstallPrompt } from '@/lib/useInstallPrompt';
 import { useNotificationsRead } from '@/lib/useNotificationsRead';
@@ -29,13 +37,17 @@ export default function Home() {
   const week = ds ? thisWeek(ds) : [];
   const held = ds ? heldLaws(ds) : [];
   const read = useNotificationsRead();
-  const unread = notifications.filter((n) => !read.has(n.id)).length;
+  // 벨 배지도 파생 알림에서 센다. S6와 다른 수를 보이면 안 된다.
+  const unread = ds
+    ? derivedNotifications(ds, done).filter((n) => !read.has(n.id)).length
+    : 0;
   // 설치 배너는 계획서대로 / 에만 둔다. 2회차 방문부터 뜬다.
   const installPrompt = useInstallPrompt();
 
   // 항로 좌표. 출발국이 countries.json에 없으면 DotGeo의 기본값이 그려진다.
   const origin = ds ? countryByCode(ds.profile.originCountry) : undefined;
   const dest = ds?.country;
+  const asOf = ds ? dataAsOf(ds) : null;
 
   return (
     <Screen
@@ -54,9 +66,11 @@ export default function Home() {
         left={<Label color="var(--text)">NEO</Label>}
         right={
           <>
-            <span className="t-meta tnum" style={{ color: 'var(--text-3)' }}>
-              {formatSyncTime(REFERENCE_DATE)}
-            </span>
+            {asOf && (
+              <span className="t-meta tnum" style={{ color: 'var(--text-3)' }}>
+                {formatDate(asOf)} 확인
+              </span>
+            )}
             {unread > 0 && <UnreadDot count={unread} href="/notifications" />}
           </>
         }
@@ -168,6 +182,9 @@ export default function Home() {
         ))}
       </Section>
 
+      {/* 이번 주에 실제로 무슨 일이 있는 법령이 없으면 섹션 자체를 그리지 않는다.
+          아무 일도 없는 주에 "이번 주"라는 라벨만 남기지 않는다. */}
+      {week.length > 0 && (
       <Section label="THIS WEEK">
         {week.map((law, i) => (
           <Row
@@ -184,6 +201,7 @@ export default function Home() {
           </Row>
         ))}
       </Section>
+      )}
     </Screen>
   );
 }

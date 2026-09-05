@@ -1,11 +1,11 @@
-import { actionsOfLaw, notifications, priorities, productsMatching } from '@/lib/data';
+import { actionsOfLaw, priorities, productsMatching } from '@/lib/data';
 import type { Dataset } from '@/lib/dataset';
 import {
-  REFERENCE_DATE,
   countdown,
   daysUntil,
   formatDate,
   formatMonthDay,
+  kstDay,
   type Countdown,
 } from '@/lib/dday';
 import {
@@ -28,6 +28,18 @@ import {
  * 화면이 프로필을 따라갈 수 없었다.
  */
 
+/**
+ * 이 조합 데이터를 마지막으로 확인한 날.
+ *
+ * 상단바의 시각 자리다. 예전에는 REFERENCE_DATE를 "마지막 동기화"로 찍었는데
+ * 동기화하는 서버가 없으므로 그건 지어낸 시각이었다. 실제로 말할 수 있는 것은
+ * "우리가 이 출처들을 언제 열어 봤는가"뿐이다.
+ */
+export function dataAsOf(ds: Dataset): string | null {
+  const days = ds.laws.map((l) => l.source.lastVerified).sort();
+  return days.length > 0 ? days[days.length - 1] : null;
+}
+
 /** 이 법령의 영향 제품. 사용자의 제품 목록에서 HS 앞자리로 고른다. */
 export function productsOfLaw(ds: Dataset, law: Law): Product[] {
   return productsMatching(law, ds.products);
@@ -40,26 +52,59 @@ export interface MustDo {
 }
 
 /**
- * MUST DO NOW — 마감일이 있는 법률마다 아직 끝나지 않은 첫 액션 하나씩.
- * 순서는 laws.json 순서를 따르고, 배지는 액션의 dueDate가 아니라 법률의 deadline을 쓴다.
- * 액션이 전부 끝난 법률은 목록에서 빠진다.
+ * 액션 하나에 붙는 배지. **실재하는 날짜에서만 나온다.**
+ *
+ *   1. 법령에 명시된 기한(law.deadline)이 있으면 거기까지 카운트다운
+ *   2. 없는데 법령이 이미 시행 중이면 `기한 경과` — 의무가 이미 살아 있는데 안 했다
+ *   3. 아직 시행 전이면 시행일까지 카운트다운
+ *   4. 보류 법령이면 배지 없음 — 언제까지 해야 하는지 아무도 모른다
+ *
+ * 아트보드의 D-45·D-14는 목 데이터에 맞춰 그린 허구값이라 쓰지 않는다.
  */
-export function mustDoNow(ds: Dataset, done: ReadonlySet<string>): MustDo[] {
-  return ds.laws
-    .filter((law) => law.deadline !== null)
-    .map((law) => {
-      const action = actionsOfLaw(law).find((a) => !done.has(a.id));
-      return action ? { law, action, countdown: countdown(law.deadline!) } : null;
-    })
-    .filter((m): m is MustDo => m !== null);
+export function actionBadge(law: Law, today: string): Countdown | null {
+  if (law.status === 'hold') return null;
+  if (law.deadline) return countdown(law.deadline, today);
+  return countdown(law.effectiveDate, today);
 }
 
 /**
- * THIS WEEK — 마감이 아직 남아 있는 법률. 기한이 지난 것은 빠진다.
- * 순서는 laws.json 순서.
+ * MUST DO NOW — 아직 끝나지 않은 액션이 있는 법률마다 첫 액션 하나씩.
+ *
+ * 예전에는 `deadline`이 있는 법률만 골랐는데, 허구 deadline을 폐기하고 나니
+ * 그 기준으로는 목록이 거의 비었다. 기준은 "마감이 적혀 있는가"가 아니라
+ * "아직 안 한 일이 있는가"다.
+ *
+ * 보류 법령은 빠진다 — 효력이 정지된 법의 액션은 지금 할 일이 아니다.
+ * 급한 순으로 세운다: 기한 경과가 먼저, 그다음 남은 날짜가 적은 순.
+ */
+export function mustDoNow(ds: Dataset, done: ReadonlySet<string>): MustDo[] {
+  return ds.laws
+    .filter((law) => law.status !== 'hold')
+    .map((law) => {
+      const action = actionsOfLaw(law).find((a) => !done.has(a.id));
+      if (!action) return null;
+      return { law, action, countdown: actionBadge(law, ds.today) };
+    })
+    .filter((m): m is MustDo => m !== null)
+    .sort((a, b) => (a.countdown?.days ?? Infinity) - (b.countdown?.days ?? Infinity));
+}
+
+/** THIS WEEK 창. 앞뒤 7일 — 곧 닥치는 것과 방금 지나간 것 둘 다 봐야 한다. */
+const WEEK = 7;
+
+/**
+ * THIS WEEK — 이번 주에 실제로 무슨 일이 있는 법률.
+ *
+ * 기준 날짜는 법령의 기한이고, 없으면 시행일이다. 앞뒤 7일 안에 들면 여기 선다.
+ * 해당하는 법률이 없으면 **섹션 자체를 그리지 않는다.** 아무 일도 없는 주에
+ * "이번 주"라는 라벨만 남기지 않는다.
  */
 export function thisWeek(ds: Dataset): Law[] {
-  return ds.laws.filter((law) => law.deadline !== null && daysUntil(law.deadline) >= 0);
+  return ds.laws.filter((law) => {
+    const at = law.deadline ?? law.effectiveDate;
+    const d = daysUntil(at, ds.today);
+    return d >= -WEEK && d <= WEEK;
+  });
 }
 
 /** 보류된 법률. S1 상단 상태 스트립에 쓴다. */
@@ -110,12 +155,15 @@ export interface BadgeSpec {
  * S2 목록 행 우측 배지.
  * 보류는 D-Day를 계산하지 않고, 마감이 없으면 배지 자체를 그리지 않는다.
  */
-export function listBadge(law: Law): BadgeSpec | null {
+export function listBadge(law: Law, today: string): BadgeSpec | null {
   if (law.status === 'hold') {
     return { tone: STATUS_COLOR.hold, text: '보류', tnum: false };
   }
-  if (law.deadline === null) return null;
-  const c = countdown(law.deadline);
+  // 대응할 것이 없는 법률에는 배지를 달지 않는다.
+  if (isDormant(law)) return null;
+  const c = law.deadline
+    ? countdown(law.deadline, today)
+    : countdown(law.effectiveDate, today);
   return { tone: c.tone, text: c.text, tnum: !c.overdue };
 }
 
@@ -123,18 +171,21 @@ export function listBadge(law: Law): BadgeSpec | null {
  * S3 헤더 배지. 색면은 언제나 위험도이고, 상태는 글자에 꼬리로 붙는다.
  * "HIGH · D-45" / "MEDIUM · 보류" / "LOW"
  */
-export function headerBadge(law: Law): BadgeSpec {
+export function headerBadge(law: Law, today: string): BadgeSpec {
   const tone = RISK_COLOR[law.riskLevel];
   const risk = RISK_LABEL[law.riskLevel];
   if (law.status === 'hold') return { tone, text: `${risk} · 보류`, tnum: false };
-  if (law.deadline === null) return { tone, text: risk, tnum: false };
-  const c = countdown(law.deadline);
+  if (isDormant(law)) return { tone, text: risk, tnum: false };
+  const c = law.deadline
+    ? countdown(law.deadline, today)
+    : countdown(law.effectiveDate, today);
   return { tone, text: `${risk} · ${c.text}`, tnum: !c.overdue };
 }
 
 // ── S2 필터·정렬 ───────────────────────────────────────────────
 
-export const FILTER_PRESETS = ['내 우선순위', '전체', 'VN', 'HIGH+', '시행 임박'] as const;
+// 국가 칩은 없앴다 — 도착국은 프로필로 고정이라 거를 것이 없다.
+export const FILTER_PRESETS = ['내 우선순위', '전체', 'HIGH+', '시행 임박'] as const;
 export type FilterPreset = (typeof FILTER_PRESETS)[number];
 
 export const SORT_OPTIONS = [
@@ -152,20 +203,19 @@ function maxRisk(group: Law[]): RiskLevel | null {
     : null;
 }
 
-function matchesPreset(law: Law, preset: FilterPreset): boolean {
+function matchesPreset(law: Law, preset: FilterPreset, today: string): boolean {
   switch (preset) {
     case '내 우선순위':
       return priorities.some((p) => p.category === law.category);
     case '전체':
       return true;
-    case 'VN':
-      return law.country === 'VN';
+
     case 'HIGH+':
       return law.riskLevel === 'critical' || law.riskLevel === 'high';
     case '시행 임박':
       // 기한이 지난 것도 포함한다. 규제 대응 앱에서 경과한 마감을
       // '임박' 필터 뒤에 숨기면 가장 급한 걸 놓친다.
-      return law.deadline !== null && daysUntil(law.deadline) <= 30;
+      return !isDormant(law) && daysUntil(law.deadline ?? law.effectiveDate, today) <= 30;
   }
 }
 
@@ -204,7 +254,7 @@ export function visibleLaws(
   query: string,
 ): Law[] {
   return ds.laws
-    .filter((law) => matchesPreset(law, preset) && matchesQuery(ds, law, query))
+    .filter((law) => matchesPreset(law, preset, ds.today) && matchesQuery(ds, law, query))
     .sort((a, b) => compareLaws(a, b, sort));
 }
 
@@ -293,33 +343,150 @@ export function openActionCountOfCountry(
 
 export type NotificationGroup = 'TODAY' | 'THIS WEEK' | 'EARLIER';
 
-/** 기준일과의 달력 일수 차. 경과 시간이 아니라 날짜 차다. */
-function daysAgo(at: string): number {
-  return -daysUntil(at);
+/** 오늘과의 달력 일수 차. 경과 시간이 아니라 날짜 차다. */
+function daysAgo(at: string, today: string): number {
+  return -daysUntil(at, today);
 }
 
 /**
- * 시간 라벨. 24시간 미만은 시간으로, 5일까지는 일로, 그 뒤는 날짜로 적는다.
- * 기준은 언제나 REFERENCE_DATE다 — new Date()를 쓰면 그룹과 라벨이 전부 어긋난다.
+ * 시간 라벨. 5일까지는 일로, 그 뒤는 날짜로 적는다.
+ *
+ * 예전에는 24시간 미만을 "N시간 전"으로 적었는데, 파생 알림의 시각은 날짜뿐이라
+ * 시각을 지어내야 그 문구가 나온다. 없는 정밀도를 만들지 않는다.
  */
-export function notificationTime(at: string): string {
-  const hours = (Date.parse(REFERENCE_DATE) - Date.parse(at)) / 3_600_000;
-  if (hours < 24) return `${Math.max(0, Math.round(hours))}시간 전`;
-  const days = daysAgo(at);
+export function notificationTime(at: string, today: string): string {
+  const days = daysAgo(at, today);
+  if (days <= 0) return '오늘';
   if (days <= 5) return `${days}일 전`;
   return formatMonthDay(at);
 }
 
+/** `new` 알림으로 볼 기간. 데이터셋에 들어온 지 이만큼 안 된 법령. */
+const NEW_WINDOW_DAYS = 30;
+/** `deadline` 알림을 띄우는 지점. */
+const DEADLINE_MARKS = [7, 1] as const;
+
+/**
+ * 알림을 법령 데이터에서 만든다.
+ *
+ * 손으로 쓴 notifications.json을 버렸다. 고정 타임스탬프 6건이라 기준일이
+ * 오늘로 바뀌는 순간 전부 EARLIER로 몰리고, 조합을 바꿔도 베트남 식품 얘기만 나왔다.
+ *
+ * | 타입 | 생성 조건 |
+ * |---|---|
+ * | deadline | 기한까지 D-7 / D-1 도달, 또는 기한 경과 |
+ * | status   | statusChangedAt이 있는 법령 |
+ * | new      | addedAt이 최근 30일 이내인 법령 |
+ * | done     | 사용자가 완료한 액션 (localStorage에서 파생) |
+ *
+ * 파생 결과가 0건이면 S6는 빈 상태를 보여준다. 억지로 채우지 않는다.
+ *
+ * id는 내용에서 결정론적으로 만든다 — `neo.notifications.read`가 그 id를 담으므로
+ * 렌더마다 달라지면 읽음 표시가 유지되지 않는다.
+ */
+export function derivedNotifications(
+  ds: Dataset,
+  done: ReadonlySet<string>,
+): Notification[] {
+  const out: Notification[] = [];
+
+  for (const law of ds.laws) {
+    // 기한 알림 — 실재하는 기한이 있을 때만. 없는 마감을 알리지 않는다.
+    if (law.deadline) {
+      const left = daysUntil(law.deadline, ds.today);
+      if (left < 0) {
+        out.push({
+          id: `n-deadline-over-${law.id}`,
+          type: 'deadline',
+          lawId: law.id,
+          title: `${law.officialRef} 기한 경과`,
+          body: `${formatDate(law.deadline)}까지였습니다`,
+          at: law.deadline,
+        });
+      } else {
+        // D-7·D-1을 지나온 시점을 알림 시각으로 삼는다.
+        for (const mark of DEADLINE_MARKS) {
+          if (left > mark) continue;
+          const at = shiftDays(law.deadline, -mark);
+          out.push({
+            id: `n-deadline-${mark}-${law.id}`,
+            type: 'deadline',
+            lawId: law.id,
+            title: `${law.officialRef} D-${mark}`,
+            body: `${formatDate(law.deadline)} 기한`,
+            at,
+          });
+          break;
+        }
+      }
+    }
+
+    // 상태 변경 알림
+    if (law.statusChangedAt) {
+      const label = law.status === 'hold' ? '시행 보류' : '상태 변경';
+      out.push({
+        id: `n-status-${law.id}`,
+        type: 'status',
+        lawId: law.id,
+        title: `${law.officialRef} ${label}`,
+        body: law.transitionNote ?? law.title,
+        at: law.statusChangedAt,
+      });
+    }
+
+    // 신규 등록 알림 — 법이 새로 생긴 것이 아니라 목록에 새로 들어왔다는 뜻이다.
+    // 그래서 제목이 법령명이고, 언제 들어왔는지를 곁말로 적는다.
+    if (daysAgo(law.addedAt, ds.today) <= NEW_WINDOW_DAYS) {
+      out.push({
+        id: `n-new-${law.id}`,
+        type: 'new',
+        lawId: law.id,
+        title: law.title,
+        body: `${law.officialRef} · ${formatDate(law.addedAt)} 추가`,
+        at: law.addedAt,
+      });
+    }
+  }
+
+  // 완료 알림 — 사용자가 체크한 액션. 완료 시각을 저장하지 않으므로
+  // 시각은 오늘로 둔다. 없는 시각을 지어내지 않고 '오늘'로만 말한다.
+  for (const law of ds.laws) {
+    for (const action of actionsOfLaw(law)) {
+      if (!done.has(action.id)) continue;
+      out.push({
+        id: `n-done-${action.id}`,
+        type: 'done',
+        lawId: law.id,
+        title: `${action.title} 완료`,
+        body: law.officialRef,
+        at: ds.today,
+      });
+    }
+  }
+
+  // 최근 순.
+  return out.sort((a, b) => b.at.localeCompare(a.at));
+}
+
+/** 날짜에 일수를 더한다. 알림 시각을 기한에서 역산할 때 쓴다. */
+function shiftDays(day: string, delta: number): string {
+  const base = Date.parse(`${kstDay(day)}T00:00:00Z`) + delta * 86_400_000;
+  return new Date(base).toISOString().slice(0, 10);
+}
+
 /** 알림을 TODAY / THIS WEEK / EARLIER 로 묶는다. 빈 그룹은 내보내지 않는다. */
-export function groupedNotifications(): { group: NotificationGroup; items: Notification[] }[] {
+export function groupedNotifications(
+  items: readonly Notification[],
+  today: string,
+): { group: NotificationGroup; items: Notification[] }[] {
   const order: NotificationGroup[] = ['TODAY', 'THIS WEEK', 'EARLIER'];
   const of = (at: string): NotificationGroup => {
-    const days = daysAgo(at);
+    const days = daysAgo(at, today);
     if (days <= 0) return 'TODAY';
     if (days <= 5) return 'THIS WEEK';
     return 'EARLIER';
   };
   return order
-    .map((group) => ({ group, items: notifications.filter((n) => of(n.at) === group) }))
+    .map((group) => ({ group, items: items.filter((n) => of(n.at) === group) }))
     .filter(({ items }) => items.length > 0);
 }

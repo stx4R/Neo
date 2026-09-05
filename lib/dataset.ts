@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react';
 import { categoryById, countryByCode, lawSetOf } from '@/lib/data';
+import { resolveToday } from '@/lib/dday';
 import { useProfile } from '@/lib/useProfile';
 import type {
   Action,
@@ -20,6 +21,15 @@ import type {
  */
 export interface Dataset {
   profile: Profile;
+  /**
+   * 오늘(YYYY-MM-DD, 한국 시각 기준).
+   *
+   * 날짜 파생값이 전부 이 값 하나에서 나온다. Dataset이 들고 다니는 이유는
+   * **클라이언트 렌더에서만 계산되기 때문**이다 — 이 객체는 프로필이 있어야
+   * 만들어지고, 프로필은 hydration 이후에야 읽힌다. 서버에서 계산하면
+   * 정적 배포 특성상 빌드 날짜가 굳고 hydration도 깨진다.
+   */
+  today: string;
   country: CountryInfo | undefined;
   category: ItemCategory | undefined;
   /** 출발국 필터를 이미 통과한 법령. */
@@ -48,6 +58,7 @@ export function buildDataset(profile: Profile): Dataset {
 
   return {
     profile,
+    today: resolveToday(),
     country: countryByCode(profile.destinationCountry),
     category: categoryById(profile.itemCategory),
     laws,

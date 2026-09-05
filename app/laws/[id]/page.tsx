@@ -1,13 +1,12 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { Badge } from '@/components/Badge';
 import { Label } from '@/components/Label';
 import { Screen, Section } from '@/components/Screen';
 import { TopBar } from '@/components/TopBar';
 import { actionsOfLaw, allLaws, countryByCode, lawById } from '@/lib/data';
 import { formatDate } from '@/lib/dday';
-import { headerBadge } from '@/lib/derive';
 import { Affected } from './Affected';
+import { HeaderBadge } from './HeaderBadge';
 import { MustDoList } from './MustDoList';
 import { OpenActionsBar } from './OpenActionsBar';
 
@@ -28,7 +27,6 @@ export default async function LawDetail({ params }: PageProps<'/laws/[id]'>) {
   if (!law) notFound();
 
   const actions = actionsOfLaw(law);
-  const badge = headerBadge(law);
   const country = countryByCode(law.country);
 
   return (
@@ -70,9 +68,7 @@ export default async function LawDetail({ params }: PageProps<'/laws/[id]'>) {
           {formatDate(law.effectiveDate)} 시행
         </p>
         <div style={{ marginTop: 12, display: 'flex' }}>
-          <Badge tone={badge.tone} tnum={badge.tnum}>
-            {badge.text}
-          </Badge>
+          <HeaderBadge law={law} />
         </div>
       </div>
 

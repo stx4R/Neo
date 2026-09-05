@@ -5,8 +5,11 @@ import { useState } from 'react';
 import { Label } from '@/components/Label';
 import { Screen, Section } from '@/components/Screen';
 import { TopBar } from '@/components/TopBar';
-import { notifications } from '@/lib/data';
-import { groupedNotifications, notificationTime } from '@/lib/derive';
+import { ComboPending } from '@/components/ComboEmpty';
+import { EmptyState } from '@/components/EmptyState';
+import { useDataset } from '@/lib/dataset';
+import { derivedNotifications, groupedNotifications, notificationTime } from '@/lib/derive';
+import { useActionsDone } from '@/lib/useActionsDone';
 import { markRead, useNotificationsRead } from '@/lib/useNotificationsRead';
 import {
   NOTIFICATION_COLOR,
@@ -14,13 +17,21 @@ import {
   type Notification,
 } from '@/types/neo';
 
-// S6 Notifications. 탭바가 없는 화면이다.
+/**
+ * S6 Notifications. 탭바가 없는 화면이다.
+ *
+ * 알림은 손으로 쓴 JSON이 아니라 법령 데이터에서 파생된다(§B-5).
+ * 파생 결과가 0건이면 빈 상태를 보여준다 — 억지로 채우지 않는다.
+ */
 export default function NotificationsPage() {
   const read = useNotificationsRead();
+  const done = useActionsDone();
+  const ds = useDataset();
   const [bannerOpen, setBannerOpen] = useState(true);
 
-  const groups = groupedNotifications();
-  const unread = notifications.filter((n) => !read.has(n.id)).length;
+  const items = ds ? derivedNotifications(ds, done) : [];
+  const groups = ds ? groupedNotifications(items, ds.today) : [];
+  const unread = items.filter((n) => !read.has(n.id)).length;
 
   return (
     <Screen scrollPadBottom="var(--pad-plain)">
@@ -43,7 +54,7 @@ export default function NotificationsPage() {
           <button
             type="button"
             className="t-meta"
-            onClick={() => markRead(notifications.map((n) => n.id))}
+            onClick={() => markRead(items.map((n) => n.id))}
             style={{
               padding: 0,
               border: 'none',
@@ -61,12 +72,25 @@ export default function NotificationsPage() {
         <h1 className="t-h1" style={{ margin: 0, color: 'var(--text)' }}>
           알림
         </h1>
-        <p className="t-meta tnum" style={{ margin: '10px 0 0', color: 'var(--text-3)' }}>
-          읽지 않음 {unread}
-        </p>
+        {ds && (
+          <p className="t-meta tnum" style={{ margin: '10px 0 0', color: 'var(--text-3)' }}>
+            읽지 않음 {unread}
+          </p>
+        )}
       </div>
 
       {bannerOpen && <PushBanner onClose={() => setBannerOpen(false)} />}
+
+      {!ds && (
+        <div style={{ marginTop: 'var(--sec-gap)', padding: '0 var(--pad)' }}>
+          <ComboPending />
+        </div>
+      )}
+      {ds && items.length === 0 && (
+        <div style={{ marginTop: 'var(--sec-gap)', padding: '0 var(--pad)' }}>
+          <EmptyState message="새로운 알림이 없습니다" />
+        </div>
+      )}
 
       {groups.map(({ group, items }) => (
         <Section key={group} label={group}>
@@ -74,6 +98,7 @@ export default function NotificationsPage() {
             <NotificationRow
               key={n.id}
               notification={n}
+              today={ds!.today}
               read={read.has(n.id)}
               last={i === items.length - 1}
             />
@@ -156,10 +181,12 @@ function PushBanner({ onClose }: { onClose: () => void }) {
 
 function NotificationRow({
   notification: n,
+  today,
   read,
   last,
 }: {
   notification: Notification;
+  today: string;
   read: boolean;
   last: boolean;
 }) {
@@ -227,7 +254,7 @@ function NotificationRow({
         }}
       >
         <span className="t-meta tnum" style={{ color: 'var(--text-3)' }}>
-          {notificationTime(n.at)}
+          {notificationTime(n.at, today)}
         </span>
         {/* 미읽음 표시. 원형이 아니라 6×6 정사각이다. */}
         {!read && <span style={{ width: 6, height: 6, background: 'var(--accent)' }} />}

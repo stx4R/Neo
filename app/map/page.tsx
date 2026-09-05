@@ -225,7 +225,7 @@ export default function MapPage() {
         {rows.length > 0 ? (
           <div style={{ marginTop: 20 }}>
             {rows.map((law, i) => {
-              const badge = listBadge(law);
+              const badge = listBadge(law, ds!.today);
               return (
                 <Row
                   key={law.id}

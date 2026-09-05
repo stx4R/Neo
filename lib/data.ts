@@ -13,7 +13,6 @@ import usFood from '@/data/laws/US-food.json';
 import vnCosmetics from '@/data/laws/VN-cosmetics.json';
 import vnElectronics from '@/data/laws/VN-electronics.json';
 import vnFood from '@/data/laws/VN-food.json';
-import notificationsJson from '@/data/notifications.json';
 import prioritiesJson from '@/data/priorities.json';
 import productsJson from '@/data/products.json';
 import type {
@@ -25,7 +24,6 @@ import type {
   ItemCategoryId,
   Law,
   LawSet,
-  Notification,
   Priority,
   Product,
 } from '@/types/neo';
@@ -102,7 +100,6 @@ export function productsMatching(law: Law, pool: readonly Product[]): Product[] 
 // 참조무결성·값 범위는 scripts/check-data.mjs가 검증한다.
 export const seedProducts = productsJson as unknown as Product[];
 export const priorities = prioritiesJson as unknown as Priority[];
-export const notifications = notificationsJson as unknown as Notification[];
 export const company = companyJson as unknown as Company;
 export const countries = countriesJson as unknown as CountryInfo[];
 export const categories = categoriesJson as unknown as ItemCategory[];
