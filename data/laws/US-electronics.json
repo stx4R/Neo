@@ -1,4 +1,270 @@
 {
-  "laws": [],
-  "actions": []
+  "laws": [
+    {
+      "id": "US-2017-015",
+      "officialRef": "47 CFR Part 15",
+      "title": "FCC 기기인증 — 무선은 Certification, 나머지는 SDoC로 갈린다",
+      "country": "US",
+      "category": "safety",
+      "itemCategories": [
+        "electronics"
+      ],
+      "hsPrefixes": [
+        "8507",
+        "8516",
+        "8518",
+        "8539"
+      ],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "critical",
+      "effectiveDate": "2017-11-02",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "transitionEndsAt": "2018-11-01",
+      "transitionNote": "Verification·DoC 병행이 2018.11.01로 끝났다. 지금은 SDoC 하나뿐이다",
+      "changes": [
+        {
+          "before": "자기적합 절차가 Verification과 Declaration of Conformity 둘로 나뉘어 있었다",
+          "after": "둘을 SDoC 하나로 통합. 미국 내 책임당사자(responsible party)를 반드시 둬야 한다"
+        }
+      ],
+      "affectedProductIds": [
+        "p-elec-1",
+        "p-elec-2",
+        "p-elec-3",
+        "p-elec-4"
+      ],
+      "actionIds": [
+        "US-a-015-01",
+        "US-a-015-02",
+        "US-a-015-03",
+        "US-a-015-04"
+      ],
+      "source": {
+        "url": "https://www.fcc.gov/engineering-technology/laboratory-division/general/equipment-authorization",
+        "publisher": "미국 연방통신위원회 (FCC)",
+        "publishedAt": "2017-11-02",
+        "originalLang": "en",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "US-2024-430",
+      "officialRef": "10 CFR 430 (GSL)",
+      "title": "일반조명램프 효율기준 — 2028.07.25부터 120 lm/W다",
+      "country": "US",
+      "category": "safety",
+      "itemCategories": [
+        "electronics"
+      ],
+      "hsPrefixes": [
+        "8539"
+      ],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "high",
+      "effectiveDate": "2022-07-25",
+      "deadline": "2028-07-25",
+      "addedAt": "2026-09-06",
+      "transitionEndsAt": "2028-07-24",
+      "transitionNote": "현행 기준은 45 lm/W다. 2028.07.25부터 생산·수입되는 램프에 120 lm/W가 적용된다",
+      "changes": [
+        {
+          "before": "일반조명램프 최저효율 45 lm/W (2022.07.25 발효한 backstop 기준)",
+          "after": "2024년 최종규칙이 120 lm/W로 올렸다. 2028.07.25 이후 생산·수입분에 적용"
+        }
+      ],
+      "affectedProductIds": [
+        "p-elec-4"
+      ],
+      "actionIds": [
+        "US-a-430-01",
+        "US-a-430-02",
+        "US-a-430-03"
+      ],
+      "source": {
+        "url": "https://www.energy.gov/cmei/buildings/general-service-lamps",
+        "publisher": "미국 에너지부 (DOE)",
+        "publishedAt": "2024-04-19",
+        "originalLang": "en",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "US-2008-185",
+      "officialRef": "49 CFR 173.185",
+      "title": "리튬전지 운송 — UN38.3 시험요약서 없이는 선적이 안 된다",
+      "country": "US",
+      "category": "customs",
+      "itemCategories": [
+        "electronics"
+      ],
+      "hsPrefixes": [
+        "8507",
+        "8518"
+      ],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "high",
+      "effectiveDate": "2008-01-01",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [],
+      "affectedProductIds": [
+        "p-elec-1",
+        "p-elec-2"
+      ],
+      "actionIds": [
+        "US-a-185-01",
+        "US-a-185-02",
+        "US-a-185-03"
+      ],
+      "source": {
+        "url": "https://www.phmsa.dot.gov/lithiumbatteries",
+        "publisher": "미국 파이프라인위험물질안전청 (PHMSA)",
+        "publishedAt": "2008-01-01",
+        "originalLang": "en",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "US-1972-115",
+      "officialRef": "CPSA §15(b) · 16 CFR 1115",
+      "title": "결함 인지 후 24시간 내 CPSC 보고 — 조사에 쓸 수 있는 시간은 10일이다",
+      "country": "US",
+      "category": "safety",
+      "itemCategories": [
+        "electronics"
+      ],
+      "hsPrefixes": [
+        "8507",
+        "8516",
+        "8518",
+        "8539"
+      ],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "medium",
+      "effectiveDate": "1972-10-27",
+      "deadline": null,
+      "addedAt": "2026-09-06",
+      "changes": [],
+      "affectedProductIds": [
+        "p-elec-1",
+        "p-elec-2",
+        "p-elec-3",
+        "p-elec-4"
+      ],
+      "actionIds": [
+        "US-a-115-01",
+        "US-a-115-02"
+      ],
+      "source": {
+        "url": "https://www.ecfr.gov/current/title-16/chapter-II/subchapter-B/part-1115",
+        "publisher": "미국 연방규정집 (eCFR)",
+        "publishedAt": "1972-10-27",
+        "originalLang": "en",
+        "lastVerified": "2026-09-06"
+      }
+    }
+  ],
+  "actions": [
+    {
+      "id": "US-a-015-01",
+      "lawId": "US-2017-015",
+      "title": "제품별 인증 경로 판정 — 무선 이어폰은 Certification, 나머지는 SDoC",
+      "owner": "품질팀",
+      "effort": "2주",
+      "dueDate": null
+    },
+    {
+      "id": "US-a-015-02",
+      "lawId": "US-2017-015",
+      "title": "무선 이어폰은 TCB를 통해 Certification 취득하고 FCC ID 확보",
+      "owner": "품질팀",
+      "effort": "10주",
+      "dueDate": null
+    },
+    {
+      "id": "US-a-015-03",
+      "lawId": "US-2017-015",
+      "title": "미국 내 책임당사자를 지정하고 시험보고서·적합성선언문을 그쪽에 보관",
+      "owner": "경영",
+      "effort": "4주",
+      "dueDate": null
+    },
+    {
+      "id": "US-a-015-04",
+      "lawId": "US-2017-015",
+      "title": "FCC ID 또는 적합성 표시와 책임당사자 정보를 제품·포장·사용설명서에 반영",
+      "owner": "디자인",
+      "effort": "3주",
+      "dueDate": null
+    },
+    {
+      "id": "US-a-430-01",
+      "lawId": "US-2024-430",
+      "title": "LED 전구 실측 효율이 현행 45 lm/W를 넘는지 확인",
+      "owner": "품질팀",
+      "effort": "3주",
+      "dueDate": null
+    },
+    {
+      "id": "US-a-430-02",
+      "lawId": "US-2024-430",
+      "title": "2028.07.25 기준 120 lm/W 달성 여부를 지금 설계로 판정",
+      "owner": "품질팀",
+      "effort": "6주",
+      "dueDate": null
+    },
+    {
+      "id": "US-a-430-03",
+      "lawId": "US-2024-430",
+      "title": "미달이면 광원·드라이버 사양 개선 로드맵을 2028년 이전으로 잡는다",
+      "owner": "경영",
+      "effort": "8주",
+      "dueDate": null
+    },
+    {
+      "id": "US-a-185-01",
+      "lawId": "US-2008-185",
+      "title": "셀·팩별 UN38.3 시험요약서를 확보해 공급망에 제공 가능한 상태로 둔다",
+      "owner": "품질팀",
+      "effort": "4주",
+      "dueDate": null
+    },
+    {
+      "id": "US-a-185-02",
+      "lawId": "US-2008-185",
+      "title": "포장 표시·리튬전지 마크와 위험물 서류를 포워더와 대조",
+      "owner": "영업",
+      "effort": "2주",
+      "dueDate": null
+    },
+    {
+      "id": "US-a-185-03",
+      "lawId": "US-2008-185",
+      "title": "셀 공급사 변경 시 UN38.3 재시험이 필요한지 설계변경 절차에 명문화",
+      "owner": "구매",
+      "effort": "2주",
+      "dueDate": null
+    },
+    {
+      "id": "US-a-115-01",
+      "lawId": "US-1972-115",
+      "title": "결함 인지에서 CPSC 보고까지 24시간에 맞는 사내 판단 절차 수립",
+      "owner": "품질팀",
+      "effort": "4주",
+      "dueDate": null
+    },
+    {
+      "id": "US-a-115-02",
+      "lawId": "US-1972-115",
+      "title": "미국 수입자와 사고·불만 정보 공유 경로를 계약서에 명시",
+      "owner": "영업",
+      "effort": "2주",
+      "dueDate": null
+    }
+  ]
 }

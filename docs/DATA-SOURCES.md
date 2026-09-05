@@ -1626,3 +1626,154 @@ FDA 일정상 제안이 2026-05, 최종은 빨라야 2027년이다. 시행일이
 
 `effectiveDate`가 1930년이다. §113이 정리한 대로 **오래된 것은 숨길 일이 아니다** —
 `changes: []`와 함께 읽히면 "원래부터 지켜야 하는 것"이라는 뜻이 된다.
+
+---
+
+# US — 전기·전자 (`data/laws/US-electronics.json`)
+
+**조사일 2026-09-06 · 법령 4건 · 액션 12건 · 1차 4 / 2차 0**
+(공용 파일 3건을 합치면 화면에는 7건이 뜬다)
+
+## 미국은 일반 가전에 강제 인증이 없다
+
+일본 조합을 먼저 한 뒤라 이 차이가 두드러졌다. 일본은 전기밥솥·LED 전구·보조배터리가
+전부 `電気用品安全法` 대상이라 PSE 마크 없이는 못 판다. **미국에는 그에 해당하는
+연방 강제 인증이 없다.** UL 인증은 시장이 요구하는 것이지 법이 요구하는 것이 아니다.
+
+대신 미국은 **다른 축**으로 규제한다 — 전파(FCC), 에너지효율(DOE), 운송(PHMSA),
+사후 결함보고(CPSC). 그래서 조합 성격이 일본과 완전히 다르다.
+
+## 채택
+
+### 1. `47 CFR Part 15` — FCC 기기인증
+`US-2017-015` · SDoC 시행 2017-11-02 · CRITICAL · `official`
+
+- **<https://www.fcc.gov/engineering-technology/laboratory-division/general/equipment-authorization>**
+  — FCC 기기인증 페이지. **1차 출처다**
+- <https://www.federalregister.gov/documents/2017/11/02/2017-23217/authorization-of-radiofrequency-equipment>
+  (연방관보 — 2017-11-02 발효)
+- <https://www.ecfr.gov/current/title-47/chapter-I/subchapter-A/part-2/subpart-J> (인증 절차 원문)
+- <https://incompliancemag.com/fcc-approval-process-what-has-changed-what-remains-the-same/> ·
+  <https://www.pillsburylaw.com/en/news-and-insights/a-primer-on-fcc-radio-frequency-device-equipment-authorization-rules.html>
+  (Verification·DoC → SDoC 통합, 2018-11-01 완전 대체)
+
+**제품이 두 경로로 갈린다.** 무선 이어폰처럼 의도적으로 전파를 내는 기기는
+TCB를 통한 **Certification**(FCC ID 부여)이고, 밥솥·LED·보조배터리 같은
+비의도적 방사체는 **SDoC**다. 리드타임이 10주 대 2주로 다르다.
+
+**미국 내 책임당사자(responsible party)를 반드시 둬야 한다.** SDoC는 원래 그렇고,
+Certification도 외국 신청인은 `47 CFR §2.911(d)(7)`에 따라 미국 내
+송달대리인(agent for service of process)을 지정해야 한다.
+FCC는 외국 인증취득자에게 **미국 내 책임주체**를 두게 하는 개정을 추가로 제안 중이다.
+
+`hsPrefixes`를 네 품목 전부로 뒀다 — 넷 다 9kHz 이상에서 동작하는 디지털 회로를 담아
+Part 15 대상이다. 갈리는 것은 **대상 여부가 아니라 절차**라서 액션으로 표현했다.
+
+### 2. `10 CFR 430` — 일반조명램프 효율기준
+`US-2024-430` · 현행 45 lm/W 2022-07-25 · **`deadline: 2028-07-25`** · HIGH ·
+**hsPrefixes `["8539"]` — 제품 1** · `official`
+
+- **<https://www.energy.gov/cmei/buildings/general-service-lamps>** — 에너지부. **1차 출처다**
+- <https://www.federalregister.gov/documents/2024/04/19/2024-07831/energy-conservation-program-energy-conservation-standards-for-general-service-lamps>
+  (2024-04-19 최종규칙)
+- <https://www.bdlaw.com/publications/u-s-department-of-energy-finalizes-rules-to-impose-stringent-efficiency-standard-on-most-lamps/> ·
+  <https://climate.law.columbia.edu/content/doe-adopts-two-final-rules-setting-stricter-energy-efficiency-standards-light-bulbs> ·
+  <https://inside.lighting/news/24-04/120-lumens-watt-doe-sets-ambitious-bulb-standards>
+  (45 → 120 lm/W, `compliance … required on and after July 25, 2028`,
+  `newly produced or imported general service lamps`)
+
+**`deadline`을 넣은 근거**: §91의 시험을 통과한다. 이 날짜는 **일반조명램프의 날짜**이고
+우리 제품 중 LED 전구(8539.52)가 정확히 그것이다. 그래서 `hsPrefixes`도 `["8539"]`다.
+화면에서 **제품 1 · D-688**로 뜬다.
+
+**2025~2026년 폐지 여부를 확인했다.** 2026년 7월 제안은 기준 자체가 아니라
+**기준을 정하는 절차**를 손보는 것이었고, 120 lm/W와 2028-07-25는 그대로다.
+다음 재검증에서 다시 본다 — 에너지효율 기준은 행정부 교체에 따라 흔들린다.
+
+### 3. `49 CFR 173.185` — 리튬전지 운송
+`US-2008-185` · 시험요약서 의무 2008-01-01 제조분부터 · HIGH ·
+**hsPrefixes `["8507","8518"]` — 제품 2** · `official`
+
+- **<https://www.phmsa.dot.gov/lithiumbatteries>** — 파이프라인위험물질안전청. **1차 출처다**
+- <https://www.phmsa.dot.gov/sites/phmsa.dot.gov/files/2023-07/Lithium%20Battery%20Guide.pdf>
+  (하주용 리튬전지 안내)
+- <https://www.ecfr.gov/current/title-49/subtitle-B/chapter-I/subchapter-C/part-173/subpart-E/section-173.185>
+  (조문 원문)
+
+**일본에서는 뺐던 것을 여기서는 넣었다.** JP-electronics에서 리튬전지 운송을 제외한 이유는
+"일본이 한국 수출자에게 부과하는 요건이 아니라 국제 운송 기준"이었다.
+미국은 다르다 — `49 CFR`은 **미국 상거래 내 운송을 규율하는 미국 연방규정**이고,
+수입 화물이 항구에서 창고로 가는 구간이 여기 든다. 조문이 **후속 유통자(subsequent
+distributor)** 에게도 시험요약서 제공 의무를 지운다.
+
+2008-01-01 이후 제조된 셀·배터리는 **UN38.3 시험을 통과한 설계**여야 하고
+시험요약서를 공급망에 제공할 수 있어야 한다.
+
+**남긴 정밀도**: 리튬전지 마크의 경과 규정(구 마크를 2026-12-31까지 허용)을 봤으나
+**2차 요약 한 곳뿐이라 데이터에 넣지 않았다.** eCFR 원문은 봇 차단으로 열지 못했다
+(§117과 같은 문제 — 이번에는 WebFetch도 `unblock.federalregister.gov`로 튕긴다).
+사실이라면 실기한이 하나 더 생긴다. **다음 재검증 항목이다.**
+
+### 4. `CPSA §15(b) · 16 CFR 1115` — 결함 보고
+`US-1972-115` · CPSA 제정 1972-10-27 · MEDIUM · `official`
+
+- **<https://www.ecfr.gov/current/title-16/chapter-II/subchapter-B/part-1115>** — 연방규정집. **1차 출처다**
+- <https://www.cpsc.gov/Business--Manufacturing/Recall-Guidance/Duty-to-Report-to-CPSC-Rights-and-Responsibilities-of-Businesses>
+  (CPSC — 보고 의무)
+- <https://www.saferproducts.gov/FAQs/FrequentlyAskedQuestions8> (자진보고 FAQ)
+
+결함을 인지하면 **24시간 내** CPSC에 보고해야 하고, 보고 여부를 판단하기 위한
+조사는 **10일을 넘기지 않아야** 한다. 의무자는 제조자·수입자·유통자·소매업자다.
+
+**의무자는 미국 수입자다.** 그래도 넣은 것은 사고·불만 정보가 수출자에게서 나오고,
+24시간 시계가 도는 동안 한국 본사가 답을 못 주면 수입자가 보고를 못 하기 때문이다.
+액션을 정보 공유 경로 계약화로 잡았다.
+
+## 제외 — 그리고 그 사유
+
+### `UL` 인증 · NRTL
+
+**제외했다. 법이 아니다.**
+
+미국에는 일반 소비자 가전에 대한 연방 강제 안전인증이 없다. UL 마크는 소매체인·보험사·
+주 전기규정이 요구하는 것이지 연방법이 요구하는 것이 아니다.
+OSHA의 NRTL 제도는 **사업장에서 쓰는 기기**에 걸리는 것이라 소비자 판매와 다르다.
+
+**이 앱은 법령을 담는다.** 시장이 요구하는 인증을 법령으로 적으면 §B-3 규칙 1 위반이다.
+다만 실무상 UL 없이는 대형 유통에 못 들어가므로, 이 사실 자체를 여기 남긴다.
+
+### `CPSC` 리튬이온전지 안전기준 (마이크로모빌리티)
+
+**제외했다. 2026-06-24 제안규칙이고 대상이 마이크로모빌리티다.**
+
+전동킥보드·전기자전거의 리튬전지를 겨냥한 규칙이라 보조배터리는 대상이 아니다.
+제안 단계라 시행일도 없다.
+
+- <https://www.federalregister.gov/documents/2026/06/24/2026-12749/safety-standard-for-lithium-ion-batteries-used-in-micromobility-products-and-electrical-systems-of>
+
+### `Reese's Law`(16 CFR 1263) 버튼형 전지
+
+**제외했다. 우리 제품에 버튼셀이 없다.**
+
+### 주(州) 규제 — 캘리포니아 에너지위원회 · Prop 65
+
+**제외했다.** US-화장품과 같은 이유다 — 주마다 기준과 시행일이 달라 이 데이터 모델이
+담을 수 없다. 모델의 한계이지 규제가 없어서가 아니다.
+
+## HS 차등 — 실재한다
+
+| 법령 | 제품 | 근거 |
+|---|---|---|
+| 47 CFR Part 15 | 4 | 넷 다 디지털 회로를 담는다. **절차**가 갈린다 |
+| 10 CFR 430 | **1** | 일반조명램프만 |
+| 49 CFR 173.185 | **2** | 리튬전지를 담은 것만 |
+| CPSA §15(b) | 4 | 소비자제품 전부 |
+
+JP-electronics(§112)에 이어 두 번째로 차등이 실재하는 전기전자 조합이다.
+다만 **갈래의 성격이 다르다** — 일본은 법령마다 대상 품목 목록이 있어 `제품 3/2/1/1`로
+잘게 갈렸고, 미국은 규제 축(전파·효율·운송·안전)이 달라 `제품 4/1/2/4`로 갈린다.
+
+## `originScope` — 조합 파일에는 없다
+
+FCC도 DOE도 PHMSA도 CPSC도 출발국을 가리지 않는다.
+이 조합의 `originScope`는 공용 파일의 `KORUS FTA` 하나뿐이다.
