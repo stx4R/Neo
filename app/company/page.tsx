@@ -74,7 +74,7 @@ export default function CompanyPage() {
               {dest?.code ?? ds.profile.destinationCountry}
               {ds.category ? ` · ${ds.category.nameKo}` : ''}
             </span>
-            <Link href="/setup?edit=1" className="t-meta" style={{ flex: 'none' }}>
+            <Link href="/setup?edit=1" className="t-meta tap" style={{ flex: 'none' }}>
               변경
             </Link>
           </div>
@@ -136,7 +136,7 @@ export default function CompanyPage() {
                   onClick={() =>
                     updateProducts(ds.products.filter((p) => p.id !== product.id))
                   }
-                  className="t-meta"
+                  className="t-meta tap"
                   style={{
                     flex: 'none',
                     width: 'var(--mark-w)',
@@ -161,7 +161,7 @@ export default function CompanyPage() {
         )}
         {ds && (
           <div style={{ marginTop: 14 }}>
-            <Link href="/setup?edit=1&step=4" className="t-body">
+            <Link href="/setup?edit=1&step=4" className="t-body tap-y">
               + 제품 추가
             </Link>
           </div>
@@ -295,7 +295,7 @@ function AddTile({ remaining }: { remaining: Category[] }) {
           <button
             key={category}
             type="button"
-            className="t-body"
+            className="t-body tap-y"
             onClick={() => {
               addPriority(category);
               setPicking(false);
@@ -315,7 +315,7 @@ function AddTile({ remaining }: { remaining: Category[] }) {
       ) : (
         <button
           type="button"
-          className="t-body"
+          className="t-body tap-y"
           onClick={() => setPicking(true)}
           style={{
             padding: 0,

@@ -41,6 +41,7 @@ export default function NotificationsPage() {
           <Link
             href="/"
             aria-label="홈으로"
+            className="tap"
             style={{
               font: '400 20px/1 Pretendard, sans-serif',
               color: 'var(--text)',
@@ -53,7 +54,7 @@ export default function NotificationsPage() {
         right={
           <button
             type="button"
-            className="t-meta"
+            className="t-meta tap-y"
             onClick={() => markRead(items.map((n) => n.id))}
             style={{
               padding: 0,
@@ -162,6 +163,7 @@ function PushBanner({ onClose }: { onClose: () => void }) {
           type="button"
           onClick={onClose}
           aria-label="알림 배너 닫기"
+          className="tap"
           style={{
             flex: 'none',
             font: '400 16px/1 Pretendard, sans-serif',

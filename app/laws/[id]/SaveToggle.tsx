@@ -21,9 +21,9 @@ export function SaveToggle({ lawId }: { lawId: string }) {
       type="button"
       onClick={() => toggleLawSaved(lawId)}
       aria-pressed={on}
-      className="t-meta"
+      className="t-meta tap"
       style={{
-        // 터치 타겟 44px. 글자는 우측 끝에 맞추고 여백으로 넓힌다.
+        // 글자는 우측 끝에 맞춘다. 히트 영역 44px은 .tap이 만든다.
         minHeight: 44,
         padding: '0 0 0 16px',
         background: 'none',

@@ -49,7 +49,10 @@ export function FilterChip({
     <button
       type="button"
       onClick={onClick}
-      className="t-badge"
+      // 칩의 시각 크기는 아트보드대로 var(--badge-h)에 글자 폭이다. 히트 영역만 44px로 넓힌다.
+      // 가로 확장이 이웃 칩을 침범하지 않는다: 44보다 좁은 칩만 늘어나고(최대 4.5px씩),
+      // 칩 사이 간격이 6px이며, 늘어나는 칩의 이웃은 이미 44보다 넓다.
+      className="t-badge tap"
       style={{
         flex: 'none',
         height: 'var(--badge-h)',

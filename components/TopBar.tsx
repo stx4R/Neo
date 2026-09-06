@@ -28,7 +28,8 @@ export function UnreadDot({ count, href }: { count: number; href: string }) {
     <Link
       href={href}
       aria-label={`읽지 않은 알림 ${count}건`}
-      className="tnum"
+      // 색면은 아트보드대로 12×12로 두고 히트 영역만 44px로 넓힌다.
+      className="tnum tap"
       style={{
         width: 12,
         height: 12,

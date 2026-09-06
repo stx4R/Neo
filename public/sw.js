@@ -9,10 +9,15 @@
  * 캐싱 대상은 실제로 URL을 갖는 것뿐이다.
  *
  * 빌드 산출물 프리캐시 매니페스트도 만들지 않는다. 해시 파일명을 알려면 빌드 훅이
- * 필요한데, /_next/static/* 은 해시가 붙어 불변이므로 cache-first 런타임 캐싱으로 충분하다.
+ * 필요한데, 그 대신 **프리캐시한 문서 HTML에서 /_next/static/* 참조를 뽑아** 같이 담는다.
+ * 빌드 훅 없이도 라우트별 청크가 전부 들어온다.
+ *
+ * 4차 B8 실측: cache-first 런타임 캐싱만으로는 부족했다. 그것은 실제로 요청된 것만
+ * 담으므로 **온라인에서 이미 열어 본 화면만** 오프라인에서 열렸다. 프로덕션 빌드를 띄우고
+ * 홈만 연 뒤 서버를 내리니 /laws·/map이 청크 ERR_FAILED로 빈 화면이 됐다.
  */
 
-const VERSION = 'v2';
+const VERSION = 'v3';
 const SHELL_CACHE = `neo-${VERSION}`;
 const RSC_CACHE = `neo-${VERSION}-rsc`;
 const KEEP = [SHELL_CACHE, RSC_CACHE];
@@ -100,29 +105,54 @@ self.addEventListener('message', (event) => {
 
 async function precacheRoutes(urls) {
   const [shell, rsc] = await Promise.all([caches.open(SHELL_CACHE), caches.open(RSC_CACHE)]);
+  const assets = new Set();
   await Promise.all(
     urls.map(async (url) => {
       const key = new URL(url, self.location.origin).pathname;
       // 문서와 RSC 페이로드를 둘 다 받는다. 문서만 담으면 오프라인에서
       // 탭을 눌렀을 때 라우터가 RSC를 못 받아 아무 일도 일어나지 않는다 —
       // 하드 내비게이션으로 떨어지지도 않고 그냥 멈춘다.
-      await Promise.all([
+      const [html] = await Promise.all([
         // Accept를 명시해 RSC가 아니라 문서를 받는다.
         put(shell, key, new Request(url, { cache: 'reload', headers: { Accept: 'text/html' } })),
         // 브라우저는 `?_rsc=<해시>`로 요청하지만 해시는 빌드마다 다르다.
         // 쿼리 없는 `?_rsc`가 같은 페이로드를 주고, 키는 경로만 쓰므로 맞는다.
         put(rsc, key, new Request(`${url}?_rsc`, { cache: 'reload', headers: { RSC: '1' } })),
       ]);
+      // 문서가 참조하는 빌드 산출물을 같이 담는다. 이게 없으면 오프라인에서
+      // **온라인에 이미 열어 본 화면만** 열린다 — cache-first 런타임 캐싱은
+      // 실제로 요청된 것만 담기 때문이다. 4차 B8에서 실측으로 잡았다.
+      for (const asset of assetUrls(html)) assets.add(asset);
     }),
   );
+  // 라우트마다 청크가 겹치므로 모아서 한 번에 받는다.
+  await Promise.all([...assets].map((a) => put(shell, a, new Request(a))));
 }
 
+/** 문서 HTML이 참조하는 `/_next/static/*` 경로. 해시가 붙어 있어 불변이다. */
+function assetUrls(html) {
+  if (!html) return [];
+  const out = new Set();
+  for (const m of html.matchAll(/["'(](\/_next\/static\/[^"')\s]+?)["')\s]/g)) {
+    // JSON 안에 escape된 슬래시가 섞여 들어오는 경우를 정리한다.
+    out.add(m[1].replace(/\\/g, ''));
+  }
+  return out;
+}
+
+/** 캐시에 담고, 문서였으면 본문 텍스트를 돌려준다. */
 async function put(cache, key, request) {
   try {
     const response = await fetch(request);
-    if (response.ok && !response.redirected) await cache.put(key, response);
+    if (!response.ok || response.redirected) return null;
+    // put은 본문을 소비하므로 읽을 것이 있으면 복제해 둔다.
+    const isHtml = (response.headers.get('Content-Type') || '').includes('text/html');
+    const copy = isHtml ? response.clone() : null;
+    await cache.put(key, response);
+    return copy ? await copy.text() : null;
   } catch (err) {
     console.warn('[sw] 프리캐시 실패', request.url, err);
+    return null;
   }
 }
 

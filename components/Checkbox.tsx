@@ -25,6 +25,9 @@ export function Checkbox({
       aria-checked={checked}
       aria-label={label}
       onClick={() => onChange(!checked)}
+      // 원형 16px은 아트보드 값이다. 히트 영역만 44px로 넓힌다 —
+      // 오른쪽으로 넘치는 부분은 액션 문구 위에 얹히는데 그 문구는 타겟이 아니라 안전하다.
+      className="tap"
       style={{
         flex: 'none',
         width: 'var(--mark-w)',

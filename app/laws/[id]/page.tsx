@@ -42,6 +42,7 @@ export default async function LawDetail({ params }: PageProps<'/laws/[id]'>) {
           <Link
             href="/laws"
             aria-label="법률 목록으로"
+            className="tap"
             style={{
               font: '400 20px/1 Pretendard, sans-serif',
               color: 'var(--text)',
@@ -192,7 +193,7 @@ export default async function LawDetail({ params }: PageProps<'/laws/[id]'>) {
             데이터가 없으면 표시하지 않는다. */}
         <div style={{ marginTop: 12 }}>
           <a
-            className="t-body"
+            className="t-body tap"
             href={law.source.url}
             target="_blank"
             rel="noreferrer noopener"

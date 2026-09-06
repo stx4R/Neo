@@ -268,7 +268,7 @@ export default function MapPage() {
         )}
 
         <div style={{ marginTop: 12 }}>
-          <Link href="/laws" className="t-body">
+          <Link href="/laws" className="t-body tap-y">
             법률 {countryLaws.length}건 모두 보기
           </Link>
         </div>
@@ -318,6 +318,8 @@ export default function MapPage() {
               aria-label="국가 검색"
               style={{
                 width: '100%',
+                // 감싸는 행은 border-box 44px라 안쪽이 43px다. 44를 명시해 타겟을 맞춘다.
+                height: 44,
                 border: 'none',
                 outline: 'none',
                 background: 'transparent',
@@ -372,7 +374,10 @@ export default function MapPage() {
                 type="button"
                 disabled={!selectable}
                 onClick={() => selectable && setAsk(m.country)}
-                className="t-label"
+                // 고를 수 있는 마커만 히트 영역을 넓힌다. 지원 국가는 지도에서 서로
+                // 멀리 떨어져 있어 44px로 키워도 겹치지 않는다. 미지원 마커는
+                // pointerEvents:none이라 애초에 타겟이 아니다.
+                className={selectable ? 't-label tap' : 't-label'}
                 style={{
                   marginLeft: m.size ? 0 : 9 + 6,
                   padding: 0,

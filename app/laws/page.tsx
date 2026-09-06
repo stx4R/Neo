@@ -94,6 +94,8 @@ export default function LawsPage() {
             aria-label="법률 검색"
             style={{
               width: '100%',
+              // 감싸는 행은 border-box 44px라 안쪽이 43px다. 44를 명시해 타겟을 맞춘다.
+              height: 44,
               border: 'none',
               outline: 'none',
               background: 'transparent',
@@ -134,7 +136,7 @@ export default function LawsPage() {
           <button
             key={key}
             type="button"
-            className="t-meta"
+            className="t-meta tap-y"
             onClick={() => setSort(key)}
             aria-pressed={sort === key}
             style={{
