@@ -1,0 +1,117 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>NEO — PWA 아이콘 생성</title>
+<!--
+  PWA 아이콘 넷을 만든다. 아트보드 `design/NEO Setup v4.dc.html`의 IC 섹션 안 A다.
+
+  Node가 아니라 브라우저인 이유: 글리프를 래스터라이즈해야 하는데
+  **Pretendard 700의 실제 N 모양**이 필요하다. 외부 이미지·폰트 라이브러리를
+  추가하지 않는다는 규칙이 살아 있으므로, 폰트를 이미 가진 곳에서 그린다.
+
+  쓰는 법
+    1. `npm run dev`
+    2. 이 파일을 그 서버로 연다 — file:// 로 열면 폰트를 못 받는다.
+       예: http://localhost:3000/... 이 아니라, 개발자 도구 콘솔에 이 파일 내용을
+       붙여 넣거나 아래처럼 아무 앱 페이지에서 열어도 된다.
+       가장 간단한 방법은 앱을 띄운 탭의 콘솔에서 이 파일의 <script>를 실행하는 것이다.
+    3. [4개 내려받기]를 누른다. 받은 파일을 public/icons/ 에 덮어쓴다.
+
+  아트보드 실측값 (512 캔버스에 그린 뒤 축소한다 — 192·180도 같은 아트를 줄인 것이다)
+    배경 #22D3EE
+    글리프 "N" · Pretendard 700 · 340px · line-height 1 · letter-spacing -.02em · #171717
+    any      : left 56px, bottom 24px            (좌하단)
+    maskable : flex 정중앙                        (안전영역 지름 410px 안에 든다)
+
+  ★ 좌하단 정렬을 maskable에 쓰면 잘린다. 원형 마스크를 씌우면 N의 왼아래가 날아간다.
+-->
+<style>
+  body { background:#171717; color:#F5F5F5; font:400 14px/1.6 Pretendard, sans-serif; padding:24px; }
+  button { font:700 14px Pretendard, sans-serif; background:#22D3EE; color:#171717; border:0; padding:12px 20px; cursor:pointer; }
+  .row { display:flex; gap:12px; margin-top:20px; align-items:flex-start; }
+  figure { margin:0; display:flex; flex-direction:column; gap:6px; align-items:center; }
+  figcaption { font:400 11px Pretendard, sans-serif; color:#6B6B6B; }
+  canvas { width:128px; height:128px; }
+</style>
+<h1 style="font:700 20px Pretendard,sans-serif">NEO PWA 아이콘</h1>
+<p style="color:#A3A3A3">Pretendard가 로드된 오리진에서 열어야 한다. 받은 파일을 <code>public/icons/</code>에 덮어쓴다.</p>
+<button id="go">4개 내려받기</button>
+<div class="row" id="preview"></div>
+<script type="module">
+  const BG = '#22D3EE';
+  const FG = '#171717';
+  const FONT = '700 340px Pretendard, sans-serif';
+  const LS = '-0.02em';
+  const BOX = 340;          // line-height 1 이므로 인라인 박스 높이가 곧 폰트 크기다
+  const SIZE = 512;
+
+  await document.fonts.ready;
+
+  /**
+   * CSS 인라인 박스의 top에서 베이스라인까지의 거리.
+   * half-leading = (line-height − (ascent + descent)) / 2 이고 베이스라인은 그 아래 ascent다.
+   * ascent·descent는 캔버스가 주는 폰트 메트릭이고, 크로미움은 CSS 줄 배치에 같은 값을 쓴다.
+   * (DOM span의 getBoundingClientRect와 대조해 좌표가 일치하는 것을 확인했다.)
+   */
+  function baselineFromBoxTop(m) {
+    return (BOX - (m.fontBoundingBoxAscent + m.fontBoundingBoxDescent)) / 2 + m.fontBoundingBoxAscent;
+  }
+
+  function draw(centered) {
+    const c = document.createElement('canvas');
+    c.width = c.height = SIZE;
+    const x = c.getContext('2d');
+    x.fillStyle = BG;
+    x.fillRect(0, 0, SIZE, SIZE);
+    x.font = FONT;
+    x.letterSpacing = LS;
+    x.fillStyle = FG;
+    x.textAlign = 'left';
+    x.textBaseline = 'alphabetic';
+    const m = x.measureText('N');
+    const boxLeft = centered ? (SIZE - m.width) / 2 : 56;
+    const boxTop = centered ? (SIZE - BOX) / 2 : SIZE - 24 - BOX;
+    x.fillText('N', boxLeft, boxTop + baselineFromBoxTop(m));
+    return c;
+  }
+
+  function scaled(src, size) {
+    const c = document.createElement('canvas');
+    c.width = c.height = size;
+    const x = c.getContext('2d');
+    x.imageSmoothingEnabled = true;
+    x.imageSmoothingQuality = 'high';
+    x.drawImage(src, 0, 0, size, size);
+    return c;
+  }
+
+  const any512 = draw(false);
+  const mask512 = draw(true);
+  const files = {
+    'icon-512.png': any512,
+    'icon-192.png': scaled(any512, 192),
+    'apple-touch-icon-180.png': scaled(any512, 180),
+    'icon-maskable-512.png': mask512,
+  };
+
+  const preview = document.getElementById('preview');
+  for (const [name, c] of Object.entries(files)) {
+    const f = document.createElement('figure');
+    const shown = c.cloneNode(true);
+    shown.getContext('2d').drawImage(c, 0, 0);
+    // maskable은 원형 마스크를 씌워 보여 준다 — 잘리지 않는지 여기서 바로 본다.
+    if (name.includes('maskable')) shown.style.borderRadius = '50%';
+    const cap = document.createElement('figcaption');
+    cap.textContent = name;
+    f.append(shown, cap);
+    preview.appendChild(f);
+  }
+
+  document.getElementById('go').onclick = () => {
+    for (const [name, c] of Object.entries(files)) {
+      const a = document.createElement('a');
+      a.download = name;
+      a.href = c.toDataURL('image/png');
+      a.click();
+    }
+  };
+</script>
