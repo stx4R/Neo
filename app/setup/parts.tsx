@@ -169,7 +169,8 @@ export function ChoiceRow({
     // 헤어라인도 글자 뒤에서 끊긴다. 폭을 직접 준다.
     // 선택 행은 좌우 패딩 밖까지 나가야 하므로 패딩 두 배만큼 더 넓다.
     width: selected ? 'calc(100% + var(--pad) * 2)' : '100%',
-    height: 'var(--row-info)',
+    // Row와 같은 이유로 최소 높이다 — 국가명이 길어져 두 줄이 되면 고정 높이는 흘러넘친다.
+    minHeight: 'var(--row-info)',
     display: 'flex',
     alignItems: 'center',
     gap: 'var(--row-gap)',

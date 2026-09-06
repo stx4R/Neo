@@ -49,7 +49,11 @@ export function Row({
 }) {
   const style: CSSProperties = {
     width: '100%',
-    height: HEIGHT[height],
+    // 아트보드 실측값은 **최소 높이**다. 고정 높이로 두면 제목이 한 줄 더 길어질 때
+    // 내용이 행 밖으로 흘러 위아래 행을 덮는다 — 4차 B9에서 실기기 기하로 잡았다.
+    // 인도네시아 화장품 조합의 3줄짜리 액션 제목이 66px 행을 6px 침범하고 있었다.
+    // 내용이 들어가는 행은 실측값 그대로 그려진다. 안 들어가는 행만 늘어난다.
+    minHeight: HEIGHT[height],
     display: 'flex',
     alignItems: 'center',
     gap: 'var(--row-gap)',
