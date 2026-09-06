@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useCallback, useMemo, useState } from 'react';
 import { Badge } from '@/components/Badge';
-import { DotGeo, type Projector } from '@/components/DotGeo';
+import { DotGeo, outsideArtboardBox, type Projector } from '@/components/DotGeo';
 import { Label } from '@/components/Label';
 import { Mark } from '@/components/Mark';
 import { Row, RowTitle } from '@/components/Row';
@@ -36,12 +36,29 @@ import { RISK_COLOR, RISK_LABEL, type CountryInfo } from '@/types/neo';
  * HTML 정사각을 겹쳐 그리지 않는다(size 0). 원형 도트는 없다. 전부 정사각이다.
  * 마커와 라벨 사이는 --marker-gap.
  */
+/**
+ * 지도 박스 실측값. 우측으로 MAP_BLEED만큼 흘려 잘리는 것이 아트보드의 의도다
+ * — S1 지구본과 같은 어법이다. 가운데 정렬하지 않는다.
+ */
+const MAP_W = 330;
+const MAP_H = 366;
+const MAP_BLEED = 36;
+
+/**
+ * 마커 라벨이 점 오른쪽으로 먹는 폭. 가장 긴 것이 `US · CRITICAL` 84px이고
+ * 점과 라벨 사이가 15px다 — 99에 여백 13을 더해 잡았다. 딱 맞춰 두면
+ * 라벨이 화면 끝에 1px을 남기고 붙는다. 도착국 마커는 이 자리가 있어야 읽힌다.
+ */
+const LABEL_ROOM = 112;
+
 interface MarkerSpec {
   country: CountryInfo;
   size: number;
   color: string;
   labelColor: string;
   label: string;
+  /** 라벨이 점의 어느 쪽에 붙는가. 기본은 오른쪽이고 출발국만 뒤집힐 수 있다. */
+  labelSide: 'left' | 'right';
 }
 
 // S5 Map.
@@ -63,6 +80,17 @@ function withRo(word: string): string {
  * 사용자가 무엇을 칠지 모른다 — 지도에 보이는 것은 코드뿐이지만 머리에 있는 것은
  * 한국어 이름이다. 빈 검색어는 전부 통과시킨다.
  */
+/**
+ * 도착국이 출발국의 동쪽인가. 경도가 ±180에서 감기므로 짧은 쪽으로 재서 본다 —
+ * KR(129)에서 US(-118.2)는 서쪽으로 247도가 아니라 동쪽으로 113도다.
+ */
+function isEastward(origin: CountryInfo, dest: CountryInfo): boolean {
+  let d = dest.lng - origin.lng;
+  while (d > 180) d -= 360;
+  while (d <= -180) d += 360;
+  return d > 0;
+}
+
 function matchesCountry(c: CountryInfo, query: string): boolean {
   const q = query.trim().toLowerCase();
   if (q === '') return true;
@@ -94,8 +122,14 @@ export default function MapPage() {
     const destCode = ds.profile.destinationCountry;
     const originCode = ds.profile.originCountry;
     const destRisk = focus ? countryRisk(ds, focus.code) : null;
+    // 도착국이 아시아 밖이면 지도가 태평양까지 넓어져 축척이 작아진다. 그러면
+    // 이웃 국가 라벨이 서로 겹쳐 글자가 글자 위에 얹힌다 — `JP`가 `CN · 지원 예정`
+    // 위에 앉았다. 지원 예정 마커는 "왜 넷뿐인가"에 답하는 장치인데 그 답은
+    // 아시아 지도에서만 읽힌다. 넓어진 지도에서는 접는다(§166).
+    const dense = focus ? outsideArtboardBox([focus.lng, focus.lat]) : false;
     return countries
       .filter((c) => c.destination || c.code === originCode)
+      .filter((c) => !dense || c.supported || c.code === originCode)
       .map((c) => {
         if (c.code === originCode) {
           return {
@@ -105,6 +139,10 @@ export default function MapPage() {
             color: 'var(--text)',
             labelColor: 'var(--text-3)',
             label: `${c.code} · 출발`,
+            // 도착국이 동쪽이면 라벨을 왼쪽에 붙인다. 항로가 나가는 쪽에 그대로 두면
+            // 이웃한 도착국 라벨과 겹친다 — KR(129)과 JP(139.8)는 10.8도 떨어져
+            // 있고 그 간격보다 `KR · 출발`이 넓다(§166).
+            labelSide: focus && isEastward(c, focus) ? 'left' : 'right',
           };
         }
         if (!c.supported) {
@@ -114,6 +152,7 @@ export default function MapPage() {
             color: 'var(--text-3)',
             labelColor: 'var(--text-3)',
             label: `${c.code} · 지원 예정`,
+            labelSide: 'right',
           };
         }
         const isDest = c.code === destCode;
@@ -124,6 +163,7 @@ export default function MapPage() {
           color: r ? RISK_COLOR[r] : 'var(--text)',
           labelColor: isDest ? 'var(--text)' : 'var(--text-3)',
           label: isDest && r ? `${c.code} · ${RISK_LABEL[r]}` : c.code,
+          labelSide: 'right',
         };
       });
   }, [ds, focus]);
@@ -335,12 +375,23 @@ export default function MapPage() {
           가운데 정렬하지 않는다. 좌측에 여백이 남는 비대칭이 의도다.
           아트보드의 top:60은 화면 좌표다. Screen이 상단 상태바 자리를 이미 잡으므로
           콘텐츠 좌표로는 16px이 된다. */}
-      <div style={{ position: 'absolute', top: 16, right: -36, width: 330, height: 366 }}>
+      <div
+        style={{
+          position: 'absolute',
+          top: 16,
+          right: -MAP_BLEED,
+          width: MAP_W,
+          height: MAP_H,
+        }}
+      >
         <DotGeo
           mode="asia"
           dotColor="var(--geo-dot)"
           from={origin ? [origin.lng, origin.lat] : undefined}
           to={focus ? [focus.lng, focus.lat] : undefined}
+          // 도착국 마커가 라벨까지 보이는 자리에 들어와야 한다. 잘리는 우측과
+          // 라벨 자리를 뺀 선을 넘으면 DotGeo가 축척을 줄인다(§166).
+          safeRight={MAP_W - MAP_BLEED - LABEL_ROOM}
           onProject={handleProject}
         />
         {markers.map((m, i) => {
@@ -351,14 +402,19 @@ export default function MapPage() {
           if (!matchesCountry(m.country, query)) return null;
           const selectable =
             m.country.supported && m.country.code !== ds?.profile.destinationCountry;
+          const flip = m.labelSide === 'left';
           return (
             <div
               key={m.country.code}
               style={{
                 position: 'absolute',
-                left: Math.round(xy[0]),
+                // 왼쪽에 붙는 라벨은 상자가 점에서 **끝나야** 한다. left로 두면
+                // 상자가 점에서 시작해 라벨이 오른쪽에 그대로 남는다.
+                left: flip ? undefined : Math.round(xy[0]),
+                right: flip ? MAP_W - Math.round(xy[0]) : undefined,
                 top: Math.round(xy[1]),
                 display: 'flex',
+                flexDirection: flip ? 'row-reverse' : 'row',
                 alignItems: 'center',
                 gap: 'var(--marker-gap)',
                 transform: 'translateY(-50%)',
@@ -379,7 +435,8 @@ export default function MapPage() {
                 // pointerEvents:none이라 애초에 타겟이 아니다.
                 className={selectable ? 't-label tap' : 't-label'}
                 style={{
-                  marginLeft: m.size ? 0 : 9 + 6,
+                  marginLeft: m.size || flip ? 0 : 9 + 6,
+                  marginRight: !m.size && flip ? 9 + 6 : 0,
                   padding: 0,
                   border: 'none',
                   background: 'transparent',

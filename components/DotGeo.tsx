@@ -87,21 +87,180 @@ function resolveColor(host: Element, value: string): string {
   return getComputedStyle(host).getPropertyValue(name[1]).trim() || value;
 }
 
-function projectionFor(mode: GeoMode, w: number, h: number): GeoProjection {
-  if (mode === 'asia') {
-    return geoMercator().fitExtent(
-      [
-        [0, 0],
-        [w, h],
-      ],
-      { type: 'MultiPoint', coordinates: [[92, -12], [146, 47]] },
-    );
+/**
+ * S5 평면지도의 기본 범위. 아트보드 값이다. 이 상자보다 좁아지지 않는다.
+ * 아트보드의 세계는 KR·VN·ID·TH 넷이었다 — 그때는 이 상자가 전부를 담았다.
+ */
+const ASIA_BOX: [[number, number], [number, number]] = [
+  [92, -12],
+  [146, 47],
+];
+
+/** S1 지구본의 시점. 아트보드 값이다. */
+const GLOBE_ROTATE: [number, number] = [-116, -18];
+
+/**
+ * 이 각도를 넘게 떨어진 점은 지구본 시점을 옮겨서 본다.
+ * 90이 아니라 80인 것은, 가장자리에 붙은 점이 극단적으로 눌려 보이기 때문이다.
+ */
+const GLOBE_VISIBLE_DEG = 80;
+
+const RAD = Math.PI / 180;
+
+/**
+ * 경도를 기준값 주위로 풀어 준다. 경도는 ±180에서 감기므로 그냥 min·max를 하면
+ * 태평양을 건너는 항로가 지구 반대쪽으로 돌아가는 그림이 된다.
+ * KR(129)과 US(-118.2)는 서쪽으로 247도가 아니라 동쪽으로 113도 떨어져 있다.
+ */
+function unwrapLng(lng: number, base: number): number {
+  let d = lng - base;
+  while (d > 180) d -= 360;
+  while (d <= -180) d += 360;
+  return base + d;
+}
+
+/** 단위 구면 위의 벡터. 두 점의 중점을 각도로 재려고 쓴다. */
+function unitVec([lng, lat]: [number, number]): [number, number, number] {
+  const a = lng * RAD;
+  const b = lat * RAD;
+  return [Math.cos(b) * Math.cos(a), Math.cos(b) * Math.sin(a), Math.sin(b)];
+}
+
+/** 두 지점 사이 각거리(도). */
+function angleBetween(a: [number, number], b: [number, number]): number {
+  const [x1, y1, z1] = unitVec(a);
+  const [x2, y2, z2] = unitVec(b);
+  return Math.acos(Math.max(-1, Math.min(1, x1 * x2 + y1 * y2 + z1 * z2))) / RAD;
+}
+
+/** 두 지점의 대권 중점. 지구본 시점을 옮길 때 쓴다. */
+function midpoint(a: [number, number], b: [number, number]): [number, number] {
+  const [x1, y1, z1] = unitVec(a);
+  const [x2, y2, z2] = unitVec(b);
+  const x = x1 + x2;
+  const y = y1 + y2;
+  const z = z1 + z2;
+  const l = Math.hypot(x, y, z) || 1;
+  return [Math.atan2(y / l, x / l) / RAD, Math.asin(z / l) / RAD];
+}
+
+/**
+ * 도착국이 아트보드 상자 밖인가. 밖이면 지도가 그만큼 넓어지고 축척이 작아진다.
+ * S5가 마커 밀도를 정하는 데 쓴다 — 넓어진 지도에서는 이웃 국가 라벨이 서로 겹친다.
+ */
+export function outsideArtboardBox(to: [number, number]): boolean {
+  const base = (ASIA_BOX[0][0] + ASIA_BOX[1][0]) / 2;
+  const lng = unwrapLng(to[0], base);
+  return (
+    lng < ASIA_BOX[0][0] ||
+    lng > ASIA_BOX[1][0] ||
+    to[1] < ASIA_BOX[0][1] ||
+    to[1] > ASIA_BOX[1][1]
+  );
+}
+
+/**
+ * 평면지도 투영.
+ *
+ * 아트보드 상자를 바닥값으로 두고 출발국·도착국이 그 밖이면 상자를 넓힌다.
+ * B6에서 도착국이 JP·US로 늘면서 고정 상자가 도착국을 화면 밖으로 밀어냈다
+ * (DISCREPANCIES §166). US는 투영 밖으로 1000px 넘게 나가 있었다.
+ *
+ * `safeRight`는 **도착점이 넘으면 안 되는 x**다. 지도 박스는 우측으로 흘러 잘리고
+ * 마커 라벨은 점 오른쪽 자리를 더 먹는다 — 그 둘을 뺀 값이 호출부에서 온다.
+ * 넘으면 축척을 줄여 다시 맞춘다. 아시아 도착국은 첫 계산에서 이미 안쪽이라
+ * **결과가 지금과 픽셀 단위로 같다.**
+ *
+ * 출발점은 재지 않는다. 이 앱의 출발국은 KR 하나이고 `KR · 출발` 라벨이
+ * 지금 자리에 들어간다 — 넣으면 아시아 조합 아홉 개의 그림이 같이 바뀐다.
+ */
+function planeProjection(
+  w: number,
+  h: number,
+  from: [number, number],
+  to: [number, number],
+  safeRight: number,
+): GeoProjection {
+  const base = (ASIA_BOX[0][0] + ASIA_BOX[1][0]) / 2;
+  const lngs = [
+    ASIA_BOX[0][0],
+    ASIA_BOX[1][0],
+    unwrapLng(from[0], base),
+    unwrapLng(to[0], base),
+  ];
+  const lats = [ASIA_BOX[0][1], ASIA_BOX[1][1], from[1], to[1]];
+  const box = {
+    type: 'MultiPoint' as const,
+    coordinates: [
+      [Math.min(...lngs), Math.min(...lats)],
+      [Math.max(...lngs), Math.max(...lats)],
+    ],
+  };
+  // 회전으로 중심을 옮겨야 태평양 쪽 짧은 길이 그려진다. 메르카토르의 x는 경도에
+  // 선형이라 회전은 평행이동으로 흡수된다 — 상자가 안 넓어진 경우 결과가 회전
+  // 전과 같은 이유다.
+  const center = (Math.min(...lngs) + Math.max(...lngs)) / 2;
+  const fit = (target: number) =>
+    geoMercator()
+      .rotate([-center, 0])
+      .fitExtent(
+        [
+          [0, 0],
+          [target, h],
+        ],
+        box,
+      );
+
+  let target = w;
+  let proj = fit(target);
+  // 폭으로 맞춰진 구간에서 x는 target에 비례하므로 보통 두 번이면 닿는다.
+  for (let i = 0; i < 5; i++) {
+    const q = proj(to);
+    if (!q || q[0] <= safeRight) break;
+    target = Math.max(40, (target * safeRight) / q[0]);
+    proj = fit(target);
   }
+  return proj;
+}
+
+/**
+ * 지구본 투영.
+ *
+ * 아트보드 시점을 그대로 쓰되, 항로 양 끝 중 하나라도 그 시점에서 보이는 반구
+ * 밖이면 시점을 항로 중점으로 옮긴다.
+ *
+ * **d3의 투영 함수는 clipAngle을 적용하지 않는다.** 스트림(geoPath)만 자른다.
+ * 그래서 반대편 점을 null이 아니라 앞면에 접어서 돌려준다 — US 조합에서
+ * 도착 마커가 캄차카 근처에 찍히고 있었다(§166). `if (!xy)` 가드로는 못 잡는다.
+ */
+function globeProjection(
+  w: number,
+  h: number,
+  from: [number, number],
+  to: [number, number],
+): GeoProjection {
+  const eye: [number, number] = [-GLOBE_ROTATE[0], -GLOBE_ROTATE[1]];
+  const outside =
+    angleBetween(eye, from) > GLOBE_VISIBLE_DEG || angleBetween(eye, to) > GLOBE_VISIBLE_DEG;
+  // 중점에서 양 끝까지는 항상 항로의 절반이므로 둘 다 반드시 보인다.
+  const next = outside ? midpoint(from, to) : eye;
   return geoOrthographic()
-    .rotate([-116, -18])
+    .rotate([-next[0], -next[1]])
     .translate([w / 2, h / 2])
     .scale(Math.min(w, h) / 2 - 2)
     .clipAngle(90);
+}
+
+function projectionFor(
+  mode: GeoMode,
+  w: number,
+  h: number,
+  from: [number, number],
+  to: [number, number],
+  safeRight: number,
+): GeoProjection {
+  if (mode === 'asia') return planeProjection(w, h, from, to, safeRight);
+  return globeProjection(w, h, from, to);
 }
 
 /**
@@ -117,10 +276,11 @@ function buildScene(
   originMarker: boolean,
   from: [number, number],
   to: [number, number],
+  safeRight: number,
 ): Scene | null {
   const cfg = CFG[mode];
   const dpr = Math.min(2, window.devicePixelRatio || 1);
-  const proj = projectionFor(mode, w, h);
+  const proj = projectionFor(mode, w, h, from, to, safeRight);
 
   // 마스크는 CSS 픽셀 그대로 그린다. 알파를 읽기만 하므로 dpr이 필요 없다.
   const mask = document.createElement('canvas');
@@ -249,6 +409,7 @@ export function DotGeo({
   to = TO,
   flow = true,
   onProject,
+  safeRight,
   style,
 }: {
   mode: GeoMode;
@@ -272,6 +433,12 @@ export function DotGeo({
    * 마커가 점을 따라간다.
    */
   onProject?: (project: Projector, size: { w: number; h: number }) => void;
+  /**
+   * 도착점이 넘으면 안 되는 x. 지도 박스가 우측으로 흘려 잘리는 폭과 마커 라벨
+   * 자리를 뺀 값을 S5가 넘긴다. 넘으면 축척을 줄여 다시 맞춘다(§166).
+   * 넘기지 않으면 박스 폭 전체를 쓴다 — S1 지구본은 잘리는 자리가 없다.
+   */
+  safeRight?: number;
   style?: CSSProperties;
 }) {
   const hostRef = useRef<HTMLDivElement>(null);
@@ -327,6 +494,7 @@ export function DotGeo({
         originMarker,
         [fromLng, fromLat],
         [toLng, toLat],
+        safeRight ?? w,
       );
       if (scene) {
         paint(canvas, scene, flow ? 0 : null);
@@ -386,6 +554,7 @@ export function DotGeo({
     fromLat,
     toLng,
     toLat,
+    safeRight,
   ]);
 
   return (
