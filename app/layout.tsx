@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { ProfileGate } from "@/components/ProfileGate";
 import { ServiceWorker } from "@/components/ServiceWorker";
+import { ThemeSync } from "@/components/ThemeToggle";
+import { THEME_COLOR, THEME_SCRIPT } from "@/lib/theme";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -34,22 +36,26 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  // 브라우저 UI 색. 화면 바탕(--tds-bg-canvas)과 같은 값이다 — CSS 변수를 못 쓰는
-  // 자리라 리터럴이다. 라이트 oklch(0.968 0.004 247), 다크 oklch(0.185 0.019 254).
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f2f5f7" },
-    { media: "(prefers-color-scheme: dark)", color: "#0d131b" },
-  ],
+  // 브라우저 UI 색. 기본 테마(라이트)의 화면 바탕이다. 다크를 켜면 인라인 스크립트와
+  // lib/useTheme.ts가 이 meta를 고친다 — 기기 설정을 따르지 않으므로 미디어 쿼리로 나누지 않는다.
+  themeColor: THEME_COLOR.light,
   viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="ko">
+    // suppressHydrationWarning — 아래 인라인 스크립트가 <html>에 data-theme을 먼저 단다.
+    // React가 그 속성을 불일치로 보지 않게 한다. 이 요소 하나에만 걸리고 자식에는 번지지 않는다.
+    <html lang="ko" suppressHydrationWarning>
+      <head>
+        {/* 저장된 테마를 첫 페인트 전에 입힌다. 내용은 lib/theme.ts의 THEME_SCRIPT. */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+      </head>
       <body>
         {children}
         <ProfileGate />
         <ServiceWorker />
+        <ThemeSync />
       </body>
     </html>
   );

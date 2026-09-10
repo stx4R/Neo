@@ -14,6 +14,7 @@ import { ProgressBar } from '@/components/ProgressBar';
 import { Row } from '@/components/Row';
 import { Screen, Section } from '@/components/Screen';
 import { TabBar } from '@/components/TabBar';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { BellButton, TopBar } from '@/components/TopBar';
 import { countryByCode } from '@/lib/data';
 import { useDataset, type Dataset } from '@/lib/dataset';
@@ -88,7 +89,12 @@ export default function Home() {
                 {formatMonthDay(asOf)} 확인
               </span>
             )}
-            <BellButton count={unread} href="/notifications" />
+            {/* 테마 버튼과 벨은 한 묶음이다. 40px 버튼 둘을 4px로 붙인다 —
+                44px 히트 영역끼리 겹치지 않는 가장 좁은 간격이다. */}
+            <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+              <ThemeToggle />
+              <BellButton count={unread} href="/notifications" />
+            </span>
           </>
         }
       />

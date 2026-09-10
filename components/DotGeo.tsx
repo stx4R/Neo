@@ -511,10 +511,13 @@ export function DotGeo({
     const observer = new ResizeObserver(rebuild);
     observer.observe(host);
 
-    // 캔버스는 CSS 변수를 그릴 때 한 번 읽고 만다. 앱이 열린 채 기기가 다크로
-    // 넘어가면 점만 옛 테마 색으로 남는다 — 테마가 바뀌면 다시 그린다.
-    const scheme = window.matchMedia('(prefers-color-scheme: dark)');
-    scheme.addEventListener('change', rebuild);
+    // 캔버스는 CSS 변수를 그릴 때 한 번 읽고 만다. 테마 버튼으로 <html data-theme>이
+    // 바뀌면 점만 옛 테마 색으로 남는다 — 그 속성이 바뀔 때마다 다시 그린다.
+    const themeObserver = new MutationObserver(rebuild);
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
 
     // 250ms를 넘겨야 스켈레톤을 띄운다. 캐시에서 즉시 오면 깜빡임이 된다.
     const gate = window.setTimeout(() => {
@@ -549,7 +552,7 @@ export function DotGeo({
     return () => {
       disposed = true;
       observer.disconnect();
-      scheme.removeEventListener('change', rebuild);
+      themeObserver.disconnect();
       window.clearTimeout(gate);
       if (raf) cancelAnimationFrame(raf);
     };
