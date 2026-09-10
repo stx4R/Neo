@@ -45,7 +45,26 @@ $RECYCLE.BIN/
 *.log
 logs/
 
-# 에이전트 로컬 설정.
-# .claude/launch.json은 dev 서버 정의라 공용이다 — 계속 추적한다.
-.claude/settings.local.json
-.claude/*.local.json
+# ── 웹 구동과 무관한 개발 자료 ──────────────────────────────────
+# 빌드·실행·배포 어디에도 쓰이지 않는다. 로컬에는 그대로 두고 저장소에만 올리지 않는다.
+# 앞의 / 는 저장소 루트에서만 걸리게 한다 — 같은 이름의 하위 폴더를 건드리지 않는다.
+# README.md와 LICENSE는 추적한다. public/fonts/의 폰트 라이선스도 OFL상 폰트와
+# 함께 배포해야 하므로 추적한다.
+
+# 에이전트 설정. AGENTS.md는 `next dev`가 다시 써 넣는 파일이다.
+/AGENTS.md
+/CLAUDE.md
+/.claude/
+
+# 명세·계획서·판정 기록·데이터 조사 근거
+/docs/
+
+# 디자인 원본(Claude Design 산출물)과 포팅 전 지오그래피 원본. eslint도 이미 제외한다.
+/design/
+
+# PWA 아이콘을 한 번 만들 때 쓴 생성기. 결과물은 public/icons/에 있다.
+# 같은 폴더의 check-data.mjs는 `npm run check-data`가 쓰므로 추적한다.
+/scripts/make-icons.html
+
+# 개발용 부품 판 라우트(/kitchen-sink). 링크도 프리캐시도 없다 — 로컬에서만 연다.
+/app/kitchen-sink/
