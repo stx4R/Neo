@@ -1,33 +1,27 @@
 'use client';
 
 import Link from 'next/link';
+import { Skeleton } from '@/components/Skeleton';
 
 /**
- * S9 EMPTY — 지금 조합에 법령 데이터가 없을 때.
+ * 지금 조합에 법령 데이터가 없을 때.
  *
  * EmptyState와 다른 물건이다. 저쪽은 필터 결과 0건처럼 "찾은 게 없다"를 말하고
- * 문구가 --text-3이다. 이쪽은 "우리가 아직 안 채웠다"를 말하고 첫 줄이 --text다.
- * 아트보드 S9에서 실측했다.
+ * 문구가 흐리다. 이쪽은 "우리가 아직 안 채웠다"를 말하고 첫 줄이 진하다.
  *
- * 아트보드의 예시 문구는 `VN 베트남 · 화장품`인데 그 조합은 지원 대상이다.
- * 여기서는 지금 프로필의 조합을 그대로 적는다. 12조합을 전부 채우고 나면
- * 이 화면은 **데이터 로드 실패 방어용**으로만 남는다 — 조합 파일이 비었거나
- * 깨졌을 때 빈 목록 대신 무슨 일인지 말해 주는 자리다.
+ * 12조합을 전부 채운 지금 이 화면은 **데이터 로드 실패 방어용**으로 남는다 —
+ * 조합 파일이 비었거나 깨졌을 때 빈 목록 대신 무슨 일인지 말해 주는 자리다.
  */
 export function ComboEmpty({ combo }: { combo: string }) {
   return (
-    <div>
-      <p className="t-body" style={{ margin: 0, color: 'var(--text)' }}>
-        이 조합의 규제 데이터가 아직 없습니다
-      </p>
-      <p className="t-meta" style={{ margin: 'var(--stack) 0 0', color: 'var(--text-3)' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+      <p className="t-body-b">이 조합의 규제 데이터가 아직 없어요</p>
+      <p className="t-meta" style={{ color: 'var(--tds-fg-tertiary)' }}>
         {combo}
       </p>
-      <div style={{ marginTop: 14 }}>
-        <Link href="/setup?edit=1" className="t-body">
-          다른 조합 고르기
-        </Link>
-      </div>
+      <Link href="/setup?edit=1" className="t-body-b tap-y" style={{ marginTop: 10, alignSelf: 'flex-start' }}>
+        다른 조합 고르기
+      </Link>
     </div>
   );
 }
@@ -41,13 +35,10 @@ export function ComboEmpty({ combo }: { combo: string }) {
  */
 export function ComboPending() {
   return (
-    <div
-      className="neo-pulse"
-      style={{ display: 'flex', flexDirection: 'column', gap: 'var(--lbl-gap)' }}
-    >
-      <div style={{ width: '60%', height: 22, background: 'var(--surface)' }} />
-      <div style={{ width: '85%', height: 22, background: 'var(--surface)' }} />
-      <div style={{ width: '45%', height: 22, background: 'var(--surface)' }} />
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <Skeleton width="60%" height={20} />
+      <Skeleton width="85%" height={20} />
+      <Skeleton width="45%" height={20} />
     </div>
   );
 }

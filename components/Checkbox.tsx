@@ -1,12 +1,11 @@
 'use client';
 
+import { Icon } from '@/components/Icon';
+
 /**
- * 16×16 원형 체크박스. 이 앱에서 곡선이 허용되는 유일한 요소다 (.is-checkbox).
- * 마커 열과 같은 20px 폭 안에 든다.
- *
- * 체크된 상태는 아트보드에 없다 — 4행 모두 빈 상태로만 그려져 있다.
- * 원본이 박스 안에 `700 10px/1 · color:#171717`을 예약해 둔 것을 근거로
- * "색면 채움 + --on-color 글리프"로 구현했다. 색을 테두리로 쓰지 않는 규칙과도 맞는다.
+ * 체크박스. 22px, radius 6.
+ * 빈 칸은 흰 면 + 1.5px line-strong, 체크하면 브랜드 면 + 흰 체크로 뒤집는다.
+ * 시각 크기는 디자인 값 그대로 두고 히트 영역만 44px로 넓힌다(.tap).
  */
 export function Checkbox({
   checked,
@@ -25,38 +24,24 @@ export function Checkbox({
       aria-checked={checked}
       aria-label={label}
       onClick={() => onChange(!checked)}
-      // 원형 16px은 아트보드 값이다. 히트 영역만 44px로 넓힌다 —
-      // 오른쪽으로 넘치는 부분은 액션 문구 위에 얹히는데 그 문구는 타겟이 아니라 안전하다.
       className="tap"
       style={{
         flex: 'none',
-        width: 'var(--mark-w)',
-        height: 16,
+        width: 22,
+        height: 22,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         padding: 0,
-        border: 'none',
-        background: 'transparent',
+        borderRadius: 'var(--r-badge)',
+        border: checked ? '1.5px solid var(--tds-bg-brand)' : '1.5px solid var(--tds-line-strong)',
+        background: checked ? 'var(--tds-bg-brand)' : 'var(--tds-bg-primary)',
+        color: 'var(--tds-fg-inverse)',
         cursor: 'pointer',
+        transition: 'background-color var(--dur-base) var(--ease), border-color var(--dur-base) var(--ease)',
       }}
     >
-      <span
-        className="is-checkbox"
-        style={{
-          width: 16,
-          height: 16,
-          border: `1px solid ${checked ? 'var(--accent)' : 'var(--text-3)'}`,
-          background: checked ? 'var(--accent)' : 'transparent',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          font: '700 10px/1 Pretendard, sans-serif',
-          color: 'var(--on-color)',
-        }}
-      >
-        {checked ? '✓' : ''}
-      </span>
+      {checked && <Icon name="check" size={14} stroke={3} />}
     </button>
   );
 }

@@ -129,15 +129,15 @@ NEO는 그 판정 구간 — 품목 해당성, 기한 산정, 부서별 과업 �
 런타임 의존성은 `next` · `react` · `react-dom` · `d3-geo` · `topojson-client` 다섯뿐이고 컴포넌트는 전부 직접 썼습니다.  
 계획서가 적은 shadcn과 하단 시트용 vaul을 쓰지 않기로 한 경위는 `docs/DISCREPANCIES.md` §14에 있습니다.
 
-디자인 절대 규칙 9개(`box-shadow` 금지 · `border-radius: 0` · 카드 박스 금지 · 이모지 금지 등)는 `CLAUDE.md`에 있고 다른 모든 문서보다 우선합니다.  
-그중에서도 `design/NEO-screens.dc.html`이 최종 진실입니다 — 문서보다 우선합니다.
+디자인은 TDS(토스 디자인 시스템) 기반입니다 — 라이트 기준 + 기기 설정을 따르는 다크, 라운드 사다리, 카드, washed 배지, 해요체. 규칙은 `CLAUDE.md`에 있고 다른 모든 문서보다 우선합니다.  
+그중에서도 `design/NEO Toss Reform.dc.html`이 최종 진실입니다 — 문서보다 우선합니다.
 
 <pre><code>docs/     명세 문서 + 판정 기록(DISCREPANCIES.md) + 조사 근거(DATA-SOURCES.md)
-design/   6화면 시각 원본 · 포팅 전 지오그래피 원본 · 아이콘 원본
+design/   시각 원본(토큰·부품·8화면·다크) · 포팅 전 지오그래피 원본
 data/     법령 데이터. 조합 12파일 + 국가별 공용 4파일
 lib/      파생 함수 · localStorage 스토어
 app/      라우트
-scripts/  데이터 검사기 · 아이콘 생성기 · 마커 글꼴 생성기</code></pre>
+scripts/  데이터 검사기 · 아이콘 생성기</code></pre>
 
 ---
 ### Offline.

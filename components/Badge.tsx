@@ -1,30 +1,33 @@
 import type { ReactNode } from 'react';
+import { TONE_COLOR, type Tone } from '@/types/neo';
 
 /**
- * 색면 배지. height 22, padding 0 7. 배경은 꽉 찬 색면, 글자는 항상 --on-color.
- * 둥글지 않다 — pill 금지.
+ * 배지. height 22, padding 0 7, radius 6. TDS washed — 연한 면에 같은 계열의 진한 글자.
+ * 위험도(CRITICAL…), 카운트다운(D-433), 상태(보류·시행중), 출처(관보)가 전부 이것이다.
  */
 export function Badge({
   tone,
   tnum = false,
   children,
 }: {
-  /** 색면 배경. RISK_COLOR / STATUS_COLOR 값이나 var(--accent) 등. */
-  tone: string;
+  tone: Tone;
   tnum?: boolean;
   children: ReactNode;
 }) {
+  const { bg, fg } = TONE_COLOR[tone];
   return (
     <span
       className={tnum ? 't-badge tnum' : 't-badge'}
       style={{
         flex: 'none',
-        height: 'var(--badge-h)',
-        display: 'flex',
+        height: 22,
+        display: 'inline-flex',
         alignItems: 'center',
-        padding: '0 var(--badge-pad)',
-        background: tone,
-        color: 'var(--on-color)',
+        padding: '0 7px',
+        borderRadius: 'var(--r-badge)',
+        background: bg,
+        color: fg,
+        whiteSpace: 'nowrap',
       }}
     >
       {children}
@@ -33,37 +36,38 @@ export function Badge({
 }
 
 /**
- * 배지와 같은 치수의 필터 칩. 선택되지 않으면 색면 없이 밑줄 1px 만 남는다.
- * 색을 테두리로 쓰지 않기 위한 형태다.
+ * 필터 칩. 34px 알약. 고른 칩은 글자색 면으로 뒤집고, 나머지는 흰 면에 1px 선.
+ * 고른 칩에도 같은 색 선을 둬서 고를 때 폭이 1px도 흔들리지 않게 한다.
  */
-export function FilterChip({
+export function Chip({
   active,
-  children,
   onClick,
+  children,
 }: {
   active: boolean;
-  children: ReactNode;
   onClick?: () => void;
+  children: ReactNode;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      // 칩의 시각 크기는 아트보드대로 var(--badge-h)에 글자 폭이다. 히트 영역만 44px로 넓힌다.
-      // 가로 확장이 이웃 칩을 침범하지 않는다: 44보다 좁은 칩만 늘어나고(최대 4.5px씩),
-      // 칩 사이 간격이 6px이며, 늘어나는 칩의 이웃은 이미 44보다 넓다.
-      className="t-badge tap"
+      aria-pressed={active}
+      className="t-label"
       style={{
         flex: 'none',
-        height: 'var(--badge-h)',
-        display: 'flex',
+        height: 34,
+        display: 'inline-flex',
         alignItems: 'center',
-        padding: '0 var(--badge-pad)',
-        border: 'none',
-        borderBottom: active ? 'none' : '1px solid var(--hairline)',
-        background: active ? 'var(--accent)' : 'transparent',
-        color: active ? 'var(--on-color)' : 'var(--text-3)',
+        padding: '0 14px',
+        borderRadius: 'var(--r-full)',
+        border: `1px solid ${active ? 'var(--tds-fg-primary)' : 'var(--tds-line-default)'}`,
+        background: active ? 'var(--tds-fg-primary)' : 'var(--tds-bg-primary)',
+        color: active ? 'var(--tds-bg-primary)' : 'var(--tds-fg-secondary)',
+        lineHeight: 1,
+        whiteSpace: 'nowrap',
         cursor: 'pointer',
+        transition: 'background-color var(--dur-base) var(--ease), color var(--dur-base) var(--ease)',
       }}
     >
       {children}

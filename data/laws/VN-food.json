@@ -83,7 +83,7 @@
       "heldAt": "2026-04-06",
       "statusChangedAt": "2026-04-06",
       "addedAt": "2026-09-01",
-      "transitionNote": "Nghị quyết 15/2026/NQ-CP(2026.04.06)로 효력 정지. 개정 식품안전법과 그 시행령이 시행될 때까지 Decree 15/2018 절차를 그대로 쓴다",
+      "transitionNote": "Nghị quyết 15/2026/NQ-CP(2026.04.06)로 효력이 정지됐어요. 개정 식품안전법과 그 시행령이 시행될 때까지 Decree 15/2018 절차를 그대로 써요",
       "changes": [
         {
           "before": "자가공표(self-declaration)로 갈음",
@@ -133,7 +133,7 @@
       "effectiveDate": "2018-02-02",
       "deadline": null,
       "addedAt": "2026-09-01",
-      "transitionNote": "Decree 46/2026 보류로 당분간 계속 적용. 보류 이전에 접수된 서류도 이 시행령으로 처리된다",
+      "transitionNote": "Decree 46/2026 보류로 당분간 계속 적용돼요. 보류 이전에 접수된 서류도 이 시행령으로 처리돼요",
       "changes": [],
       "affectedProductIds": [
         "p-kimchi-sauce",

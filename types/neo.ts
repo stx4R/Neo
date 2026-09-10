@@ -162,24 +162,24 @@ export interface Notification {
 
 // ── 표시 상수. 여기서만 정의한다. ──────────────────────────────
 
-export const STATUS_MARK = {
-  active: '施',
-  hold: '留',
-  scheduled: '豫',
-} as const satisfies Record<LawStatus, string>;
+/**
+ * 색 톤. 위험도 넷 + 중립 + 브랜드.
+ * 배지와 아이콘 타일이 이 이름으로 색을 고른다 — 색값을 직접 넘기지 않는다.
+ * TDS washed 방식이다: 연한 면(bg) 위에 같은 계열의 진한 글자(fg).
+ *
+ * 한자 상태 마커(施留豫)는 없앴다. 상태는 배지 글자가 말한다 — `보류`는 medium,
+ * `시행중`은 neutral, 카운트다운은 남은 날짜에 따른 위험도 톤이다(lib/derive.ts lawBadge).
+ */
+export type Tone = RiskLevel | 'neutral' | 'brand';
 
-export const STATUS_COLOR = {
-  active: 'var(--accent)',
-  hold: 'var(--hold)',
-  scheduled: 'var(--text-3)',
-} as const satisfies Record<LawStatus, string>;
-
-export const RISK_COLOR = {
-  critical: 'var(--risk-critical)',
-  high: 'var(--risk-high)',
-  medium: 'var(--risk-medium)',
-  low: 'var(--risk-low)',
-} as const satisfies Record<RiskLevel, string>;
+export const TONE_COLOR = {
+  critical: { bg: 'var(--risk-crit-bg)', fg: 'var(--risk-crit-fg)' },
+  high: { bg: 'var(--risk-high-bg)', fg: 'var(--risk-high-fg)' },
+  medium: { bg: 'var(--risk-med-bg)', fg: 'var(--risk-med-fg)' },
+  low: { bg: 'var(--risk-low-bg)', fg: 'var(--risk-low-fg)' },
+  neutral: { bg: 'var(--tds-bg-secondary)', fg: 'var(--tds-fg-secondary)' },
+  brand: { bg: 'var(--tds-bg-brand-weak)', fg: 'var(--tds-fg-brand)' },
+} as const satisfies Record<Tone, { bg: string; fg: string }>;
 
 export const RISK_LABEL = {
   critical: 'CRITICAL',
@@ -205,9 +205,11 @@ export const NOTIFICATION_LABEL = {
   done: '액션 완료',
 } as const;
 
-export const NOTIFICATION_COLOR = {
-  deadline: 'var(--risk-critical)',
-  status: 'var(--hold)',
-  new: 'var(--risk-high)',
-  done: 'var(--risk-low)',
-} as const;
+/** 알림 종류의 색. 아이콘 타일과 종류 라벨이 같이 쓴다. */
+export const NOTIFICATION_TONE = {
+  deadline: 'critical',
+  // 보류 배지와 같은 톤이다. 상태 변경 알림은 대개 시행 보류다.
+  status: 'medium',
+  new: 'brand',
+  done: 'low',
+} as const satisfies Record<Notification['type'], Tone>;

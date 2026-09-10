@@ -1,5 +1,5 @@
 import meta from '@/data/meta.json';
-import { RISK_COLOR } from '@/types/neo';
+import type { RiskLevel } from '@/types/neo';
 
 /**
  * 날짜 기준.
@@ -48,26 +48,24 @@ export function daysUntil(date: string, today: string): number {
 }
 
 export type Countdown =
-  | { overdue: false; days: number; text: string; tone: string }
-  | { overdue: true; days: number; text: string; tone: string };
+  | { overdue: false; days: number; text: string; tone: RiskLevel }
+  | { overdue: true; days: number; text: string; tone: RiskLevel };
 
 /**
- * 마감까지의 카운트다운. 배지에 그대로 넣는다.
+ * 마감까지의 카운트다운. 배지에 그대로 넣는다. tone은 배지 색 이름이다.
  *
  *   기한 경과 · D-14 이하  →  critical
  *   D-15 ~ D-30           →  high
  *   D-31 이상             →  medium
  *
- * 초록(--risk-low)은 쓰지 않는다. 마감일 배지가 "안전"으로 읽히면 안 된다.
- * 기한이 없는 법률은 배지 자체를 그리지 않는다 — 호출부에서 거른다.
+ * low(초록)는 쓰지 않는다. 마감일 배지가 "안전"으로 읽히면 안 된다.
  */
 export function countdown(deadline: string, today: string): Countdown {
   const days = daysUntil(deadline, today);
   if (days < 0) {
-    return { overdue: true, days, text: '기한 경과', tone: RISK_COLOR.critical };
+    return { overdue: true, days, text: '기한 경과', tone: 'critical' };
   }
-  const tone =
-    days <= 14 ? RISK_COLOR.critical : days <= 30 ? RISK_COLOR.high : RISK_COLOR.medium;
+  const tone = days <= 14 ? 'critical' : days <= 30 ? 'high' : 'medium';
   return { overdue: false, days, text: `D-${days}`, tone };
 }
 

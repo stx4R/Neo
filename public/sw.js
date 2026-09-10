@@ -17,7 +17,8 @@
  * 홈만 연 뒤 서버를 내리니 /laws·/map이 청크 ERR_FAILED로 빈 화면이 됐다.
  */
 
-const VERSION = 'v3';
+// v4 — 디자인 교체(TDS). 옛 셸(다크 CSS·한자 마커 글꼴)을 통째로 버린다.
+const VERSION = 'v4';
 const SHELL_CACHE = `neo-${VERSION}`;
 const RSC_CACHE = `neo-${VERSION}-rsc`;
 const KEEP = [SHELL_CACHE, RSC_CACHE];
@@ -29,10 +30,8 @@ const SHELL = [
   '/geo/land-110m.json',
   '/fonts/Pretendard-Regular.subset.woff2',
   '/fonts/Pretendard-Medium.subset.woff2',
+  '/fonts/Pretendard-SemiBold.subset.woff2',
   '/fonts/Pretendard-Bold.subset.woff2',
-  '/fonts/neo-mark-65BD.woff2',
-  '/fonts/neo-mark-7559.woff2',
-  '/fonts/neo-mark-8C6B.woff2',
   '/icons/icon-192.png',
   '/icons/icon-512.png',
   '/icons/icon-maskable-512.png',

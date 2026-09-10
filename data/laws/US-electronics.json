@@ -22,7 +22,7 @@
       "deadline": null,
       "addedAt": "2026-09-06",
       "transitionEndsAt": "2018-11-01",
-      "transitionNote": "Verification·DoC 병행이 2018.11.01로 끝났다. 지금은 SDoC 하나뿐이다",
+      "transitionNote": "Verification·DoC 병행이 2018.11.01로 끝났어요. 지금은 SDoC 하나뿐이에요",
       "changes": [
         {
           "before": "자기적합 절차가 Verification과 Declaration of Conformity 둘로 나뉘어 있었다",
@@ -68,7 +68,7 @@
       "deadline": "2028-07-25",
       "addedAt": "2026-09-06",
       "transitionEndsAt": "2028-07-24",
-      "transitionNote": "현행 기준은 45 lm/W다. 2028.07.25부터 생산·수입되는 램프에 120 lm/W가 적용된다",
+      "transitionNote": "현행 기준은 45 lm/W예요. 2028.07.25부터 생산·수입되는 램프에 120 lm/W가 적용돼요",
       "changes": [
         {
           "before": "일반조명램프 최저효율 45 lm/W (2022.07.25 발효한 backstop 기준)",

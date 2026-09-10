@@ -8,22 +8,20 @@ import {
   kstDay,
   type Countdown,
 } from '@/lib/dday';
-import {
-  RISK_COLOR,
-  RISK_LABEL,
-  STATUS_COLOR,
-  type Action,
-  type Category,
-  type Law,
-  type Notification,
-  type Priority,
-  type Product,
-  type RiskLevel,
+import type {
+  Action,
+  Category,
+  Law,
+  Notification,
+  Priority,
+  Product,
+  RiskLevel,
+  Tone,
 } from '@/types/neo';
 
 /**
  * 화면에 박힌 숫자는 전부 여기서 나온다.
- * '대응 필요 3건' 같은 값을 문자열로 박으면 액션을 하나 체크하는 순간 거짓말이 된다.
+ * '5건 남았어요' 같은 값을 문자열로 박으면 액션을 하나 체크하는 순간 거짓말이 된다.
  *
  * 조합에 매인 함수는 Dataset을 첫 인자로 받는다. 모듈 레벨 laws를 보던 시절에는
  * 화면이 프로필을 따라갈 수 없었다.
@@ -67,17 +65,16 @@ export interface MustDo {
 }
 
 /**
- * 액션 하나에 붙는 배지. **실재하는 날짜에서만 나온다.**
+ * 법령 하나의 카운트다운. **실재하는 날짜에서만 나온다.**
  *
  *   1. 법령에 명시된 기한(law.deadline)이 있으면 거기까지 카운트다운
- *   2. 없는데 법령이 이미 시행 중이면 `기한 경과` — 의무가 이미 살아 있는데 안 했다
+ *   2. 없는데 법령이 이미 시행 중이면 `미이행` — 의무가 이미 살아 있는데 안 했다
  *   3. 아직 시행 전이면 시행일까지 카운트다운
- *   4. 보류 법령이면 배지 없음 — 언제까지 해야 하는지 아무도 모른다
  *
- * 아트보드의 D-45·D-14는 목 데이터에 맞춰 그린 허구값이라 쓰지 않는다.
+ * 보류 법령에는 쓰지 않는다 — 언제까지 해야 하는지 아무도 모른다. 호출부가 거른다.
+ * 아트보드의 D-숫자는 목 데이터에 맞춰 그린 값이라 쓰지 않는다.
  */
-export function actionBadge(law: Law, today: string): Countdown | null {
-  if (law.status === 'hold') return null;
+function lawCountdown(law: Law, today: string): Countdown {
   if (law.deadline) return countdown(law.deadline, today);
   return sinceEffective(law, today);
 }
@@ -96,36 +93,76 @@ function sinceEffective(law: Law, today: string): Countdown {
 }
 
 /**
- * MUST DO NOW — 아직 끝나지 않은 액션이 있는 법률마다 첫 액션 하나씩.
+ * 지금 해야 할 일 — 보류가 아닌 법령의 미완 액션 **전부**.
  *
- * 예전에는 `deadline`이 있는 법률만 골랐는데, 허구 deadline을 폐기하고 나니
- * 그 기준으로는 목록이 거의 비었다. 기준은 "마감이 적혀 있는가"가 아니라
- * "아직 안 한 일이 있는가"다.
+ * 예전에는 법령마다 첫 액션 하나씩만 세웠다. 새 홈은 머리말에 남은 수를 적고
+ * ("지금 해야 할 일이 5건 남았어요") 바로 아래 진행률이 "액션 12/17 완료"라서,
+ * 목록이 법령 단위면 같은 화면의 두 숫자가 어긋난다. 디자인 원본도 한 법령의
+ * 액션 두 개를 나란히 세웠다. 그래서 액션 단위다.
  *
  * 보류 법령은 빠진다 — 효력이 정지된 법의 액션은 지금 할 일이 아니다.
  * 급한 순으로 세운다: 기한 경과가 먼저, 그다음 남은 날짜가 적은 순.
+ * 날짜가 같으면 법령 순서, 그 안에서는 `law.actionIds` 순서를 지킨다(안정 정렬).
  */
 export function mustDoNow(ds: Dataset, done: ReadonlySet<string>): MustDo[] {
   return ds.laws
     .filter((law) => law.status !== 'hold')
-    .map((law) => {
-      const action = actionsOfLaw(ds, law).find((a) => !done.has(a.id));
-      if (!action) return null;
-      return { law, action, countdown: actionBadge(law, ds.today) };
+    .flatMap((law) => {
+      const c = lawCountdown(law, ds.today);
+      return openActionsOfLaw(ds, law, done).map((action) => ({ law, action, countdown: c }));
     })
-    .filter((m): m is MustDo => m !== null)
-    .sort((a, b) => (a.countdown?.days ?? Infinity) - (b.countdown?.days ?? Infinity));
+    .sort((a, b) => a.countdown.days - b.countdown.days);
 }
 
-/** THIS WEEK 창. 앞뒤 7일 — 곧 닥치는 것과 방금 지나간 것 둘 다 봐야 한다. */
+/**
+ * 홈 진행률 — 보류가 아닌 법령에 걸린 액션 중 끝낸 것.
+ * 분모에서 보류 법령을 빼는 이유: 머리말의 "남은 N건"(mustDoNow)이 보류 액션을
+ * 세지 않는다. 분모에 넣으면 total − done이 N과 달라진다.
+ */
+export function actionProgress(
+  ds: Dataset,
+  done: ReadonlySet<string>,
+): { done: number; total: number } {
+  const actions = ds.laws
+    .filter((law) => law.status !== 'hold')
+    .flatMap((law) => actionsOfLaw(ds, law));
+  return { done: actions.filter((a) => done.has(a.id)).length, total: actions.length };
+}
+
+/** 위험도 표시 순서. 높은 것부터. */
+const RISK_ORDER: readonly RiskLevel[] = ['critical', 'high', 'medium', 'low'];
+
+/**
+ * 홈 하단 규제 요약. 시행 중인 법령을 위험도별로 세고, 보류·예정은 수만 센다.
+ * 0건인 위험도는 내보내지 않는다 — 점 옆에 0을 적지 않는다.
+ */
+export function lawOverview(ds: Dataset): {
+  active: number;
+  byRisk: { risk: RiskLevel; count: number }[];
+  hold: number;
+  scheduled: number;
+} {
+  const active = ds.laws.filter((law) => law.status === 'active');
+  return {
+    active: active.length,
+    byRisk: RISK_ORDER.map((risk) => ({
+      risk,
+      count: active.filter((law) => law.riskLevel === risk).length,
+    })).filter(({ count }) => count > 0),
+    hold: ds.laws.filter((law) => law.status === 'hold').length,
+    scheduled: ds.laws.filter((law) => law.status === 'scheduled').length,
+  };
+}
+
+/** 이번 주 창. 앞뒤 7일 — 곧 닥치는 것과 방금 지나간 것 둘 다 봐야 한다. */
 const WEEK = 7;
 
 /**
- * THIS WEEK — 이번 주에 실제로 무슨 일이 있는 법률.
+ * 이번 주 — 이번 주에 실제로 무슨 일이 있는 법률.
  *
  * 기준 날짜는 법령의 기한이고, 없으면 시행일이다. 앞뒤 7일 안에 들면 여기 선다.
  * 해당하는 법률이 없으면 **섹션 자체를 그리지 않는다.** 아무 일도 없는 주에
- * "이번 주"라는 라벨만 남기지 않는다.
+ * "이번 주"라는 제목만 남기지 않는다.
  */
 export function thisWeek(ds: Dataset): Law[] {
   return ds.laws.filter((law) => {
@@ -135,7 +172,7 @@ export function thisWeek(ds: Dataset): Law[] {
   });
 }
 
-/** 보류된 법률. S1 상단 상태 스트립에 쓴다. */
+/** 보류된 법률. S1 보류 알림 줄에 쓴다. */
 export function heldLaws(ds: Dataset): Law[] {
   return ds.laws.filter((law) => law.status === 'hold');
 }
@@ -157,15 +194,10 @@ export function openActionCount(ds: Dataset, done: ReadonlySet<string>): number 
 /**
  * 사용자가 이 법률에 대해 할 일이 없는 상태.
  * 시행 중이지만 마감도 없고 액션도 없다 — DECREE 15/2018 이 여기 해당한다.
- * 마커 색과 목록 메타의 첫 칸이 이 판단 하나에 매인다.
+ * 상태 배지(`시행중`)와 목록 메타의 첫 칸이 이 판단 하나에 매인다.
  */
 export function isDormant(law: Law): boolean {
   return law.status === 'active' && law.deadline === null && law.actionIds.length === 0;
-}
-
-/** 목록 행의 한자 마커 색. 대응할 게 없으면 힘을 뺀다. */
-export function markColor(law: Law): string {
-  return isDormant(law) ? 'var(--text-3)' : STATUS_COLOR[law.status];
 }
 
 /** 목록 메타의 첫 칸. "2026.01.23 시행" / "2026.04.06 보류" / "현행 유효" */
@@ -178,36 +210,26 @@ export function statusLine(law: Law): string {
 }
 
 export interface BadgeSpec {
-  tone: string;
+  tone: Tone;
   text: string;
   tnum: boolean;
 }
 
 /**
- * S2 목록 행 우측 배지.
- * 보류는 D-Day를 계산하지 않고, 마감이 없으면 배지 자체를 그리지 않는다.
+ * 법령의 상태 배지. S2 목록 행 우측, S3 헤더, S5 시트, S1 이번 주가 같이 쓴다.
+ * 한자 마커(施留豫)가 하던 상태 표시를 이 배지가 받는다.
+ *
+ *   보류                    → `보류`   (medium)
+ *   할 일이 없는 시행 중 법령 → `시행중` (neutral)
+ *   그 외                    → 카운트다운 · `미이행` · `기한 경과`
+ *
+ * 보류는 D-Day를 계산하지 않는다.
  */
-export function listBadge(law: Law, today: string): BadgeSpec | null {
-  if (law.status === 'hold') {
-    return { tone: STATUS_COLOR.hold, text: '보류', tnum: false };
-  }
-  // 대응할 것이 없는 법률에는 배지를 달지 않는다.
-  if (isDormant(law)) return null;
-  const c = law.deadline ? countdown(law.deadline, today) : sinceEffective(law, today);
+export function lawBadge(law: Law, today: string): BadgeSpec {
+  if (law.status === 'hold') return { tone: 'medium', text: '보류', tnum: false };
+  if (isDormant(law)) return { tone: 'neutral', text: '시행중', tnum: false };
+  const c = lawCountdown(law, today);
   return { tone: c.tone, text: c.text, tnum: !c.overdue };
-}
-
-/**
- * S3 헤더 배지. 색면은 언제나 위험도이고, 상태는 글자에 꼬리로 붙는다.
- * "HIGH · D-45" / "MEDIUM · 보류" / "LOW"
- */
-export function headerBadge(law: Law, today: string): BadgeSpec {
-  const tone = RISK_COLOR[law.riskLevel];
-  const risk = RISK_LABEL[law.riskLevel];
-  if (law.status === 'hold') return { tone, text: `${risk} · 보류`, tnum: false };
-  if (isDormant(law)) return { tone, text: risk, tnum: false };
-  const c = law.deadline ? countdown(law.deadline, today) : sinceEffective(law, today);
-  return { tone, text: `${risk} · ${c.text}`, tnum: !c.overdue };
 }
 
 // ── S2 필터·정렬 ───────────────────────────────────────────────
@@ -326,7 +348,7 @@ export function priorityStat(
       (sum, law) => sum + openActionsOfLaw(ds, law, done).length,
       0,
     ),
-    // 해당 법률 중 가장 높은 위험도. 라벨과 상단 4px 바가 같이 이 값을 쓴다.
+    // 해당 법률 중 가장 높은 위험도. 타일 아이콘의 색이 이 값을 쓴다.
     risk: maxRisk(matched),
   };
 }
@@ -352,19 +374,18 @@ export function lawsOfCountry(ds: Dataset, code: string): Law[] {
 /**
  * 국가 위험도. 그 국가 법률의 최대 위험도다 — S4 우선순위 타일과 같은 규칙.
  * VN은 DECREE 110/2026이 critical이라 CRITICAL이 된다.
- * 아트보드의 HIGH는 목 데이터보다 먼저 그려진 값이라 쓰지 않는다.
- * 시트 H1 옆 배지와 지도 위 VN 마커 라벨이 같이 이 값을 본다.
+ * 시트 H1 옆 배지와 지도 위 도착국 마커가 같이 이 값을 본다.
  */
 export function countryRisk(ds: Dataset, code: string): RiskLevel | null {
   return maxRisk(lawsOfCountry(ds, code));
 }
 
-/** 시트에 세우는 행 수. 아트보드 실측. */
-export const SHEET_ROWS = 3;
+/** 시트에 세우는 행 수. 디자인 원본 실측. */
+export const SHEET_ROWS = 2;
 
 /**
- * S5 시트의 법률 행 — 미완 액션이 있는 법률을 마감 임박순으로 상위 3건.
- * 액션이 없는 보류(46)·휴면(15/2018)은 여기 들어오지 않는다. 그건 아래 링크가 받는다.
+ * S5 시트의 법률 행 — 미완 액션이 있는 법률을 마감 임박순으로 상위 몇 건.
+ * 액션이 없는 보류·휴면 법령은 여기 들어오지 않는다. 그건 아래 링크가 받는다.
  * 액션을 전부 체크하면 0건이 되고, 그때는 행 대신 안내 한 줄만 남는다.
  */
 export function sheetLaws(ds: Dataset, code: string, done: ReadonlySet<string>): Law[] {
@@ -394,7 +415,12 @@ export function openActionCountOfCountry(
 
 // ── S6 Notifications ───────────────────────────────────────────
 
-export type NotificationGroup = 'TODAY' | 'THIS WEEK' | 'EARLIER';
+/**
+ * 알림 묶음. 화면에 그대로 제목으로 나간다.
+ * 디자인 원본은 두 번째 묶음을 "지난 주"라고 적었지만 이 묶음에는 한 달 전 알림도
+ * 들어온다 — "지난 주"라고 부르면 틀린 말이 된다. 그래서 "이전"이다.
+ */
+export type NotificationGroup = '오늘' | '이번 주' | '이전';
 
 /** 오늘과의 달력 일수 차. 경과 시간이 아니라 날짜 차다. */
 function daysAgo(at: string, today: string): number {
@@ -453,7 +479,7 @@ export function derivedNotifications(
           type: 'deadline',
           lawId: law.id,
           title: `${law.officialRef} 기한 경과`,
-          body: `${formatDate(law.deadline)}까지였습니다`,
+          body: `${formatDate(law.deadline)}까지였어요`,
           at: law.deadline,
         });
       } else {
@@ -488,14 +514,19 @@ export function derivedNotifications(
     }
 
     // 신규 등록 알림 — 법이 새로 생긴 것이 아니라 목록에 새로 들어왔다는 뜻이다.
-    // 그래서 제목이 법령명이고, 언제 들어왔는지를 곁말로 적는다.
+    // 제목이 법령명이고, 곁말은 그래서 생긴 할 일의 수다. 할 일이 없는 법령이면
+    // "액션 0건"이라고 적지 않고 언제 들어왔는지를 적는다.
     if (daysAgo(law.addedAt, ds.today) <= NEW_WINDOW_DAYS) {
+      const actions = actionsOfLaw(ds, law).length;
       out.push({
         id: `n-new-${law.id}`,
         type: 'new',
         lawId: law.id,
         title: law.title,
-        body: `${law.officialRef} · ${formatDate(law.addedAt)} 추가`,
+        body:
+          actions > 0
+            ? `액션 ${actions}건이 새로 생겼어요`
+            : `${law.officialRef} · ${formatDate(law.addedAt)} 추가`,
         at: law.addedAt,
       });
     }
@@ -503,15 +534,18 @@ export function derivedNotifications(
 
   // 완료 알림 — 사용자가 체크한 액션. 완료 시각을 저장하지 않으므로
   // 시각은 오늘로 둔다. 없는 시각을 지어내지 않고 '오늘'로만 말한다.
+  // 제목에 '완료'를 붙이지 않는다 — 종류 라벨 `액션 완료`가 이미 말한다.
   for (const law of ds.laws) {
-    for (const action of actionsOfLaw(ds, law)) {
+    const actions = actionsOfLaw(ds, law);
+    const open = actions.filter((a) => !done.has(a.id)).length;
+    for (const action of actions) {
       if (!done.has(action.id)) continue;
       out.push({
         id: `n-done-${action.id}`,
         type: 'done',
         lawId: law.id,
-        title: `${action.title} 완료`,
-        body: law.officialRef,
+        title: action.title,
+        body: `${law.officialRef} · 미완 ${open}건 남음`,
         at: ds.today,
       });
     }
@@ -527,17 +561,17 @@ function shiftDays(day: string, delta: number): string {
   return new Date(base).toISOString().slice(0, 10);
 }
 
-/** 알림을 TODAY / THIS WEEK / EARLIER 로 묶는다. 빈 그룹은 내보내지 않는다. */
+/** 알림을 오늘 / 이번 주 / 이전 으로 묶는다. 빈 묶음은 내보내지 않는다. */
 export function groupedNotifications(
   items: readonly Notification[],
   today: string,
 ): { group: NotificationGroup; items: Notification[] }[] {
-  const order: NotificationGroup[] = ['TODAY', 'THIS WEEK', 'EARLIER'];
+  const order: NotificationGroup[] = ['오늘', '이번 주', '이전'];
   const of = (at: string): NotificationGroup => {
     const days = daysAgo(at, today);
-    if (days <= 0) return 'TODAY';
-    if (days <= 5) return 'THIS WEEK';
-    return 'EARLIER';
+    if (days <= 0) return '오늘';
+    if (days <= 5) return '이번 주';
+    return '이전';
   };
   return order
     .map((group) => ({ group, items: items.filter((n) => of(n.at) === group) }))

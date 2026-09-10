@@ -2,17 +2,22 @@
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useState } from 'react';
+import { Badge } from '@/components/Badge';
+import { Card } from '@/components/Card';
+import { TextField } from '@/components/Field';
+import { Icon } from '@/components/Icon';
 import { Screen } from '@/components/Screen';
+import { IconButton } from '@/components/TopBar';
 import { categories, destinationCountries, originCountries } from '@/lib/data';
 import { readProfile, saveProfile } from '@/lib/useProfile';
 import type { CountryCode, ItemCategoryId, Product, Profile } from '@/types/neo';
-import { ChoiceRow, Field, StepFooter, StepHead, StepSection } from './parts';
+import { ChoiceRow, StepFooter, StepHead, StepSection, WARNING_H } from './parts';
 
 /**
  * S7·S8 — 첫 실행 온보딩. 탭바 없음.
  *
  * 4스텝: ① 출발국 ② 도착국 ③ 품목 ④ 회사명·제품(건너뛰기 가능).
- * ①②③은 S7 리스트형, ④만 S8 입력형이다.
+ * ①②③은 S7 선택 목록형, ④만 S8 입력형이다.
  *
  * ?edit=1이면 기존 값을 프리필하고, 완료 시 이전 화면으로 돌아간다.
  * 국가나 품목이 실제로 바뀐 경우에만 초기화 경고를 띄운다.
@@ -50,9 +55,9 @@ function toDrafts(products: readonly Product[]): Draft[] {
 
 export default function SetupPage() {
   // useSearchParams는 Suspense 경계를 요구한다. 경계 안은 프레임까지 포함해야
-  // 폴백이 뜨는 동안 배경이 비지 않는다.
+  // 폴백이 뜨는 동안 바탕이 비지 않는다.
   return (
-    <Suspense fallback={<Screen scrollPadBottom="var(--pad-plain)">{null}</Screen>}>
+    <Suspense fallback={<Screen bg="canvas" scrollPadBottom="var(--pad-plain)">{null}</Screen>}>
       <Setup />
     </Suspense>
   );
@@ -65,7 +70,7 @@ function Setup() {
   const [saved] = useState(() => readProfile());
   const editing = params.get('edit') === '1' && saved !== null;
 
-  // ?step=4 는 S4의 "+ 제품 추가"가 쓰는 통로다. 제품 편집기를 두 벌 만들지 않는다.
+  // ?step=4 는 S4의 '편집'·'제품 추가'가 쓰는 통로다. 제품 편집기를 두 벌 만들지 않는다.
   const [step, setStep] = useState(() => {
     const n = Number(params.get('step'));
     return Number.isInteger(n) && n >= 1 && n <= TOTAL && saved !== null ? n - 1 : 0;
@@ -79,7 +84,7 @@ function Setup() {
   );
   const [companyName, setCompanyName] = useState(saved?.companyName ?? '');
   const [drafts, setDrafts] = useState<Draft[]>(() => toDrafts(saved?.products ?? []));
-  // 제출을 눌러 본 뒤에만 오류를 그린다. 입력하는 도중에 빨간 줄이 따라다니면 안 된다.
+  // 제출을 눌러 본 뒤에만 오류를 그린다. 입력하는 도중에 빨간 선이 따라다니면 안 된다.
   const [showErrors, setShowErrors] = useState(false);
 
   // 품목을 고르면 기본 제품 세트를 복사한다. 이미 편집한 목록은 덮지 않는다.
@@ -97,11 +102,11 @@ function Setup() {
   const categoryChanged = editing && category !== saved.itemCategory;
   const warning =
     countryChanged && categoryChanged
-      ? '국가·품목을 바꾸면 완료 표시가 초기화됩니다'
+      ? '국가·품목을 바꾸면 완료 표시가 초기화돼요'
       : countryChanged
-        ? '국가를 바꾸면 완료 표시가 초기화됩니다'
+        ? '국가를 바꾸면 완료 표시가 초기화돼요'
         : categoryChanged
-          ? '품목을 바꾸면 완료 표시가 초기화됩니다'
+          ? '품목을 바꾸면 완료 표시가 초기화돼요'
           : undefined;
 
   function commit(products: Product[]) {
@@ -155,11 +160,12 @@ function Setup() {
     step === 0 ? origin !== null : step === 1 ? destination !== null : category !== null;
 
   const scrollPadBottom = warning
-    ? 'calc(var(--pad-ctabar) + var(--block-h))'
-    : 'var(--pad-ctabar)';
+    ? `calc(var(--pad-cta) + ${WARNING_H}px)`
+    : 'var(--pad-cta)';
 
   return (
     <Screen
+      bg="canvas"
       scrollPadBottom={scrollPadBottom}
       footer={
         <StepFooter
@@ -175,50 +181,56 @@ function Setup() {
           <StepHead
             step={1}
             total={TOTAL}
-            title="어디서 출발하나요"
-            hint="수출국을 선택하십시오"
+            title="어디서 수출하세요?"
+            hint="출발하는 나라를 골라 주세요"
             onBack={editing ? () => router.back() : undefined}
           />
-          <StepSection label="ORIGIN">
-            {originCountries.map((c, i) => (
-              <ChoiceRow
-                key={c.code}
-                code={c.code}
-                name={c.nameKo}
-                selected={origin === c.code}
-                afterSelected={origin === originCountries[i - 1]?.code}
-                last={i === originCountries.length - 1}
-                onSelect={() => setOrigin(c.code)}
-              />
-            ))}
+          <StepSection>
+            <Card padding={6}>
+              {originCountries.map((c, i) => (
+                <ChoiceRow
+                  key={c.code}
+                  code={c.code}
+                  name={c.nameKo}
+                  selected={origin === c.code}
+                  afterSelected={origin === originCountries[i - 1]?.code}
+                  first={i === 0}
+                  onSelect={() => setOrigin(c.code)}
+                />
+              ))}
+            </Card>
           </StepSection>
         </>
       )}
 
-      {step === 1 && <DestinationStep value={destination} onPick={setDestination} onBack={() => setStep(0)} />}
+      {step === 1 && (
+        <DestinationStep value={destination} onPick={setDestination} onBack={() => setStep(0)} />
+      )}
 
       {step === 2 && (
         <>
           <StepHead
             step={3}
             total={TOTAL}
-            title="무엇을 수출하나요"
-            hint="품목을 선택하십시오"
+            title="어떤 품목을 수출하세요?"
+            hint="품목마다 걸리는 규제가 달라요"
             onBack={() => setStep(1)}
           />
-          {/* 품목에는 국가 코드에 해당하는 값이 없다. 빈 28px 열을 만들어
+          {/* 품목에는 국가 코드에 해당하는 값이 없다. 빈 코드 열을 만들어
               채우지 않는다 — 데이터가 없으면 표시하지 않는다. */}
-          <StepSection label="ITEM">
-            {categories.map((c, i) => (
-              <ChoiceRow
-                key={c.id}
-                name={c.nameKo}
-                selected={category === c.id}
-                afterSelected={category === categories[i - 1]?.id}
-                last={i === categories.length - 1}
-                onSelect={() => pickCategory(c.id)}
-              />
-            ))}
+          <StepSection>
+            <Card padding={6}>
+              {categories.map((c, i) => (
+                <ChoiceRow
+                  key={c.id}
+                  name={c.nameKo}
+                  selected={category === c.id}
+                  afterSelected={category === categories[i - 1]?.id}
+                  first={i === 0}
+                  onSelect={() => pickCategory(c.id)}
+                />
+              ))}
+            </Card>
           </StepSection>
         </>
       )}
@@ -255,42 +267,42 @@ function DestinationStep({
       <StepHead
         step={2}
         total={TOTAL}
-        title="어디로 수출하나요"
-        hint="수입국을 선택하십시오"
+        title="어디로 수출하세요?"
+        // 국가 수는 데이터에서 센다. 지원 국가가 늘면 문구가 따라간다.
+        hint={`지금은 ${supported.length}개국의 법령 데이터가 있어요`}
         onBack={onBack}
       />
-      <StepSection label="DESTINATION">
-        {supported.map((c, i) => (
-          <ChoiceRow
-            key={c.code}
-            code={c.code}
-            name={c.nameKo}
-            selected={value === c.code}
-            afterSelected={value === supported[i - 1]?.code}
-            last={i === supported.length - 1}
-            onSelect={() => onPick(c.code)}
-          />
-        ))}
-      </StepSection>
-      {/* 아직 데이터가 없는 국가를 흐리게 남긴다. 이게 유일하게 허용되는
-          "빈 데이터 표시"다 — 왜 4개국뿐인지에 정직하게 답하는 장치다.
-          opacity가 아니라 색으로만 구분한다. */}
-      {planned.length > 0 && (
-        <StepSection label="지원 예정">
-          {planned.map((c, i) => (
+      <StepSection>
+        <Card padding={6}>
+          {supported.map((c, i) => (
             <ChoiceRow
               key={c.code}
               code={c.code}
               name={c.nameKo}
-              disabled
-              last={i === planned.length - 1}
-              trailing={
-                <span className="t-label" style={{ flex: 'none', color: 'var(--text-3)' }}>
-                  준비 중
-                </span>
-              }
+              selected={value === c.code}
+              afterSelected={value === supported[i - 1]?.code}
+              first={i === 0}
+              onSelect={() => onPick(c.code)}
             />
           ))}
+        </Card>
+      </StepSection>
+      {/* 아직 데이터가 없는 국가를 흐리게 남긴다. 이게 유일하게 허용되는
+          "빈 데이터 표시"다 — 왜 4개국뿐인지에 정직하게 답하는 장치다. */}
+      {planned.length > 0 && (
+        <StepSection label="지원 예정">
+          <Card padding={6}>
+            {planned.map((c, i) => (
+              <ChoiceRow
+                key={c.code}
+                code={c.code}
+                name={c.nameKo}
+                disabled
+                first={i === 0}
+                trailing={<Badge tone="neutral">준비 중</Badge>}
+              />
+            ))}
+          </Card>
         </StepSection>
       )}
     </>
@@ -323,154 +335,114 @@ function ProductsStep({
       <StepHead
         step={4}
         total={TOTAL}
-        title="회사와 제품"
-        hint="건너뛰면 품목 기본 제품으로 시작합니다"
+        title="회사와 제품을 알려주세요"
+        hint="건너뛰면 품목 기본 제품으로 시작해요"
         onBack={onBack}
       />
 
-      <StepSection label="COMPANY">
-        <Field
-          value={companyName}
-          onChange={onCompanyName}
-          ariaLabel="회사명"
-          placeholder="회사명 (선택)"
-        />
-      </StepSection>
+      <div style={{ padding: '20px var(--pad) 0', display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <span className="t-label" style={{ color: 'var(--tds-fg-secondary)' }}>
+            회사명 (선택)
+          </span>
+          <TextField
+            value={companyName}
+            onChange={onCompanyName}
+            ariaLabel="회사명"
+            placeholder="회사명을 입력해 주세요"
+          />
+        </div>
 
-      <StepSection label={`PRODUCTS — ${drafts.length}`}>
-        {drafts.map((d, i) => {
-          const invalid = showErrors && (d.name.trim() || d.hs.trim()) && !hsValid(d.hs);
-          return (
-            <div
-              key={d.key}
-              style={{
-                display: 'flex',
-                // 오류일 때만 세로로 늘어난다. 행 높이에 4번째 값을 만들지 않는다.
-                alignItems: invalid ? 'flex-start' : 'center',
-                gap: 'var(--row-gap)',
-                height: invalid ? undefined : 'var(--row-info)',
-                padding: invalid ? '9px 0 12px' : undefined,
-                borderTop: '1px solid var(--hairline)',
-              }}
-            >
-              <span
-                className="t-label tnum"
-                style={{
-                  flex: 'none',
-                  width: 'var(--mark-w)',
-                  marginTop: invalid ? 11 : undefined,
-                  color: 'var(--text-3)',
-                }}
-              >
-                {String(i + 1).padStart(2, '0')}
-              </span>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <span className="t-label" style={{ color: 'var(--tds-fg-secondary)' }}>
+            제품{' '}
+            <span className="tnum" style={{ color: 'var(--tds-fg-quaternary)' }}>
+              {drafts.length}/{MAX_PRODUCTS}
+            </span>
+          </span>
 
-              <Field
-                value={d.name}
-                onChange={(v) => patch(i, { name: v })}
-                ariaLabel={`제품 ${i + 1} 이름`}
-                placeholder="제품명"
-              />
-
-              <div
-                style={{
-                  flex: 'none',
-                  width: 'var(--hs-w)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  // 메시지는 88px보다 넓다. flex-end로 두면 입력 칸 우측에 끝을 맞추고
-                  // 왼쪽(빈 자리)으로 넘친다. 줄바꿈을 허용하면 행이 88이 아니라
-                  // 106으로 커져 아트보드가 정한 확장 높이와 어긋난다.
-                  alignItems: 'flex-end',
-                  gap: 'var(--stack)',
-                }}
-              >
-                <Field
-                  value={d.hs}
-                  onChange={(v) => patch(i, { hs: v })}
-                  ariaLabel={`제품 ${i + 1} HS코드`}
-                  placeholder="HS코드"
-                  invalid={!!invalid}
-                  width="100%"
-                  tnum
-                  inputMode="numeric"
-                  maxLength={7}
-                />
+          {drafts.map((d, i) => {
+            const invalid = showErrors && (d.name.trim() || d.hs.trim()) && !hsValid(d.hs);
+            return (
+              <div key={d.key} style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <TextField
+                    value={d.name}
+                    onChange={(v) => patch(i, { name: v })}
+                    ariaLabel={`제품 ${i + 1} 이름`}
+                    placeholder="제품명"
+                  />
+                  <TextField
+                    value={d.hs}
+                    onChange={(v) => patch(i, { hs: v })}
+                    ariaLabel={`제품 ${i + 1} HS코드`}
+                    placeholder="HS코드"
+                    invalid={!!invalid}
+                    width={104}
+                    tnum
+                    inputMode="numeric"
+                    maxLength={7}
+                  />
+                  {/* 디자인 원본에는 없는 칸이다. 지우는 길이 없으면 품목 기본 세트에서
+                      제품을 뺄 수 없다. 흐린 × 하나로 둔다. */}
+                  <IconButton
+                    icon="x"
+                    label={`제품 ${i + 1} 삭제`}
+                    onClick={() => onDrafts(drafts.filter((_, j) => j !== i))}
+                    color="var(--tds-fg-quaternary)"
+                    size={20}
+                  />
+                </div>
                 {invalid && (
+                  // HS 칸 오른쪽 끝에 맞춘다 — × 칸(40)과 사이(8)만큼 안으로 들인다.
                   <span
                     className="t-meta"
-                    style={{ whiteSpace: 'nowrap', color: 'var(--text-2)' }}
+                    style={{ alignSelf: 'flex-end', marginRight: 48, color: 'var(--tds-fg-danger)' }}
                   >
-                    4자리 또는 6자리 숫자
+                    HS 코드는 4자리 또는 6자리예요
                   </span>
                 )}
               </div>
+            );
+          })}
 
-              <button
-                type="button"
-                onClick={() => onDrafts(drafts.filter((_, j) => j !== i))}
-                aria-label={`제품 ${i + 1} 삭제`}
-                className="t-meta"
-                style={{
-                  flex: 'none',
-                  width: 'var(--mark-w)',
-                  marginTop: invalid ? 11 : undefined,
-                  padding: 0,
-                  border: 'none',
-                  background: 'transparent',
-                  textAlign: 'right',
-                  color: 'var(--text-3)',
-                  cursor: 'pointer',
-                }}
-              >
-                ×
-              </button>
-            </div>
-          );
-        })}
-
-        {drafts.length < MAX_PRODUCTS && (
-          <div style={{ marginTop: 14 }}>
+          {drafts.length < MAX_PRODUCTS && (
             <button
               type="button"
-              onClick={() =>
-                onDrafts([...drafts, { key: `new-${Date.now()}`, name: '', hs: '' }])
-              }
-              className="t-body"
+              onClick={() => onDrafts([...drafts, { key: `new-${Date.now()}`, name: '', hs: '' }])}
               style={{
-                padding: 0,
-                border: 'none',
-                background: 'transparent',
-                color: 'var(--accent)',
-                textDecoration: 'underline',
-                textAlign: 'left',
+                alignSelf: 'flex-start',
+                height: 44,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                color: 'var(--tds-fg-brand)',
                 cursor: 'pointer',
               }}
             >
-              + 제품 추가
+              <Icon name="plus" size={18} stroke={2} />
+              <span className="t-body-b" style={{ lineHeight: 1 }}>
+                제품 추가
+              </span>
             </button>
-          </div>
-        )}
-      </StepSection>
+          )}
+        </div>
 
-      <section style={{ marginTop: 'var(--sec-gap)', padding: '0 var(--pad)' }}>
         <button
           type="button"
           onClick={onSkip}
-          className="t-body"
+          className="tap-y"
           style={{
-            padding: 0,
-            border: 'none',
-            background: 'transparent',
-            color: 'var(--text-3)',
+            alignSelf: 'flex-start',
+            font: '500 15px/1 var(--font)',
+            color: 'var(--tds-fg-tertiary)',
             textDecoration: 'underline',
-            textAlign: 'left',
             cursor: 'pointer',
           }}
         >
           건너뛰기
         </button>
-      </section>
+      </div>
     </>
   );
 }

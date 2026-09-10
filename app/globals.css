@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
-/* ── Pretendard. 자체 호스팅 서브셋 3종.
-   디자인이 쓰는 무게는 400·500·700 셋뿐이다.
-   CDN을 쓰지 않는다 — 오프라인 PWA에서 치명적이다.
+/* ── Pretendard. 자체 호스팅 서브셋 4종.
+   디자인이 쓰는 무게는 400·500·600·700 넷이다.
+   CDN을 쓰지 않는다 — 오프라인 PWA에서 치명적이다. 디자인 원본은 jsDelivr의
+   가변 폰트를 불렀지만 여기서는 같은 패키지의 정적 서브셋을 담는다.
    폰트 파일 출처: npm `pretendard` v1.3.9 / dist/web/static/woff2-subset
    라이선스: SIL OFL 1.1 (public/fonts/PRETENDARD-LICENSE.txt) ─────────────── */
 
@@ -24,84 +25,90 @@
 
 @font-face {
   font-family: Pretendard;
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  src: url("/fonts/Pretendard-SemiBold.subset.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: Pretendard;
   font-weight: 700;
   font-style: normal;
   font-display: swap;
   src: url("/fonts/Pretendard-Bold.subset.woff2") format("woff2");
 }
 
-/* ── NEO Mark — 한자 상태 마커 전용. 施 留 豫 세 글자뿐이다.
-   이 세 글자는 Pretendard에 없어서 serif로 떨어지는데, 어느 serif로 떨어지는지가
-   기기마다 다르다 (Windows 바탕 / macOS·iOS 명조 / Android 또 다름).
-   앱의 서명 요소가 플랫폼마다 다른 골격으로 찍히면 안 되므로 글꼴을 고정한다.
+/* NEO 디자인 토큰. design/NEO Toss Reform.dc.html 에서 옮긴 값이다 (TDS 기반).
+   색은 전부 이 변수로만 쓴다. 하드코딩하지 않는다.
 
-   font-display: block — 폴백으로 잠깐 찍혔다가 바뀌면 눈에 띈다.
-   1KB짜리 파일이라 즉시 로드된다.
-
-   출처: npm `@fontsource/noto-serif-kr` v5.3.0, 700 무게에서 글자별 서브셋.
-   재생성은 scripts/make-mark-font.mjs. 라이선스: SIL OFL 1.1
-   (public/fonts/NOTO-SERIF-KR-LICENSE.txt)
-
-   세 글자가 원본에서 서로 다른 청크에 있어 파일도 셋이다. unicode-range가
-   겹치지 않으므로 브라우저는 실제로 쓰인 마커만 받는다. ──────────────── */
-
-@font-face {
-  font-family: 'NEO Mark';
-  font-weight: 700;
-  font-style: normal;
-  font-display: block;
-  src: url("/fonts/neo-mark-65BD.woff2") format("woff2");
-  unicode-range: U+65BD;  /* 施 시행중 */
-}
-
-@font-face {
-  font-family: 'NEO Mark';
-  font-weight: 700;
-  font-style: normal;
-  font-display: block;
-  src: url("/fonts/neo-mark-7559.woff2") format("woff2");
-  unicode-range: U+7559;  /* 留 보류 */
-}
-
-@font-face {
-  font-family: 'NEO Mark';
-  font-weight: 700;
-  font-style: normal;
-  font-display: block;
-  src: url("/fonts/neo-mark-8C6B.woff2") format("woff2");
-  unicode-range: U+8C6B;  /* 豫 예정 */
-}
-
-/* NEO 디자인 토큰. 확정 6화면에서 실측한 값.
-   색상·간격을 하드코딩하지 않는다. 전부 이 변수를 쓴다. */
+   라이트가 기준이다. 다크는 기기 설정(prefers-color-scheme)을 따라 아래 미디어 쿼리가
+   같은 이름을 덮는다 — 컴포넌트는 테마를 모른다. 앱 안에 테마 스위치는 없다. */
 
 :root {
+  color-scheme: light;
+  --font: Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+
   /* 표면 */
-  --bg:            #171717;   /* 화면 배경. 푸른 검정 아님, 중성 진회색 */
-  --surface:       #212121;   /* 타일, 하단 시트 */
-  --hairline:      #2E2E2E;   /* 1px 구분선 */
+  --board:              oklch(0.930 0.006 247);   /* 프레임 바깥. 폭 440을 넘는 화면에서만 보인다 */
+  --tds-bg-canvas:      oklch(0.968 0.004 247);   /* 카드를 얹는 화면의 바탕 — S1·S4·셋업 */
+  --tds-bg-primary:     oklch(1 0 0);             /* 카드, 그리고 카드 없이 목록을 까는 화면 — S2·S3·S5·S6 */
+  --tds-bg-secondary:   oklch(0.957 0.005 247);   /* 입력칸, 세그먼트 트랙, 중립 배지 */
+  --tds-bg-tertiary:    oklch(0.913 0.008 247);   /* 진행바 트랙, 시트 핸들 */
+  --tds-bg-elevated:    oklch(1 0 0);             /* 떠 있는 면 — 탭바, 시트, 설치 카드 */
+  --tds-bg-brand:       oklch(0.624 0.176 254);   /* 주 CTA, 진행 채움, 체크 */
+  --tds-bg-brand-press: oklch(0.522 0.176 257);
+  --tds-bg-brand-weak:  oklch(0.965 0.020 250);   /* 선택 행, 순번 타일, 경과규정 */
 
   /* 글자 */
-  --text:          #F5F5F5;
-  --text-2:        #A3A3A3;
-  --text-3:        #6B6B6B;
+  --tds-fg-primary:     oklch(0.234 0.030 254);
+  --tds-fg-secondary:   oklch(0.452 0.028 253);
+  --tds-fg-tertiary:    oklch(0.155 0.060 261 / 0.58);
+  --tds-fg-quaternary:  oklch(0.155 0.060 261 / 0.40);
+  --tds-fg-disabled:    oklch(0.752 0.016 251);
+  --tds-fg-inverse:     oklch(1 0 0);             /* 브랜드 면 위 글자 */
+  --tds-fg-brand:       oklch(0.624 0.176 254);
+  --tds-fg-danger:      oklch(0.560 0.215 22);
+  --tds-fg-success:     oklch(0.493 0.143 154);
 
-  /* 색면 — 항상 --on-color 글자를 얹는다 */
-  --accent:        #22D3EE;
-  --hold:          #C084FC;
-  --risk-critical: #FF3B30;
-  --risk-high:     #FF8A00;
-  --risk-medium:   #E0A800;
-  --risk-low:      #22C55E;
-  --on-color:      #171717;
+  /* 선 */
+  --tds-line-default:   oklch(0.913 0.008 247);   /* 목록 행 구분선 */
+  --tds-line-subtle:    oklch(0 0 0 / 0.08);      /* 카드 테두리 */
+  --tds-line-strong:    oklch(0.752 0.016 251);   /* 빈 체크박스, 점선 타일 */
 
-  /* 지오그래피 — 두 화면이 다른 값을 쓴다. 아트보드가 그렇게 지정했고 이유가 있다.
-     S5 지도는 지형 위에 국가 마커와 라벨을 얹는데 그 라벨 글자색이 --text-3다.
-     지형을 --text-3와 같은 값으로 두면 'TH · 지원 예정'이 지형에 묻힌다(실측함).
-     S1 지구본에는 라벨이 없다 — 위에 얹는 것이 흰 항로와 빨간 도착 마커뿐이라
-     밝게 둬야 지구본이 히어로 비주얼로 선다. */
-  --geo-dot:       #3A3A3A;   /* S5 지도. --text-3 아래로 내린다 */
-  --geo-dot-globe: #6B6B6B;   /* S1 지구본. neo-dots.js 원본 기본값이다 */
+  /* 위험도 — washed. 연한 면(bg)에 같은 계열의 진한 글자(fg)를 얹는다. */
+  --risk-crit-bg: oklch(0.950 0.030 20);
+  --risk-crit-fg: oklch(0.520 0.205 22);
+  --risk-high-bg: oklch(0.958 0.036 62);
+  --risk-high-fg: oklch(0.520 0.140 52);
+  --risk-med-bg:  oklch(0.962 0.045 92);
+  --risk-med-fg:  oklch(0.480 0.100 82);
+  --risk-low-bg:  oklch(0.958 0.035 155);
+  --risk-low-fg:  oklch(0.440 0.130 154);
+
+  /* S5 도착국 마커는 글자색 면으로 뒤집힌 알약이다. 그 위 위험도 점은 테마마다
+     반대편 값을 쓴다 — 라이트 알약은 남색이라 진한 글자색(fg)이, 다크 알약은
+     흰색이라 진한 면색(bg)이어야 점이 보인다. */
+  --pin-dot-critical: var(--risk-crit-fg);
+  --pin-dot-high:     var(--risk-high-fg);
+  --pin-dot-medium:   var(--risk-med-fg);
+  --pin-dot-low:      var(--risk-low-fg);
+
+  /* 그림자 — 떠 있는 표면에만 쓴다. 카드는 떠 있지 않다. */
+  --shadow-1:     0 1px 2px oklch(0.155 0.060 261 / 0.04), 0 1px 1px oklch(0.155 0.060 261 / 0.04);  /* 세그먼트 선택 */
+  --shadow-2:     0 4px 12px oklch(0.155 0.060 261 / 0.06), 0 1px 2px oklch(0.155 0.060 261 / 0.04); /* 탭바, 지도 마커, 설치 카드 */
+  --shadow-sheet: 0 -2px 12px oklch(0.155 0.060 261 / 0.06);                                          /* S5 시트 */
+
+  /* 세그먼트 컨트롤의 고른 칸. 라이트는 흰 면이 트랙보다 밝다. 다크는 primary가
+     트랙보다 어두워 뒤집히므로 한 단계 밝은 면을 쓴다(아래 다크 블록). */
+  --segment-on: var(--tds-bg-primary);
+
+  /* 지오그래피. 두 화면이 다른 값을 쓴다 — S1 지구본은 카드 안 84px 원이라 진해야
+     대륙이 읽히고, S5 지도는 위에 마커 알약을 얹으므로 한 단계 흐리다. */
+  --geo-dot-globe: var(--tds-line-strong);
+  --geo-dot:       oklch(0.860 0.010 248);
+  --geo-route:     var(--tds-fg-primary);
+  --geo-dest:      var(--tds-fg-danger);
 
   /* 기기 안전영역. viewport-fit=cover로 화면 끝까지 그리므로 노치와 홈
      인디케이터를 여기서 받는다. env()를 읽는 곳은 이 두 줄뿐이다.
@@ -110,61 +117,184 @@
   --safe-bottom: env(safe-area-inset-bottom, 0px);
 
   /* 레이아웃 */
-  --pad:      20px;   /* 좌우 패딩 */
-  --topbar:   40px;
+  --pad:       24px;   /* 화면 좌우 패딩 */
+  --topbar:    56px;
+  --offline-h: 28px;
 
   /* 프레임 최대 폭. 390은 아트보드 폭이지 기기 폭이 아니다 — 402·430·440pt
-     아이폰에서 390으로 잘라 가운데 두면 좌우에 검은 띠가 남고, 하단 탭바 배경도
-     화면 끝까지 내려가지 않는다. 현재 가장 넓은 아이폰(16 Pro Max 440pt)까지
-     꽉 채우고, 그보다 넓은 데스크톱에서만 프레임으로 잘린다. */
+     아이폰에서 390으로 잘라 가운데 두면 좌우에 띠가 남는다. 현재 가장 넓은
+     아이폰(16 Pro Max 440pt)까지 꽉 채우고, 그보다 넓은 데스크톱에서만 잘린다. */
   --frame-max: 440px;
 
-  /* 하단 고정 바. 셀 높이 + 상단 하나선 1px이 바의 실제 높이다.
-     안전영역은 바 '안쪽 패딩'으로만 흡수한다 — bottom에 주면 바 전체가
-     위로 밀려 바닥에 검은 띠가 남는다. */
-  --tabbar-cell: 64px;                                 /* 탭 셀 */
-  --tabbar-h:    calc(var(--tabbar-cell) + 1px);       /* S1/S2/S4/S5 탭바 */
-  --ctabar-cell: 56px;                                 /* S3 하단 CTA */
-  --ctabar-h:    calc(var(--ctabar-cell) + 1px);
+  /* 바닥에 뜨는 것 — 탭바와 하단 CTA. 디자인 원본대로 바닥에서 20px 뜨고,
+     홈 인디케이터가 그보다 크면 그만큼 올라간다. */
+  --float-bottom: max(20px, var(--safe-bottom));
+  --tabbar-h: 64px;
+  --cta-h:    56px;
 
   /* 스크롤 화면의 하단 여백. 화면마다 숫자를 따로 적지 않는다 —
-     바 높이 + 안전영역 + 24px 한 식에서 전부 나온다. */
-  --pad-tabbar: calc(var(--tabbar-h) + var(--safe-bottom) + 24px);
-  --pad-ctabar: calc(var(--ctabar-h) + var(--safe-bottom) + 24px);
-  --pad-plain:  calc(var(--safe-bottom) + 24px);       /* 하단 바가 없는 화면 */
-  --sec-gap:  28px;   /* 섹션 간격 */
-  --lbl-gap:  12px;   /* 섹션 라벨 아래 */
-  --row-gap:  14px;   /* 행 내부 가로 */
-  --stack:     5px;   /* 행 내부 세로 */
-  --mark-w:   20px;   /* 마커·순번 열 고정폭 */
-  --code-w:   28px;   /* 국가 2글자 코드 열. Label 11px + 자간 .08em 기준 실측 */
-  --hs-w:     88px;   /* S8 HS코드 입력 폭 */
-  --marker-gap: 8px;  /* S5 지도 마커와 라벨 사이. S9 MAP MARKER 실측 */
+     뜬 요소의 아래 끝 + 높이 + 여유 한 식에서 전부 나온다. */
+  --pad-tabbar: calc(var(--float-bottom) + var(--tabbar-h) + 20px);
+  --pad-cta:    calc(var(--float-bottom) + var(--cta-h) + 24px);
+  --pad-plain:  calc(var(--safe-bottom) + 24px);
 
-  /* 행 높이 */
-  --row-law:    92px;   /* S2 법률 목록 행 — 디자인 원본 실측 */
-  --row-action: 66px;
-  --row-info:   62px;
-  --row-short:  44px;
+  /* S5 시트 높이. 탭바가 시트 아래쪽에 겹쳐 앉는다. 디자인 원본 실측 432. */
+  --sheet-h: calc(432px + var(--safe-bottom));
 
-  /* 색면 치수 */
-  --badge-h:    22px;
-  --badge-pad:   7px;
-  --block-h:    52px;
-  --block-pad:  14px;
+  /* 라운드 사다리 */
+  --r-badge: 6px;     /* 배지, 체크박스 */
+  --r-m:     12px;    /* 입력칸, 버튼 M·S */
+  --r-l:     14px;    /* 아이콘 타일 44, 콜아웃, 선택 행 */
+  --r-xl:    16px;    /* 버튼 XL, 작은 카드, 경과규정 */
+  --r-card:  20px;    /* 카드 */
+  --r-sheet: 24px;    /* 시트, 탭바 */
+  --r-full:  999px;   /* 칩, 진행바, 점 */
+
+  /* 모션 — TDS. 바운스 없음, 320ms를 넘기지 않는다. */
+  --ease:     cubic-bezier(0.22, 0.61, 0.36, 1);
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
 }
 
-/* 타이포 — Pretendard 하나. 무게로 위계를 만든다. 32px은 없다. */
-.t-h1    { font: 700 24px/30px Pretendard, sans-serif; letter-spacing: -.02em; }
-.t-h2    { font: 700 17px/24px Pretendard, sans-serif; }
-.t-body  { font: 500 15px/22px Pretendard, sans-serif; }
-.t-meta  { font: 400 13px/18px Pretendard, sans-serif; }
-.t-label { font: 700 11px/12px Pretendard, sans-serif; letter-spacing: .08em; text-transform: uppercase; }
-.t-mark  { font: 700 12px/1 'NEO Mark', Pretendard, serif; }  /* serif 폴백 유지 필수 */
-.t-badge { font: 700 12px/1 Pretendard, sans-serif; }
-.tnum    { font-variant-numeric: tabular-nums; }
+/* 짧은 화면(SE·가로 브라우저 툴바)에서는 시트가 지도를 거의 다 덮는다.
+   시트 안이 스크롤되므로 내용은 잃지 않는다. */
+@media (max-height: 760px) {
+  :root { --sheet-h: calc(352px + var(--safe-bottom)); }
+}
 
-/* 스켈레톤 펄스. shimmer를 쓰지 않는다 — 좌→우로 흐르는 광택이 곧 글로우다.
+/* 다크. 디자인 원본의 [data-theme="dark"] 값이다. TDS가 다크 표를 공개하지 않아
+   원본이 라이트 값에서 파생했다. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+
+    --board:              oklch(0.145 0.018 254);
+    --tds-bg-canvas:      oklch(0.185 0.019 254);
+    --tds-bg-primary:     oklch(0.222 0.020 254);
+    --tds-bg-secondary:   oklch(0.272 0.019 254);
+    --tds-bg-tertiary:    oklch(0.320 0.018 254);
+    --tds-bg-elevated:    oklch(0.252 0.020 254);
+    --tds-bg-brand:       oklch(0.640 0.170 254);
+    --tds-bg-brand-press: oklch(0.560 0.170 256);
+    --tds-bg-brand-weak:  oklch(0.300 0.062 254);
+
+    --tds-fg-primary:     oklch(0.968 0.004 247);
+    --tds-fg-secondary:   oklch(0.800 0.014 250);
+    --tds-fg-tertiary:    oklch(0.700 0.016 250);
+    --tds-fg-quaternary:  oklch(0.570 0.018 250);
+    --tds-fg-disabled:    oklch(0.480 0.016 250);
+    --tds-fg-inverse:     oklch(0.180 0.020 254);
+    --tds-fg-brand:       oklch(0.760 0.130 254);
+    --tds-fg-danger:      oklch(0.780 0.150 22);
+    --tds-fg-success:     oklch(0.760 0.130 155);
+
+    --tds-line-default:   oklch(0.335 0.016 250);
+    --tds-line-subtle:    oklch(1 0 0 / 0.09);
+    --tds-line-strong:    oklch(0.450 0.016 250);
+
+    --risk-crit-bg: oklch(0.330 0.080 22);
+    --risk-crit-fg: oklch(0.830 0.130 22);
+    --risk-high-bg: oklch(0.330 0.070 60);
+    --risk-high-fg: oklch(0.850 0.110 62);
+    --risk-med-bg:  oklch(0.330 0.058 90);
+    --risk-med-fg:  oklch(0.880 0.110 90);
+    --risk-low-bg:  oklch(0.300 0.058 155);
+    --risk-low-fg:  oklch(0.830 0.120 155);
+
+    --pin-dot-critical: var(--risk-crit-bg);
+    --pin-dot-high:     var(--risk-high-bg);
+    --pin-dot-medium:   var(--risk-med-bg);
+    --pin-dot-low:      var(--risk-low-bg);
+
+    --shadow-1:     0 1px 2px oklch(0 0 0 / 0.30);
+    --shadow-2:     0 4px 12px oklch(0 0 0 / 0.36), 0 1px 2px oklch(0 0 0 / 0.30);
+    --shadow-sheet: 0 -2px 12px oklch(0 0 0 / 0.36);
+
+    --segment-on: var(--tds-bg-tertiary);
+    --geo-dot:    oklch(0.360 0.017 252);
+  }
+}
+
+/* 타이포 — Pretendard 하나. 디자인 원본에서 되풀이되는 조합만 이름을 붙였다. */
+.t-h1       { font: 700 24px/1.35 var(--font); letter-spacing: -0.02em; }   /* 화면 제목 */
+.t-appbar   { font: 700 20px/1 var(--font); letter-spacing: -0.02em; }      /* 상단바 제목 */
+.t-title    { font: 600 18px/1.45 var(--font); letter-spacing: -0.01em; }   /* 섹션 제목 */
+.t-subtitle { font: 600 17px/1.4 var(--font); letter-spacing: -0.01em; }    /* 목록 행 제목 */
+.t-body     { font: 400 15px/1.5 var(--font); }
+.t-body-m   { font: 500 15px/1.4 var(--font); }
+.t-body-b   { font: 600 15px/1.4 var(--font); }
+.t-meta     { font: 400 13px/1.5 var(--font); }
+.t-label    { font: 600 13px/1.4 var(--font); }                              /* 그룹 라벨, 입력 라벨, 작은 텍스트 버튼 */
+.t-caption  { font: 500 12px/1.4 var(--font); }                              /* 법령 번호, 머리말 */
+.t-small    { font: 400 12px/1.4 var(--font); }                              /* 행 보조줄, 시각 */
+.t-badge    { font: 700 12px/1 var(--font); }
+.tnum       { font-variant-numeric: tabular-nums; }                          /* font 단축속성보다 뒤에 둔다 */
+
+.one-line { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* 버튼. 눌림·비활성은 인라인으로 못 쓰므로 여기서 받는다.
+   사이즈는 TDS 사다리 — XL 56/16, M 40/12, S 36/12.
+   비활성은 부분 회색이 아니라 노드 전체 opacity .3이다. */
+.neo-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex: none;
+  border: none;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease), opacity var(--dur-fast) var(--ease);
+}
+.neo-btn:disabled { opacity: .3; cursor: default; }
+.neo-btn--primary   { background: var(--tds-bg-brand); color: var(--tds-fg-inverse); }
+.neo-btn--secondary { background: var(--tds-bg-secondary); color: var(--tds-fg-primary); }
+.neo-btn--ghost     { background: transparent; color: var(--tds-fg-brand); }
+.neo-btn--primary:not(:disabled):active   { background: var(--tds-bg-brand-press); }
+.neo-btn--secondary:not(:disabled):active { background: var(--tds-bg-tertiary); }
+.neo-btn--ghost:not(:disabled):active     { background: var(--tds-bg-brand-weak); }
+@media (hover: hover) {
+  .neo-btn--primary:not(:disabled):hover { background: var(--tds-bg-brand-press); }
+}
+.neo-btn--xl { height: var(--cta-h); padding: 0 20px; border-radius: var(--r-xl); font: 700 17px/1.25 var(--font); letter-spacing: -0.005em; }
+.neo-btn--m  { height: 40px; padding: 0 16px; border-radius: var(--r-m); font: 600 15px/1.25 var(--font); }
+.neo-btn--s  { height: 36px; padding: 0 14px; border-radius: var(--r-m); font: 600 13px/1 var(--font); }
+
+/* 입력칸. 48px 회색 면에서, 누르면 흰 면 + 1.5px 브랜드 선으로 바뀐다.
+   쉴 때도 1.5px 투명 선을 둬서 포커스가 글자를 밀지 않게 한다 —
+   그래서 좌우 패딩이 14가 아니라 12.5다. */
+.neo-field {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12.5px;
+  border: 1.5px solid transparent;
+  border-radius: var(--r-m);
+  background: var(--tds-bg-secondary);
+  transition: background-color var(--dur-base) var(--ease), border-color var(--dur-base) var(--ease);
+}
+.neo-field:focus-within   { background: var(--tds-bg-primary); border-color: var(--tds-bg-brand); }
+.neo-field[data-invalid]  { background: var(--tds-bg-primary); border-color: var(--tds-fg-danger); }
+.neo-field input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font: 400 15px/1.5 var(--font);
+  color: var(--tds-fg-primary);
+  caret-color: var(--tds-bg-brand);
+}
+.neo-field input::placeholder { color: var(--tds-fg-quaternary); opacity: 1; }
+
+/* 키보드 포커스. 브랜드 선 하나. 입력칸은 칸 테두리가 이미 포커스를 말한다. */
+:focus-visible { outline: 2px solid var(--tds-fg-brand); outline-offset: 2px; }
+
+/* 스켈레톤 펄스. shimmer를 쓰지 않는다 — 좌→우로 흐르는 광택은 TDS도 금한다.
    opacity만 오르내린다. 그라데이션도 transform도 없다. */
 @keyframes neo-pulse {
   0%, 100% { opacity: 1; }
@@ -178,20 +308,15 @@
   .neo-pulse { animation: none; opacity: 1; }
 }
 
-/* 전역 금지 규칙 */
-* { box-shadow: none; border-radius: 0; }
-.is-checkbox { border-radius: 999px; }  /* 유일한 예외 */
-
 /* 터치 타겟 44px.
-   아트보드의 글자 크기와 자리는 그대로 두고 **히트 영역만** 넓힌다.
+   디자인의 크기와 자리는 그대로 두고 **히트 영역만** 넓힌다.
    ::after는 레이아웃 흐름을 차지하지 않으므로 화면의 픽셀이 하나도 움직이지 않는다.
-   padding + 음수 margin으로 늘리면 flex gap 계산이 흔들려 자리가 밀린다.
 
    .tap    가로·세로 둘 다 44px까지. 주변에 다른 타겟이 없는 컨트롤에 쓴다.
    .tap-y  세로만 44px까지. 가로로 이웃한 타겟이 있어 겹치면 안 되는 곳에 쓴다.
 
    <input>에는 쓸 수 없다 — 대체 요소라 의사 요소가 생기지 않는다.
-   입력칸은 감싸는 44px 행을 height:100%로 채워 해결한다. */
+   입력칸은 감싸는 48px 칸을 height:100%로 채워 해결한다. */
 .tap, .tap-y { position: relative; }
 .tap::after, .tap-y::after {
   content: '';
@@ -204,13 +329,12 @@
 }
 .tap-y::after { width: 100%; }
 
-/* 스크롤바를 숨긴다. 앱은 스크롤 막대를 그리지 않는다 —
-   390 폭 안에서 세로선 하나가 레이아웃을 밀고, 그 선은 디자인에 없다. */
+/* 스크롤바를 숨긴다. 앱은 스크롤 막대를 그리지 않는다. */
 * { scrollbar-width: none; }
 *::-webkit-scrollbar { width: 0; height: 0; display: none; }
 
 /* 화면 밖으로 당겨지지 않게 한다. 프레임 뒤에는 아무것도 없고,
-   고무줄처럼 늘어나며 흰 바탕이 드러나면 앱이 웹페이지로 보인다. */
+   고무줄처럼 늘어나며 바탕이 드러나면 앱이 웹페이지로 보인다. */
 html, body {
   height: 100%;
   overflow: hidden;
@@ -229,11 +353,19 @@ html, body {
   .neo-viewport { bottom: auto; height: 100lvh; }
 }
 
+/* Screen의 프레임. --screen-bg는 Screen이 화면마다 넣는다(canvas / primary).
+   하단 보호 그라디언트(--veil)는 그 바탕색으로 끝나야 이음매가 안 보인다 —
+   흰 그라디언트를 canvas 위에 깔면 바닥에 흰 띠가 생긴다. */
+.neo-frame {
+  background: var(--screen-bg);
+  --veil: linear-gradient(to bottom, transparent, var(--screen-bg));
+}
+
 body {
-  background: var(--bg);
-  color: var(--text);
+  background: var(--board);
+  color: var(--tds-fg-primary);
   margin: 0;
-  font: 500 15px/22px Pretendard, sans-serif;
+  font: 400 15px/1.5 var(--font);
   -webkit-font-smoothing: antialiased;
 
   /* 앱처럼 다룬다 — 더블탭 확대, 길게 눌러 뜨는 선택·복사 메뉴를 막는다.
@@ -244,11 +376,11 @@ body {
   user-select: none;
 }
 
-/* 입력만은 예외다. 검색창(S2)에서 선택도 복사도 못 하면 입력이 아니다. */
+/* 입력만은 예외다. 검색창에서 선택도 복사도 못 하면 입력이 아니다. */
 input, textarea {
   -webkit-touch-callout: default;
   -webkit-user-select: text;
   user-select: text;
 }
 
-a { color: var(--accent); text-decoration: underline; }
+a { color: var(--tds-fg-brand); text-decoration: none; }

@@ -1,10 +1,10 @@
+import { Button } from '@/components/Button';
+
 /**
- * 빈 상태 · 에러 문구. 한 줄 + 선택적 --accent 밑줄 액션.
- * 일러스트 없다. 아이콘도 없다. 좌측 정렬이고 radius 0이다 —
- * 상태 화면도 §4 절대 규칙에서 예외가 아니다.
+ * 빈 상태 · 에러 문구. 한 줄 + 선택적인 텍스트 버튼 하나.
+ * 일러스트는 없다 — 쓸 수 있는 에셋이 없고, 이모지로 대신하지 않는다.
  *
- * size는 문구의 위계다. S2 목록 자리는 Body, S4 우선순위 아래와 DotGeo 자리는
- * 본문이 아니라 곁말이라 Meta다.
+ * size는 문구의 위계다. 목록 자리는 body, S4 곁말과 지도 자리는 meta다.
  */
 export function EmptyState({
   message,
@@ -18,38 +18,18 @@ export function EmptyState({
   onAction?: () => void;
 }) {
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'flex-start',
-        gap: 'var(--lbl-gap)',
-      }}
-    >
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 4 }}>
       <p
         className={size === 'body' ? 't-body' : 't-meta'}
-        style={{ margin: 0, color: 'var(--text-3)' }}
+        style={{ color: 'var(--tds-fg-tertiary)' }}
       >
         {message}
       </p>
       {actionLabel && onAction && (
-        <button
-          type="button"
-          className="t-body"
-          onClick={onAction}
-          style={{
-            padding: 0,
-            border: 'none',
-            background: 'transparent',
-            color: 'var(--accent)',
-            textDecoration: 'underline',
-            // button의 UA 기본값이 center다. 좌측 정렬을 명시한다.
-            textAlign: 'left',
-            cursor: 'pointer',
-          }}
-        >
+        // ghost 버튼의 좌우 패딩만큼 당겨 글자를 문구와 한 선에 세운다.
+        <Button variant="ghost" size="m" onClick={onAction} style={{ marginLeft: -16 }}>
           {actionLabel}
-        </button>
+        </Button>
       )}
     </div>
   );

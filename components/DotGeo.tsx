@@ -402,21 +402,22 @@ function paint(canvas: HTMLCanvasElement, scene: Scene, t: number | null): void 
 export function DotGeo({
   mode,
   dotColor = 'var(--geo-dot)',
-  routeColor = 'var(--text)',
-  destColor = 'var(--risk-critical)',
+  routeColor = 'var(--geo-route)',
+  destColor = 'var(--geo-dest)',
   originMarker = true,
   from = FROM,
   to = TO,
   flow = true,
   onProject,
-  safeRight,
+  rightRoom = 0,
+  showError = true,
   style,
 }: {
   mode: GeoMode;
   /**
    * 육지 점 색. **호출부가 반드시 명시한다** — 두 화면이 다른 값을 쓰기 때문이다.
    * S1 지구본은 --geo-dot-globe, S5 지도는 --geo-dot다. 이유는 globals.css에 적었다.
-   * 기본값은 어두운 쪽(--geo-dot)이다. 라벨을 얹는 화면에서 안전한 쪽이다.
+   * 기본값은 흐린 쪽(--geo-dot)이다. 마커를 얹는 화면에서 안전한 쪽이다.
    */
   dotColor?: string;
   routeColor?: string;
@@ -434,11 +435,16 @@ export function DotGeo({
    */
   onProject?: (project: Projector, size: { w: number; h: number }) => void;
   /**
-   * 도착점이 넘으면 안 되는 x. 지도 박스가 우측으로 흘려 잘리는 폭과 마커 라벨
-   * 자리를 뺀 값을 S5가 넘긴다. 넘으면 축척을 줄여 다시 맞춘다(§166).
+   * 오른쪽 끝에서 도착점이 들어오면 안 되는 폭. S5가 도착국 마커 알약이 먹는
+   * 자리를 넘긴다. 도착점이 그 선을 넘으면 축척을 줄여 다시 맞춘다(§166).
    * 넘기지 않으면 박스 폭 전체를 쓴다 — S1 지구본은 잘리는 자리가 없다.
    */
-  safeRight?: number;
+  rightRoom?: number;
+  /**
+   * 지리 데이터를 못 받았을 때 문구와 '다시 시도'를 그릴지.
+   * S1의 84px 지구본에는 문구가 들어갈 자리가 없어 끈다 — 원 바탕만 남는다.
+   */
+  showError?: boolean;
   style?: CSSProperties;
 }) {
   const hostRef = useRef<HTMLDivElement>(null);
@@ -494,7 +500,7 @@ export function DotGeo({
         originMarker,
         [fromLng, fromLat],
         [toLng, toLat],
-        safeRight ?? w,
+        w - rightRoom,
       );
       if (scene) {
         paint(canvas, scene, flow ? 0 : null);
@@ -504,6 +510,11 @@ export function DotGeo({
 
     const observer = new ResizeObserver(rebuild);
     observer.observe(host);
+
+    // 캔버스는 CSS 변수를 그릴 때 한 번 읽고 만다. 앱이 열린 채 기기가 다크로
+    // 넘어가면 점만 옛 테마 색으로 남는다 — 테마가 바뀌면 다시 그린다.
+    const scheme = window.matchMedia('(prefers-color-scheme: dark)');
+    scheme.addEventListener('change', rebuild);
 
     // 250ms를 넘겨야 스켈레톤을 띄운다. 캐시에서 즉시 오면 깜빡임이 된다.
     const gate = window.setTimeout(() => {
@@ -538,6 +549,7 @@ export function DotGeo({
     return () => {
       disposed = true;
       observer.disconnect();
+      scheme.removeEventListener('change', rebuild);
       window.clearTimeout(gate);
       if (raf) cancelAnimationFrame(raf);
     };
@@ -554,7 +566,7 @@ export function DotGeo({
     fromLat,
     toLng,
     toLat,
-    safeRight,
+    rightRoom,
   ]);
 
   return (
@@ -569,10 +581,10 @@ export function DotGeo({
         style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block' }}
       />
 
-      {state === 'error' && (
-        <div style={{ position: 'absolute', inset: 0 }}>
+      {state === 'error' && showError && (
+        <div style={{ position: 'absolute', inset: 0, padding: '12px var(--pad)' }}>
           <EmptyState
-            message="지도를 불러오지 못했습니다"
+            message="지도를 불러오지 못했어요"
             size="meta"
             actionLabel="다시 시도"
             onAction={() => {
@@ -585,7 +597,7 @@ export function DotGeo({
 
       {state === 'loading' && showSkeleton && (
         <div style={{ position: 'absolute', inset: 0 }}>
-          <Skeleton height="100%" />
+          <Skeleton height="100%" radius="0" />
         </div>
       )}
     </div>

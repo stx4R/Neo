@@ -1,21 +1,33 @@
 'use client';
 
-import Link from 'next/link';
-import { useState } from 'react';
-import { Label } from '@/components/Label';
-import { Screen, Section } from '@/components/Screen';
-import { TopBar } from '@/components/TopBar';
+import { useState, useSyncExternalStore } from 'react';
+import { Button } from '@/components/Button';
+import { Card } from '@/components/Card';
 import { ComboPending } from '@/components/ComboEmpty';
 import { EmptyState } from '@/components/EmptyState';
+import { Icon, type IconName } from '@/components/Icon';
+import { IconTile } from '@/components/IconTile';
+import { Row } from '@/components/Row';
+import { Screen } from '@/components/Screen';
+import { IconButton, TopBar } from '@/components/TopBar';
 import { useDataset } from '@/lib/dataset';
 import { derivedNotifications, groupedNotifications, notificationTime } from '@/lib/derive';
 import { useActionsDone } from '@/lib/useActionsDone';
 import { markRead, useNotificationsRead } from '@/lib/useNotificationsRead';
 import {
-  NOTIFICATION_COLOR,
   NOTIFICATION_LABEL,
+  NOTIFICATION_TONE,
+  TONE_COLOR,
   type Notification,
 } from '@/types/neo';
+
+/** 알림 종류의 아이콘. 색은 NOTIFICATION_TONE이 정한다. */
+const NOTIFICATION_ICON: Record<Notification['type'], IconName> = {
+  deadline: 'clock',
+  status: 'arrow-left-right',
+  new: 'plus',
+  done: 'circle-check',
+};
 
 /**
  * S6 Notifications. 탭바가 없는 화면이다.
@@ -27,7 +39,6 @@ export default function NotificationsPage() {
   const read = useNotificationsRead();
   const done = useActionsDone();
   const ds = useDataset();
-  const [bannerOpen, setBannerOpen] = useState(true);
 
   const items = ds ? derivedNotifications(ds, done) : [];
   const groups = ds ? groupedNotifications(items, ds.today) : [];
@@ -36,147 +47,115 @@ export default function NotificationsPage() {
   return (
     <Screen scrollPadBottom="var(--pad-plain)">
       <TopBar
-        left={
-          // router.back()이 아니라 Link다. 딥링크로 들어오면 back()이 갈 곳이 없다.
-          <Link
-            href="/"
-            aria-label="홈으로"
-            className="tap"
-            style={{
-              font: '400 20px/1 Pretendard, sans-serif',
-              color: 'var(--text)',
-              textDecoration: 'none',
-            }}
-          >
-            ←
-          </Link>
-        }
+        inset={16}
+        // router.back()이 아니라 링크다. 딥링크로 들어오면 back()이 갈 곳이 없다.
+        left={<IconButton icon="chevron-left" label="홈으로" href="/" stroke={2} />}
         right={
           <button
             type="button"
-            className="t-meta tap-y"
+            className="t-body-b tap-y"
             onClick={() => markRead(items.map((n) => n.id))}
-            style={{
-              padding: 0,
-              border: 'none',
-              background: 'transparent',
-              color: 'var(--text-3)',
-              cursor: 'pointer',
-            }}
+            style={{ padding: '0 8px', lineHeight: 1, color: 'var(--tds-fg-brand)', cursor: 'pointer' }}
           >
             모두 읽음
           </button>
         }
       />
 
-      <div style={{ padding: '12px var(--pad) 0' }}>
-        <h1 className="t-h1" style={{ margin: 0, color: 'var(--text)' }}>
-          알림
-        </h1>
-        {ds && (
-          <p className="t-meta tnum" style={{ margin: '10px 0 0', color: 'var(--text-3)' }}>
-            읽지 않음 {unread}
-          </p>
-        )}
-      </div>
-
-      {bannerOpen && <PushBanner onClose={() => setBannerOpen(false)} />}
-
-      {!ds && (
-        <div style={{ marginTop: 'var(--sec-gap)', padding: '0 var(--pad)' }}>
-          <ComboPending />
+      <div style={{ padding: '4px var(--pad) 0', display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+          <h1 className="t-h1">알림</h1>
+          {ds && (
+            <p className="t-meta tnum" style={{ color: 'var(--tds-fg-tertiary)' }}>
+              읽지 않음 {unread}
+            </p>
+          )}
         </div>
-      )}
-      {ds && items.length === 0 && (
-        <div style={{ marginTop: 'var(--sec-gap)', padding: '0 var(--pad)' }}>
-          <EmptyState message="새로운 알림이 없습니다" />
-        </div>
-      )}
 
-      {groups.map(({ group, items }) => (
-        <Section key={group} label={group}>
-          {items.map((n, i) => (
-            <NotificationRow
-              key={n.id}
-              notification={n}
-              today={ds!.today}
-              read={read.has(n.id)}
-              last={i === items.length - 1}
-            />
+        <PushBanner />
+
+        {!ds && <ComboPending />}
+        {ds && items.length === 0 && <EmptyState message="새 알림이 없어요" />}
+
+        {ds &&
+          groups.map(({ group, items }) => (
+            <section key={group} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <h2 className="t-label" style={{ color: 'var(--tds-fg-quaternary)' }}>
+                {group}
+              </h2>
+              <Card padding="2px 20px">
+                {items.map((n, i) => (
+                  <NotificationRow
+                    key={n.id}
+                    notification={n}
+                    today={ds.today}
+                    read={read.has(n.id)}
+                    divider={i < items.length - 1}
+                  />
+                ))}
+              </Card>
+            </section>
           ))}
-        </Section>
-      ))}
+      </div>
     </Screen>
   );
 }
 
-/** 푸시 권한 블록. 배너 카드가 아니라 색면이다. */
-function PushBanner({ onClose }: { onClose: () => void }) {
+const noSubscribe = () => () => {};
+
+function readPermission(): NotificationPermission | 'unsupported' {
+  return 'Notification' in window ? Notification.permission : 'unsupported';
+}
+
+/**
+ * 푸시 권한 카드. 권한 요청까지만 한다 — 발송 서버는 만들지 않는다(V6 범위 밖).
+ * 구독(pushManager.subscribe)도 보낼 곳이 없어 만들지 않는다.
+ *
+ * 디자인 원본에 닫기(×)가 없다. 그래서 이미 허용·거부한 기기에서는 처음부터
+ * 그리지 않는다 — 브라우저가 다시 묻지 않는 권한을, 닫을 수도 없는 카드로 매번
+ * 권하게 된다. 알림 API가 없는 브라우저(iOS 사파리 탭 등)에서도 그리지 않는다.
+ */
+function PushBanner() {
+  const permission = useSyncExternalStore(noSubscribe, readPermission, () => null);
+  const [asked, setAsked] = useState(false);
+
+  if (asked || permission !== 'default') return null;
+
   return (
-    <div style={{ marginTop: 20, padding: '0 var(--pad)' }}>
-      <div
-        style={{
-          height: 64,
-          display: 'flex',
-          alignItems: 'center',
-          gap: 'var(--row-gap)',
-          padding: '0 var(--block-pad)',
-          background: 'var(--accent)',
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 14,
+        padding: '18px 20px',
+        borderRadius: 'var(--r-card)',
+        background: 'var(--tds-bg-brand-weak)',
+      }}
+    >
+      <IconTile tone="brand-solid">
+        <Icon name="bell" size={22} />
+      </IconTile>
+      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 3 }}>
+        <span className="t-subtitle">시행일 알림 받기</span>
+        <span className="t-meta tnum" style={{ color: 'var(--tds-fg-secondary)' }}>
+          D-7에 미리 알려드려요
+        </span>
+      </div>
+      <Button
+        size="s"
+        onClick={async () => {
+          try {
+            await Notification.requestPermission();
+          } catch {
+            // 일부 브라우저는 이 자리에서 throw 한다. 그래도 카드는 닫는다.
+          }
+          // 허용이든 거부든 닫는다 — 허용했으면 다시 권할 이유가 없고,
+          // 거부는 브라우저가 다시 묻지 않는다.
+          setAsked(true);
         }}
       >
-        {/* 권한 요청까지만 한다. 발송 서버는 만들지 않는다 — V6 범위 밖이다.
-            구독(pushManager.subscribe)도 보낼 곳이 없어 만들지 않는다. */}
-        <button
-          type="button"
-          onClick={async () => {
-            try {
-              if ('Notification' in window) await Notification.requestPermission();
-            } catch {
-              // 일부 브라우저는 이 자리에서 throw 한다. 그래도 블록은 닫는다.
-            }
-            // 허용이든 거부든 닫는다 — 허용했으면 다시 권할 이유가 없고,
-            // 거부는 브라우저가 다시 묻지 않는다.
-            onClose();
-          }}
-          style={{
-            flex: 1,
-            minWidth: 0,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-start',
-            gap: 'var(--stack)',
-            padding: 0,
-            border: 'none',
-            background: 'transparent',
-            textAlign: 'left',
-            cursor: 'pointer',
-          }}
-        >
-          <span className="t-h2" style={{ color: 'var(--on-color)' }}>
-            시행일 알림 켜기
-          </span>
-          <span className="t-meta tnum" style={{ color: 'var(--on-color)' }}>
-            D-7에 미리 알려드립니다
-          </span>
-        </button>
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label="알림 배너 닫기"
-          className="tap"
-          style={{
-            flex: 'none',
-            font: '400 16px/1 Pretendard, sans-serif',
-            color: 'var(--on-color)',
-            padding: 0,
-            border: 'none',
-            background: 'transparent',
-            cursor: 'pointer',
-          }}
-        >
-          ×
-        </button>
-      </div>
+        켜기
+      </Button>
     </div>
   );
 }
@@ -185,94 +164,58 @@ function NotificationRow({
   notification: n,
   today,
   read,
-  last,
+  divider,
 }: {
   notification: Notification;
   today: string;
   read: boolean;
-  last: boolean;
+  divider: boolean;
 }) {
-  const tone = NOTIFICATION_COLOR[n.type];
+  const tone = NOTIFICATION_TONE[n.type];
 
-  const style = {
-    width: '100%',
-    height: 78,
-    display: 'flex',
-    alignItems: 'stretch',
-    gap: 'var(--row-gap)',
-    borderTop: '1px solid var(--hairline)',
-    borderBottom: last ? '1px solid var(--hairline)' : undefined,
-    borderLeft: 'none',
-    borderRight: 'none',
-    padding: 0,
-    background: 'transparent',
-    textAlign: 'left',
-    color: 'inherit',
-    font: 'inherit',
-    textDecoration: 'none',
-    opacity: read ? 0.5 : undefined,
-    cursor: 'pointer',
-  } as const;
-
-  const inner = (
-    <>
-      {/* 좌측 세로 색 바. 원형 아이콘 배경을 쓰지 않는다. */}
-      <div style={{ flex: 'none', width: 4, background: tone }} />
-      <div
-        style={{
-          flex: 1,
-          minWidth: 0,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 'var(--stack)',
-          justifyContent: 'center',
-        }}
-      >
-        <Label color={tone}>{NOTIFICATION_LABEL[n.type]}</Label>
-        <h2
-          className="t-h2"
+  return (
+    <Row
+      // 법령에 매인 알림은 그 상세로 간다. 가면서 읽음으로 표시한다.
+      href={n.lawId ? `/laws/${n.lawId}` : undefined}
+      onClick={() => markRead([n.id])}
+      align="start"
+      divider={divider}
+      dimmed={read}
+      leading={
+        <IconTile tone={tone} size={40} radius="13px">
+          <Icon name={NOTIFICATION_ICON[n.type]} size={20} stroke={2} />
+        </IconTile>
+      }
+      trailing={
+        <span
           style={{
-            margin: 0,
-            color: 'var(--text)',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
+            flex: 'none',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-end',
+            gap: 6,
           }}
         >
-          {n.title}
-        </h2>
-        <span className="t-meta tnum" style={{ color: 'var(--text-3)' }}>
-          {n.body}
+          <span className="t-small tnum" style={{ color: 'var(--tds-fg-quaternary)' }}>
+            {notificationTime(n.at, today)}
+          </span>
+          {!read && (
+            <span
+              role="img"
+              aria-label="읽지 않음"
+              style={{ width: 6, height: 6, borderRadius: 'var(--r-full)', background: 'var(--tds-bg-brand)' }}
+            />
+          )}
         </span>
-      </div>
-      <div
-        style={{
-          flex: 'none',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'flex-end',
-          gap: 6,
-          justifyContent: 'center',
-        }}
-      >
-        <span className="t-meta tnum" style={{ color: 'var(--text-3)' }}>
-          {notificationTime(n.at, today)}
-        </span>
-        {/* 미읽음 표시. 원형이 아니라 6×6 정사각이다. */}
-        {!read && <span style={{ width: 6, height: 6, background: 'var(--accent)' }} />}
-      </div>
-    </>
-  );
-
-  const onActivate = () => markRead([n.id]);
-
-  return n.lawId ? (
-    <Link href={`/laws/${n.lawId}`} onClick={onActivate} style={style}>
-      {inner}
-    </Link>
-  ) : (
-    <button type="button" onClick={onActivate} style={style}>
-      {inner}
-    </button>
+      }
+    >
+      <span className="t-caption" style={{ fontWeight: 600, color: TONE_COLOR[tone].fg }}>
+        {NOTIFICATION_LABEL[n.type]}
+      </span>
+      <span className="t-body-b one-line">{n.title}</span>
+      <span className="t-small tnum" style={{ color: 'var(--tds-fg-tertiary)' }}>
+        {n.body}
+      </span>
+    </Row>
   );
 }

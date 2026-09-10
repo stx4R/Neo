@@ -1,25 +1,19 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Badge, FilterChip } from '@/components/Badge';
+import { Chip } from '@/components/Badge';
 import { ComboEmpty, ComboPending } from '@/components/ComboEmpty';
 import { EmptyState } from '@/components/EmptyState';
-import { Label } from '@/components/Label';
-import { Mark } from '@/components/Mark';
-import { RiskText } from '@/components/RiskText';
-import { Row, RowMeta, RowTitle } from '@/components/Row';
+import { SearchField } from '@/components/Field';
+import { LawRow } from '@/components/LawRow';
 import { Screen } from '@/components/Screen';
 import { TabBar } from '@/components/TabBar';
 import { TopBar } from '@/components/TopBar';
 import { useDataset } from '@/lib/dataset';
-import { formatDate } from '@/lib/dday';
-
 import {
   FILTER_PRESETS,
   SORT_OPTIONS,
-  dataAsOf,
-  listBadge,
-  markColor,
+  lawBadge,
   openActionsOfLaw,
   productsOfLaw,
   statusLine,
@@ -31,8 +25,8 @@ import { useActionsDone } from '@/lib/useActionsDone';
 import { useLawsSaved } from '@/lib/useLawsSaved';
 import { usePriorities } from '@/lib/usePriorities';
 
-// S2 Laws.
-// 필터·정렬·검색은 전부 useState. localStorage로 옮기는 건 6단계다.
+// S2 Laws. 탭 이름은 '규제'다.
+// 필터·정렬·검색은 전부 useState — 화면을 떠나면 처음으로 돌아간다.
 export default function LawsPage() {
   const [preset, setPreset] = useState<FilterPreset>('내 우선순위');
   const [sort, setSort] = useState<SortKey>('date');
@@ -42,7 +36,6 @@ export default function LawsPage() {
   const saved = useLawsSaved();
 
   const ds = useDataset();
-  const asOf = ds ? dataAsOf(ds) : null;
   const rows = useMemo(
     () => (ds ? visibleLaws(ds, preset, sort, query, priorities, saved) : []),
     [ds, preset, sort, query, priorities, saved],
@@ -50,65 +43,23 @@ export default function LawsPage() {
 
   return (
     <Screen scrollPadBottom="var(--pad-tabbar)" footer={<TabBar />}>
-      <TopBar
-        left={<Label color="var(--text)">NEO</Label>}
-        right={
-          asOf && (
-            <span className="t-meta tnum" style={{ color: 'var(--text-3)' }}>
-              {formatDate(asOf)} 확인
-            </span>
-          )
-        }
-      />
+      {/* 디자인 원본의 우상단 필터 아이콘은 뺐다. 필터는 바로 아래 칩이 전부 한다 —
+          열 화면이 없는 컨트롤을 두지 않는다(4차 B7-3과 같은 판단). */}
+      <TopBar left={<span className="t-appbar">규제</span>} />
 
-      <div style={{ padding: '12px var(--pad) 0' }}>
-        <h1 className="t-h1" style={{ margin: 0, color: 'var(--text)' }}>
-          법률
-        </h1>
-        {/* 국가 필터 칩은 없앴다 — 도착국은 프로필로 고정이라 거를 것이 없다.
-            대신 지금 조합을 여기 적는다. */}
-        {ds && (
-          <p className="t-meta tnum" style={{ margin: '10px 0 0', color: 'var(--text-3)' }}>
-            {ds.country ? `${ds.country.code} ${ds.country.nameKo} · ` : ''}
-            {ds.category ? `${ds.category.nameKo} · ` : ''}
-            {rows.length}건
-          </p>
-        )}
+      <div style={{ padding: '4px var(--pad) 0' }}>
+        <SearchField
+          value={query}
+          onChange={setQuery}
+          placeholder="법령명, 제품, 키워드"
+          ariaLabel="규제 검색"
+        />
       </div>
 
-      {/* 검색 — 박스가 아니다. 하단 1px 선만 남긴다. */}
-      <div style={{ marginTop: 20, padding: '0 var(--pad)' }}>
-        <div
-          style={{
-            height: 44,
-            display: 'flex',
-            alignItems: 'center',
-            borderBottom: '1px solid var(--hairline)',
-          }}
-        >
-          <input
-            className="t-body"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="법령명, 제품, 키워드"
-            aria-label="법률 검색"
-            style={{
-              width: '100%',
-              // 감싸는 행은 border-box 44px라 안쪽이 43px다. 44를 명시해 타겟을 맞춘다.
-              height: 44,
-              border: 'none',
-              outline: 'none',
-              background: 'transparent',
-              color: 'var(--text)',
-              padding: 0,
-            }}
-          />
-        </div>
-      </div>
-
+      {/* 칩 줄은 가로로 스크롤된다. 좌우 패딩을 스크롤 안쪽에 둬서 칩이 화면 끝까지 흐른다. */}
       <div
         style={{
-          marginTop: 16,
+          marginTop: 14,
           display: 'flex',
           gap: 6,
           padding: '0 var(--pad)',
@@ -116,44 +67,37 @@ export default function LawsPage() {
         }}
       >
         {FILTER_PRESETS.map((p) => (
-          <FilterChip key={p} active={preset === p} onClick={() => setPreset(p)}>
+          <Chip key={p} active={preset === p} onClick={() => setPreset(p)}>
             {p}
-          </FilterChip>
+          </Chip>
         ))}
       </div>
 
-      {/* 정렬 — 세그먼트 컨트롤이 아니라 텍스트 둘. */}
+      {/* 국가 필터 칩은 없다 — 도착국은 프로필로 고정이라 거를 것이 없다.
+          대신 지금 조합과 건수를 여기 적는다. */}
       <div
         style={{
-          marginTop: 20,
+          marginTop: 14,
           padding: '0 var(--pad)',
           display: 'flex',
-          justifyContent: 'flex-end',
+          alignItems: 'center',
+          justifyContent: 'space-between',
           gap: 12,
         }}
       >
-        {SORT_OPTIONS.map(({ key, label }) => (
-          <button
-            key={key}
-            type="button"
-            className="t-meta tap-y"
-            onClick={() => setSort(key)}
-            aria-pressed={sort === key}
-            style={{
-              padding: 0,
-              border: 'none',
-              background: 'transparent',
-              cursor: 'pointer',
-              color: sort === key ? 'var(--text)' : 'var(--text-3)',
-              textDecoration: sort === key ? 'underline' : 'none',
-            }}
-          >
-            {label}
-          </button>
-        ))}
+        <span className="t-meta tnum one-line" style={{ color: 'var(--tds-fg-tertiary)' }}>
+          {ds && (
+            <>
+              {ds.country ? `${ds.country.code} ${ds.country.nameKo} · ` : ''}
+              {ds.category ? `${ds.category.nameKo} · ` : ''}
+              {rows.length}건
+            </>
+          )}
+        </span>
+        <Segmented options={SORT_OPTIONS} value={sort} onChange={setSort} />
       </div>
 
-      <div style={{ marginTop: 'var(--sec-gap)', padding: '0 var(--pad)' }}>
+      <div style={{ padding: '14px var(--pad) 0' }}>
         {!ds && <ComboPending />}
         {ds?.empty && (
           <ComboEmpty
@@ -161,62 +105,97 @@ export default function LawsPage() {
           />
         )}
         {ds && !ds.empty && rows.length === 0 && (
-          <EmptyState
-            // '저장됨'만 문구를 따로 준다. 나머지는 조건을 좁혀서 0건이지만
-            // 이건 사용자가 아직 아무것도 저장하지 않은 것이라 원인이 다르다.
-            message={
-              preset === '저장됨'
-                ? '저장한 법률이 없습니다. 법률 상세 우상단에서 저장합니다'
-                : '조건에 맞는 법률이 없습니다'
-            }
-            actionLabel="필터 초기화"
-            // 정렬은 건드리지 않는다 — 결과를 0건으로 만드는 건 필터와 검색뿐이다.
-            onAction={() => {
-              setPreset('전체');
-              setQuery('');
-            }}
-          />
-        )}
-        {rows.map((law, i) => {
-          const badge = listBadge(law, ds!.today);
-          return (
-            <Row
-              key={law.id}
-              height="law"
-              href={`/laws/${law.id}`}
-              leading={<Mark status={law.status} color={markColor(law)} />}
-              leadingAlign="top"
-              dimmed={law.status === 'hold'}
-              trailing={
-                badge ? (
-                  <Badge tone={badge.tone} tnum={badge.tnum}>
-                    {badge.text}
-                  </Badge>
-                ) : undefined
+          <div style={{ paddingTop: 12 }}>
+            <EmptyState
+              // '저장됨'만 문구를 따로 준다. 나머지는 조건을 좁혀서 0건이지만
+              // 이건 사용자가 아직 아무것도 저장하지 않은 것이라 원인이 다르다.
+              message={
+                preset === '저장됨'
+                  ? '저장한 법률이 없어요. 법률 상세 오른쪽 위 북마크로 저장해요'
+                  : '조건에 맞는 법률이 없어요'
               }
-              last={i === rows.length - 1}
-            >
-              <Label>{law.officialRef}</Label>
-              <RowTitle>{law.title}</RowTitle>
-              <RowMeta>
-                {statusLine(law)} · 제품 {productsOfLaw(ds!, law).length} · 미완{' '}
-                {openActionsOfLaw(ds!, law, done).length} · <RiskText level={law.riskLevel} />
-              </RowMeta>
-            </Row>
-          );
-        })}
+              actionLabel="필터 초기화"
+              // 정렬은 건드리지 않는다 — 결과를 0건으로 만드는 건 필터와 검색뿐이다.
+              onAction={() => {
+                setPreset('전체');
+                setQuery('');
+              }}
+            />
+          </div>
+        )}
+        {ds &&
+          rows.map((law) => (
+            <LawRow
+              key={law.id}
+              law={law}
+              href={`/laws/${law.id}`}
+              badge={lawBadge(law, ds.today)}
+              meta={`${statusLine(law)} · 제품 ${productsOfLaw(ds, law).length} · 미완 ${openActionsOfLaw(ds, law, done).length}`}
+            />
+          ))}
 
         {/* 출발국을 바꿨는데 아무것도 안 바뀐 척하지 않는다. 반대로 바뀐 척도 하지 않는다.
             originScope 데이터는 KR 출발분만 채워져 있다. */}
         {ds && ds.hiddenByOrigin > 0 && (
-          <p
-            className="t-meta"
-            style={{ margin: 'var(--sec-gap) 0 0', color: 'var(--text-3)' }}
-          >
-            출발국 KR 외에는 수출국별 요건 데이터가 아직 없습니다
+          <p className="t-meta" style={{ marginTop: 20, color: 'var(--tds-fg-tertiary)' }}>
+            출발국 KR 외에는 수출국별 요건 데이터가 아직 없어요
           </p>
         )}
       </div>
     </Screen>
+  );
+}
+
+/**
+ * 정렬 세그먼트. 회색 트랙 안에서 고른 칸만 떠오른다(--segment-on + shadow-1).
+ * 둘 중 하나를 고르는 상호 배타 선택이라 칩이 아니라 이것이다.
+ */
+function Segmented<K extends string>({
+  options,
+  value,
+  onChange,
+}: {
+  options: readonly { key: K; label: string }[];
+  value: K;
+  onChange: (next: K) => void;
+}) {
+  return (
+    <div
+      style={{
+        flex: 'none',
+        display: 'flex',
+        padding: 3,
+        borderRadius: 'var(--r-m)',
+        background: 'var(--tds-bg-secondary)',
+      }}
+    >
+      {options.map(({ key, label }) => {
+        const on = key === value;
+        return (
+          <button
+            key={key}
+            type="button"
+            aria-pressed={on}
+            onClick={() => onChange(key)}
+            className="t-label tap-y"
+            style={{
+              height: 30,
+              display: 'flex',
+              alignItems: 'center',
+              padding: '0 12px',
+              borderRadius: 9,
+              lineHeight: 1,
+              background: on ? 'var(--segment-on)' : 'transparent',
+              boxShadow: on ? 'var(--shadow-1)' : undefined,
+              color: on ? 'var(--tds-fg-primary)' : 'var(--tds-fg-secondary)',
+              cursor: 'pointer',
+              transition: 'background-color var(--dur-base) var(--ease), color var(--dur-base) var(--ease)',
+            }}
+          >
+            {label}
+          </button>
+        );
+      })}
+    </div>
   );
 }

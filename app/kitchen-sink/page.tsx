@@ -1,279 +1,148 @@
 'use client';
 
-// 3단계 검증용. 공용 컴포넌트 9종을 모든 변형으로 늘어놓는다.
-// 최종 대조(12단계) 전에 지운다.
+// 부품 대조용. 디자인 원본의 01 Tokens · 02 Components 판을 앱 부품으로 다시 늘어놓는다.
+// 라이트·다크는 기기 설정을 따른다 — 둘 다 보려면 OS 테마를 바꿔 본다.
 
 import { useState } from 'react';
-import { Badge, FilterChip } from '@/components/Badge';
-import { DotGeo } from '@/components/DotGeo';
+import { Badge, Chip } from '@/components/Badge';
+import { Button } from '@/components/Button';
+import { Card } from '@/components/Card';
 import { Checkbox } from '@/components/Checkbox';
-import { ColorBlock } from '@/components/ColorBlock';
-import { Label } from '@/components/Label';
-import { Mark, Ordinal } from '@/components/Mark';
-import { RiskText } from '@/components/RiskText';
-import { Row, RowMeta, RowTitle } from '@/components/Row';
+import { DotGeo } from '@/components/DotGeo';
+import { SearchField, TextField } from '@/components/Field';
+import { Icon } from '@/components/Icon';
+import { IconTile } from '@/components/IconTile';
+import { ProgressBar } from '@/components/ProgressBar';
+import { Row } from '@/components/Row';
+import { Screen, Section } from '@/components/Screen';
 import { TabBar } from '@/components/TabBar';
-import { TopBar, UnreadDot } from '@/components/TopBar';
-import { RISK_COLOR, STATUS_COLOR, type RiskLevel } from '@/types/neo';
+import { TopBar } from '@/components/TopBar';
+import { RISK_LABEL, type RiskLevel } from '@/types/neo';
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <section style={{ marginTop: 'var(--sec-gap)', padding: '0 var(--pad)' }}>
-      <Label>{title}</Label>
-      <div style={{ marginTop: 'var(--lbl-gap)' }}>{children}</div>
-    </section>
-  );
-}
-
-const PRODUCTS: [string, string, RiskLevel][] = [
-  ['김치양념 소스', '2103.90', 'high'],
-  ['조미김', '2008.99', 'high'],
-  ['고추장', '2103.90', 'medium'],
-  ['유자청', '2007.99', 'low'],
-];
-
-const TASKS = [
-  '라벨 시안에 원산지 영문표기 반영',
-  '최소 글꼴 0.9mm 이상 확인',
-  '영양성분표 삽입 (Circular 29 연계)',
-  '구포장 재고 소진 계획 수립',
-];
+const RISKS: RiskLevel[] = ['critical', 'high', 'medium', 'low'];
+const TASKS = ['포장재 중량 산정 자료 제출', '재활용 계획 등록 결정'];
 
 export default function KitchenSink() {
-  const [checked, setChecked] = useState([false, true, false, false]);
-  const [filter, setFilter] = useState('내 우선순위');
-
-  const tick = (i: number) => (v: boolean) =>
-    setChecked((prev) => prev.map((c, j) => (j === i ? v : c)));
+  const [checked, setChecked] = useState([true, false]);
+  const [chip, setChip] = useState('내 우선순위');
+  const [query, setQuery] = useState('');
+  const [hs, setHs] = useState('340');
 
   return (
-    <div style={{ position: 'relative', minHeight: '100vh', paddingBottom: 130 }}>
-      <TopBar
-        left={<Label color="var(--text)">NEO</Label>}
-        right={
-          <>
-            <span className="t-meta tnum" style={{ color: 'var(--text-3)' }}>
-              09.03 08:12
-            </span>
-            <UnreadDot count={3} href="/notifications" />
-          </>
-        }
-      />
+    <Screen bg="canvas" scrollPadBottom="var(--pad-tabbar)" footer={<TabBar />}>
+      <TopBar left={<span className="t-appbar">부품</span>} />
 
-      <div style={{ padding: '12px var(--pad) 0' }}>
-        <ColorBlock tone={RISK_COLOR.critical}>대응 필요 3건</ColorBlock>
-      </div>
-
-      <Section title="COLORBLOCK — 색면 4종">
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <ColorBlock tone="var(--accent)">시안 색면</ColorBlock>
-          <ColorBlock tone={RISK_COLOR.high}>주의 색면</ColorBlock>
-          <ColorBlock tone={RISK_COLOR.medium}>경고 색면</ColorBlock>
-          <ColorBlock tone="var(--hold)">보류 색면</ColorBlock>
-        </div>
-      </Section>
-
-      <Section title="BADGE — 색면 배지">
-        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-          <Badge tone={RISK_COLOR.medium} tnum>
-            D-45
-          </Badge>
-          <Badge tone={RISK_COLOR.critical} tnum>
-            D-14
-          </Badge>
-          <Badge tone={RISK_COLOR.critical}>기한 경과</Badge>
-          <Badge tone="var(--hold)">보류</Badge>
-          <Badge tone={RISK_COLOR.high} tnum>
-            HIGH · D-45
-          </Badge>
-          <Badge tone="var(--accent)">내 우선순위</Badge>
-        </div>
-      </Section>
-
-      <Section title="FILTERCHIP — 선택/비선택">
-        <div style={{ display: 'flex', gap: 6, overflowX: 'auto' }}>
-          {['내 우선순위', '전체', 'VN', 'HIGH+', '시행 임박'].map((f) => (
-            <FilterChip key={f} active={filter === f} onClick={() => setFilter(f)}>
-              {f}
-            </FilterChip>
-          ))}
-        </div>
-      </Section>
-
-      <Section title="MARK — 한자 마커 3종 (serif 폴백)">
-        <div style={{ display: 'flex', gap: 'var(--row-gap)', alignItems: 'center' }}>
-          <Mark status="active" />
-          <Mark status="hold" />
-          <Mark status="scheduled" />
-          <span className="t-meta" style={{ color: 'var(--text-3)' }}>
-            좌측 3개가 컴포넌트(serif) — 본문 글꼴로 쓰면 施 留 豫
-          </span>
-        </div>
-      </Section>
-
-      <Section title="RISKTEXT — 위험도 글자색">
-        <span className="t-meta tnum" style={{ color: 'var(--text-3)' }}>
-          <RiskText level="critical" /> · <RiskText level="high" /> ·{' '}
-          <RiskText level="medium" /> · <RiskText level="low" />
-        </span>
-      </Section>
-
-      <Section title="ROW — LAW 92px">
-        <Row
-          height="law"
-          leading={<Mark status="active" />}
-          leadingAlign="top"
-          trailing={
-            <Badge tone={RISK_COLOR.medium} tnum>
-              D-45
+      <div style={{ padding: '8px var(--pad) 0', display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <Section title="배지">
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+            {RISKS.map((r) => (
+              <Badge key={r} tone={r}>
+                {RISK_LABEL[r]}
+              </Badge>
+            ))}
+            <Badge tone="neutral">시행중</Badge>
+            <Badge tone="medium">보류</Badge>
+            <Badge tone="brand">관보</Badge>
+            <Badge tone="medium" tnum>
+              D-433
             </Badge>
-          }
-          onClick={() => {}}
-        >
-          <Label>DECREE 37/2026</Label>
-          <RowTitle>식품 라벨 표시 규정 전면 개정</RowTitle>
-          <RowMeta>
-            2026.01.23 시행 · 제품 4 · 액션 4 · <RiskText level="high" />
-          </RowMeta>
-        </Row>
-        <Row
-          height="law"
-          leading={<Mark status="hold" />}
-          leadingAlign="top"
-          trailing={<Badge tone="var(--hold)">보류</Badge>}
-          dimmed
-          last
-          onClick={() => {}}
-        >
-          <Label>DECREE 46/2026</Label>
-          <RowTitle>식품안전법 시행령 개정</RowTitle>
-          <RowMeta>
-            2026.04.06 보류 · 제품 4 · 액션 0 · <RiskText level="medium" />
-          </RowMeta>
-        </Row>
-      </Section>
+          </div>
+        </Section>
 
-      <Section title="ROW — ACTION 66px · 순번">
-        <Row
-          height="action"
-          leading={<Ordinal n={1} />}
-          leadingAlign="top"
-          trailing={
-            <Badge tone={RISK_COLOR.medium} tnum>
-              D-45
-            </Badge>
-          }
-        >
-          <span className="t-body" style={{ color: 'var(--text)' }}>
-            라벨 시안 재설계 (원산지 영문표기)
-          </span>
-          <Label>DECREE 37/2026</Label>
-        </Row>
-        <Row
-          height="action"
-          leading={<Ordinal n={2} />}
-          leadingAlign="top"
-          trailing={<Badge tone={RISK_COLOR.critical}>기한 경과</Badge>}
-          last
-        >
-          <span className="t-body" style={{ color: 'var(--text)' }}>
-            영양성분 시험성적서 확보
-          </span>
-          <Label>CIRCULAR 29/2023</Label>
-        </Row>
-      </Section>
+        <Section title="버튼">
+          <Button size="xl" block>
+            액션 5건 확인하기
+          </Button>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <Button variant="secondary">편집</Button>
+            <Button variant="ghost">전체보기</Button>
+            <Button size="s" disabled>
+              비활성
+            </Button>
+          </div>
+        </Section>
 
-      <Section title="ROW — ACTION 66px · 체크박스">
-        {TASKS.map((t, i) => (
-          <Row
-            key={t}
-            height="action"
-            leading={<Checkbox checked={checked[i]} onChange={tick(i)} label={t} />}
-            leadingAlign="top"
-            last={i === TASKS.length - 1}
-          >
-            <span
-              className="t-body"
+        <Section title="칩 · 검색 · 입력">
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+            {['내 우선순위', '전체', '저장됨'].map((c) => (
+              <Chip key={c} active={chip === c} onClick={() => setChip(c)}>
+                {c}
+              </Chip>
+            ))}
+          </div>
+          <SearchField value={query} onChange={setQuery} placeholder="법령명, 제품, 키워드" ariaLabel="검색" />
+          <TextField value={hs} onChange={setHs} ariaLabel="HS코드" invalid tnum width={104} />
+        </Section>
+
+        <Section title="목록 · 체크박스">
+          <Card>
+            <Row
+              leading={
+                <IconTile tone="high">
+                  <Icon name="scroll" size={22} />
+                </IconTile>
+              }
+              trailing={
+                <Badge tone="medium" tnum>
+                  D-500
+                </Badge>
+              }
+            >
+              <span className="t-subtitle">상품 라벨 규정</span>
+              <span className="t-meta tnum" style={{ color: 'var(--tds-fg-tertiary)' }}>
+                미완 2 · 제품 4
+              </span>
+            </Row>
+            {TASKS.map((t, i) => (
+              <Row
+                key={t}
+                divider={i < TASKS.length - 1}
+                leading={
+                  <Checkbox
+                    checked={checked[i]}
+                    onChange={(v) => setChecked((prev) => prev.map((c, j) => (j === i ? v : c)))}
+                    label={t}
+                  />
+                }
+              >
+                <span
+                  className="t-body"
+                  style={{
+                    color: checked[i] ? 'var(--tds-fg-tertiary)' : undefined,
+                    textDecoration: checked[i] ? 'line-through' : undefined,
+                  }}
+                >
+                  {t}
+                </span>
+              </Row>
+            ))}
+          </Card>
+        </Section>
+
+        <Section title="진행">
+          <ProgressBar value={0.71} label="진행" />
+        </Section>
+
+        <Section title="지오그래피">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div
               style={{
-                color: checked[i] ? 'var(--text-3)' : 'var(--text)',
-                textDecoration: checked[i] ? 'line-through' : undefined,
+                flex: 'none',
+                width: 84,
+                height: 84,
+                borderRadius: 'var(--r-full)',
+                background: 'var(--tds-bg-secondary)',
+                overflow: 'hidden',
               }}
             >
-              {t}
-            </span>
-            <RowMeta>품질팀 · 2주 · ~10.15</RowMeta>
-          </Row>
-        ))}
-      </Section>
-
-      <Section title="ROW — INFO 62px">
-        <Row height="info" leading={<Mark status="active" />}>
-          <RowTitle>식품 라벨 표시 규정 전면 개정</RowTitle>
-          <RowMeta>
-            2026.01.23 · 제품 4 · <RiskText level="high" />
-          </RowMeta>
-        </Row>
-        <Row height="info" leading={<Mark status="active" />} last>
-          <RowTitle>생산자책임재활용(EPR) 시행</RowTitle>
-          <RowMeta>
-            2026.05.25 · 제품 4 · <RiskText level="critical" />
-          </RowMeta>
-        </Row>
-      </Section>
-
-      <Section title="ROW — SHORT 44px · 상태 스트립 (마커 자연폭)">
-        <Row
-          height="short"
-          leading={<Mark status="hold" fixedWidth={false} />}
-          trailing={
-            <span className="t-meta tnum" style={{ flex: 'none', color: 'var(--text-3)' }}>
-              04.06
-            </span>
-          }
-          last
-        >
-          <RowTitle as="span">DECREE 46/2026 시행 보류</RowTitle>
-        </Row>
-      </Section>
-
-      <Section title="ROW — SHORT 44px · 제품 행">
-        {PRODUCTS.map(([name, hs, risk], i) => (
-          <Row
-            key={name}
-            height="short"
-            trailing={
-              <>
-                <span className="t-meta tnum" style={{ flex: 'none', color: 'var(--text-3)' }}>
-                  HS {hs}
-                </span>
-                <span className="t-meta" style={{ flex: 'none', width: 64, textAlign: 'right' }}>
-                  <RiskText level={risk} />
-                </span>
-              </>
-            }
-            last={i === PRODUCTS.length - 1}
-          >
-            <RowTitle as="span">{name}</RowTitle>
-          </Row>
-        ))}
-      </Section>
-
-      <Section title="DOTGEO — globe / asia 두 모드">
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          {/* 화면과 같은 색을 쓴다 — 여기가 두 값을 나란히 보는 자리다. */}
-          <DotGeo mode="globe" dotColor="var(--geo-dot-globe)" style={{ width: '100%', height: 240 }} />
-          <DotGeo mode="asia" dotColor="var(--geo-dot)" style={{ width: '100%', height: 240 }} />
-        </div>
-      </Section>
-
-      <Section title="STATUS_COLOR 대조">
-        <span className="t-meta" style={{ color: 'var(--text-3)' }}>
-          active {STATUS_COLOR.active} · hold {STATUS_COLOR.hold} · scheduled{' '}
-          {STATUS_COLOR.scheduled}
-        </span>
-      </Section>
-
-      <TabBar />
-    </div>
+              <DotGeo mode="globe" dotColor="var(--geo-dot-globe)" showError={false} />
+            </div>
+            <div style={{ flex: 1, height: 200 }}>
+              <DotGeo mode="asia" dotColor="var(--geo-dot)" />
+            </div>
+          </div>
+        </Section>
+      </div>
+    </Screen>
   );
 }

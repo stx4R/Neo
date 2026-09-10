@@ -2,110 +2,70 @@ import Link from 'next/link';
 import type { CSSProperties, ReactNode } from 'react';
 
 /**
- * 목록 행. 카드 박스가 아니다 — 구분은 border-top 1px --hairline 으로만 한다.
- * 높이 4종은 디자인 원본 실측값이다.
- *   law    92px  S2 법률 목록 (라벨 + 제목 + 메타 3줄)
- *   action 66px  S1·S3 액션 (본문 + 메타 2줄)
- *   info   62px  S1 정보 행 (제목 + 메타 2줄)
- *   short  44px  단문 행 (한 줄)
+ * 목록 행. 카드 안에서도, 카드 없이 목록을 까는 화면(S2)에서도 같은 부품이다.
+ *
+ * 행 사이는 아래 1px line-default로 가른다. 마지막 행에 선을 그을지는 호출부가
+ * 정한다 — 카드 안 마지막 행은 카드 모서리가 닫고, S2 목록은 마지막 행까지 긋는다.
+ *
+ * 높이는 고정하지 않는다. 위아래 패딩만 주고 내용이 높이를 정한다 —
+ * 제목이 두 줄이 되는 조합이 실제로 있다(4차 B9).
  */
-export type RowHeight = 'law' | 'action' | 'info' | 'short';
-
-const HEIGHT: Record<RowHeight, string> = {
-  law: 'var(--row-law)',
-  action: 'var(--row-action)',
-  info: 'var(--row-info)',
-  short: 'var(--row-short)',
-};
-
-/** leading을 위로 붙일 때 쓰는 상단 여백. 원본 실측 — 92px 행은 16, 66px 행은 14. */
-const LEADING_TOP: Partial<Record<RowHeight, number>> = { law: 16, action: 14 };
-
 export function Row({
-  height = 'info',
   leading,
-  leadingAlign = 'center',
   trailing,
-  last = false,
+  children,
+  align = 'center',
+  divider = true,
+  padding = '14px 0',
+  gap = 3,
   dimmed = false,
   href,
   onClick,
-  children,
 }: {
-  height?: RowHeight;
-  /** 마커·순번·체크박스가 들어가는 20px 열. */
+  /** 왼쪽 열 — 아이콘 타일·체크박스. */
   leading?: ReactNode;
-  /** 'top'이면 첫 줄에 맞춰 위로 붙는다. 3줄 이상인 행에서 쓴다. */
-  leadingAlign?: 'center' | 'top';
+  /** 오른쪽 열 — 배지·시각·지우기 버튼. */
   trailing?: ReactNode;
-  /** 목록 마지막 행. border-bottom을 하나 더 그어 닫는다. */
-  last?: boolean;
-  /** 보류 등 힘을 뺀 행. 원본 실측 opacity .55 */
+  children: ReactNode;
+  /** 'start'면 위로 붙는다. 제목이 여러 줄인 행에서 쓴다. */
+  align?: 'center' | 'start';
+  divider?: boolean;
+  padding?: string;
+  /** 가운데 열의 줄 간격. */
+  gap?: number;
+  /** 보류 등 힘을 뺀 행. 디자인 원본 실측 opacity .55 */
   dimmed?: boolean;
-  /** 행 전체가 링크인 경우. onClick과 같이 쓰지 않는다. */
+  /** 행 전체가 링크인 경우. onClick을 같이 주면 이동하면서 그것도 부른다(S6 읽음 표시). */
   href?: string;
   onClick?: () => void;
-  children: ReactNode;
 }) {
   const style: CSSProperties = {
     width: '100%',
-    // 아트보드 실측값은 **최소 높이**다. 고정 높이로 두면 제목이 한 줄 더 길어질 때
-    // 내용이 행 밖으로 흘러 위아래 행을 덮는다 — 4차 B9에서 실기기 기하로 잡았다.
-    // 인도네시아 화장품 조합의 3줄짜리 액션 제목이 66px 행을 6px 침범하고 있었다.
-    // 내용이 들어가는 행은 실측값 그대로 그려진다. 안 들어가는 행만 늘어난다.
-    minHeight: HEIGHT[height],
     display: 'flex',
-    alignItems: 'center',
-    gap: 'var(--row-gap)',
-    borderTop: '1px solid var(--hairline)',
-    borderBottom: last ? '1px solid var(--hairline)' : undefined,
-    borderLeft: 'none',
-    borderRight: 'none',
-    padding: 0,
-    background: 'transparent',
+    alignItems: align === 'start' ? 'flex-start' : 'center',
+    gap: 14,
+    padding,
+    borderBottom: divider ? '1px solid var(--tds-line-default)' : undefined,
     textAlign: 'left',
     color: 'inherit',
-    font: 'inherit',
+    textDecoration: 'none',
     opacity: dimmed ? 0.55 : undefined,
     cursor: href || onClick ? 'pointer' : undefined,
-    textDecoration: 'none',
   };
 
   const inner = (
     <>
-      {leading !== undefined && (
-        <span
-          style={{
-            flex: 'none',
-            display: 'flex',
-            alignSelf: leadingAlign === 'top' ? 'flex-start' : undefined,
-            marginTop:
-              leadingAlign === 'top' ? LEADING_TOP[height] ?? 14 : undefined,
-          }}
-        >
-          {leading}
-        </span>
-      )}
-
-      <div
-        style={{
-          flex: 1,
-          minWidth: 0,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 'var(--stack)',
-        }}
-      >
+      {leading !== undefined && <span style={{ flex: 'none', display: 'flex' }}>{leading}</span>}
+      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap }}>
         {children}
       </div>
-
       {trailing}
     </>
   );
 
   if (href) {
     return (
-      <Link href={href} style={style}>
+      <Link href={href} onClick={onClick} style={style}>
         {inner}
       </Link>
     );
@@ -120,38 +80,36 @@ export function Row({
   return <div style={style}>{inner}</div>;
 }
 
-/** 행 안에서 한 줄로 잘리는 제목. 넘치면 말줄임. */
-export function RowTitle({
-  as = 'h2',
+/**
+ * 이름표 + 값 한 줄. S4 회사 정보와 S3 출처가 쓴다.
+ * 이름표 열은 88px로 고정해 값이 한 세로선에 선다.
+ */
+export function InfoRow({
+  label,
   children,
+  divider = true,
 }: {
-  as?: 'h2' | 'span';
+  label: string;
   children: ReactNode;
+  divider?: boolean;
 }) {
-  const style = {
-    margin: 0,
-    color: 'var(--text)',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-  } as const;
-
-  return as === 'h2' ? (
-    <h2 className="t-h2" style={style}>
-      {children}
-    </h2>
-  ) : (
-    <span className="t-body" style={style}>
-      {children}
-    </span>
-  );
-}
-
-/** 행 안의 보조 줄. 숫자가 섞이므로 tabular-nums를 기본으로 켠다. */
-export function RowMeta({ children }: { children: ReactNode }) {
   return (
-    <span className="t-meta tnum" style={{ color: 'var(--text-3)' }}>
-      {children}
-    </span>
+    <div
+      style={{
+        minHeight: 48,
+        display: 'flex',
+        alignItems: 'center',
+        gap: 12,
+        padding: '12px 0',
+        borderBottom: divider ? '1px solid var(--tds-line-default)' : undefined,
+      }}
+    >
+      <span className="t-meta" style={{ flex: 'none', width: 88, color: 'var(--tds-fg-tertiary)' }}>
+        {label}
+      </span>
+      <span className="t-body tnum" style={{ flex: 1, minWidth: 0 }}>
+        {children}
+      </span>
+    </div>
   );
 }

@@ -6,8 +6,8 @@ import type { MetadataRoute } from 'next';
  *
  * 산출 URL은 /manifest.webmanifest 다. public/sw.js의 프리캐시 목록도 그 URL을 쓴다.
  *
- * 색은 layout.tsx의 viewport.themeColor와 같은 리터럴이다 — 매니페스트는 CSS가
- * 아니라 var()를 쓸 수 없고, 이미 두 곳뿐이라 세 번째 출처를 만들지 않는다.
+ * 색은 layout.tsx의 viewport.themeColor 라이트 값과 같은 리터럴이다 — 매니페스트는
+ * CSS가 아니라 var()도 미디어 쿼리도 쓸 수 없다. 스플래시는 라이트 하나로 둔다.
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -17,8 +17,8 @@ export default function manifest(): MetadataRoute.Manifest {
     start_url: '/',
     display: 'standalone',
     orientation: 'portrait',
-    background_color: '#171717',
-    theme_color: '#171717',
+    background_color: '#f2f5f7',
+    theme_color: '#f2f5f7',
     icons: [
       { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
       { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },

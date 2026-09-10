@@ -10,16 +10,17 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     title: "NEO",
-    // 상태바를 배경(--bg) 위에 겹친다. Screen이 상단 --safe-top을 비워 두고 있다.
-    statusBarStyle: "black-translucent",
+    // 예전에는 "black-translucent"로 상태바를 앱 바탕 위에 겹쳤다. 그 모드의
+    // 상태바 글자는 언제나 흰색이라, 라이트가 기준인 지금은 시계·배터리가 흰 바탕에
+    // 묻힌다. "default"는 상태바를 웹뷰 바깥 위쪽에 따로 둔다 — 그만큼 --safe-top은 0이 된다.
+    statusBarStyle: "default",
   },
   // 매니페스트 아이콘과 달리 apple-touch-icon은 <link>로 따로 알려야 한다.
   icons: { apple: "/icons/apple-touch-icon-180.png" },
   // appleWebApp.capable은 Next 16에서 표준명 mobile-web-app-capable 하나만 낸다.
-  // iOS Safari는 그 이름을 모른다 — apple- 접두 이름이 없으면 위의
-  // statusBarStyle "black-translucent"를 통째로 무시하고, 그러면 웹뷰가
-  // 화면 전체를 덮지 않아 env(safe-area-inset-*)이 0으로 접힌다.
-  // 그 결과가 "탭바가 바닥에서 떠 있고 아래에 검은 띠가 남는" 증상이다.
+  // iOS Safari는 그 이름을 모른다 — apple- 접두 이름이 없으면 홈 화면 앱 설정을
+  // 통째로 무시하고, 그러면 웹뷰가 화면 전체를 덮지 않아 env(safe-area-inset-*)이
+  // 0으로 접힌다. 그 결과가 "탭바가 홈 인디케이터를 비켜 서지 않는" 증상이다.
   // 표준명은 Next가 이미 내보내므로 여기서는 애플 이름만 더한다.
   other: { "apple-mobile-web-app-capable": "yes" },
 };
@@ -33,7 +34,12 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: "#171717",
+  // 브라우저 UI 색. 화면 바탕(--tds-bg-canvas)과 같은 값이다 — CSS 변수를 못 쓰는
+  // 자리라 리터럴이다. 라이트 oklch(0.968 0.004 247), 다크 oklch(0.185 0.019 254).
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f2f5f7" },
+    { media: "(prefers-color-scheme: dark)", color: "#0d131b" },
+  ],
   viewportFit: "cover",
 };
 

@@ -2,80 +2,86 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { Icon, type IconName } from '@/components/Icon';
 
 /**
- * 하단 탭바. 텍스트 4개, 아이콘 없음.
- * 활성 탭은 상단에 2px --accent 색면 한 줄.
+ * 하단 탭바. 바닥에 붙지 않고 떠 있는 둥근 막대다 — 좌우 16, 바닥에서 20,
+ * 높이 64, radius 24. 홈 인디케이터가 20보다 크면 그만큼 올라간다(--float-bottom).
  *
- * 탭 라벨만은 가운데 정렬이다 — 디자인 원본이 justify-content:center 로 그려져 있다.
- * "전부 좌측 정렬" 규칙은 화면 콘텐츠에 적용되고 탭바에는 적용되지 않는다.
+ * 활성 탭은 글자색(fg-primary) + 굵은 선, 나머지는 fg-quaternary.
+ * 탭 아이콘과 라벨만은 가운데 정렬이다.
  *
- * 하단 여백은 iOS 홈 인디케이터 자리다. 아트보드 실측 34px이 아니라 --safe-bottom을
- * 쓴다 — 기기가 알려주는 값이라야 인디케이터가 탭 라벨을 가리지 않는다.
- *
- * bottom: 0 + padding-bottom: 안전영역이다. bottom에 안전영역을 주면 바 전체가
- * 그만큼 위로 밀려 바닥에 검은 띠가 남는다. 바 높이는 --tabbar-cell 하나에서 오고,
- * 스크롤 화면들의 하단 여백(--pad-tabbar)도 같은 값에서 계산된다.
+ * 뒤에 120px 보호 그라디언트(veil)를 깐다. 탭바 둘레로 스크롤되는 글자가
+ * 비치지 않게 한다. S5처럼 시트가 이미 바닥을 덮는 화면에서는 끈다 —
+ * 다크 테마에서 시트 면(elevated) 위에 화면 바탕색 띠가 생긴다.
  */
-const TABS = [
-  { href: '/', label: 'HOME' },
-  { href: '/laws', label: 'LAWS' },
-  { href: '/company', label: 'COMPANY' },
-  { href: '/map', label: 'MAP' },
-] as const;
+const TABS: readonly { href: string; label: string; icon: IconName }[] = [
+  { href: '/', label: '홈', icon: 'home' },
+  { href: '/laws', label: '규제', icon: 'scroll' },
+  { href: '/company', label: '회사', icon: 'building' },
+  { href: '/map', label: '지도', icon: 'map' },
+];
 
-export function TabBar() {
+export function TabBar({ veil = true }: { veil?: boolean }) {
   const pathname = usePathname();
 
   return (
-    <nav
-      style={{
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        bottom: 0,
-        zIndex: 5,
-        paddingBottom: 'var(--safe-bottom)',
-        background: 'var(--bg)',
-        borderTop: '1px solid var(--hairline)',
-      }}
-    >
-      <div style={{ height: 'var(--tabbar-cell)', display: 'flex', alignItems: 'stretch' }}>
-        {TABS.map(({ href, label }) => {
+    <>
+      {veil && (
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            bottom: 0,
+            height: 'calc(var(--float-bottom) + 100px)',
+            zIndex: 5,
+            background: 'var(--veil)',
+            pointerEvents: 'none',
+          }}
+        />
+      )}
+      <nav
+        style={{
+          position: 'absolute',
+          left: 16,
+          right: 16,
+          bottom: 'var(--float-bottom)',
+          zIndex: 5,
+          height: 'var(--tabbar-h)',
+          display: 'flex',
+          alignItems: 'stretch',
+          borderRadius: 'var(--r-sheet)',
+          background: 'var(--tds-bg-elevated)',
+          border: '1px solid var(--tds-line-default)',
+          boxShadow: 'var(--shadow-2)',
+        }}
+      >
+        {TABS.map(({ href, label, icon }) => {
           const active = href === '/' ? pathname === '/' : pathname.startsWith(href);
           return (
             <Link
               key={href}
               href={href}
               aria-current={active ? 'page' : undefined}
-              className="t-label"
               style={{
-                position: 'relative',
                 flex: 1,
                 display: 'flex',
+                flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: active ? 'var(--text)' : 'var(--text-3)',
+                gap: 3,
+                color: active ? 'var(--tds-fg-primary)' : 'var(--tds-fg-quaternary)',
                 textDecoration: 'none',
               }}
             >
-              {active && (
-                <span
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    height: 2,
-                    background: 'var(--accent)',
-                  }}
-                />
-              )}
-              {label}
+              <Icon name={icon} stroke={active ? 2.2 : 1.75} />
+              <span style={{ font: `${active ? 600 : 500} 11px/1 var(--font)` }}>{label}</span>
             </Link>
           );
         })}
-      </div>
-    </nav>
+      </nav>
+    </>
   );
 }

@@ -1,3 +1,5 @@
+import { Icon } from '@/components/Icon';
+
 /**
  * 오프라인 바. 프레임 상단 상태바 자리(--safe-top) 바로 아래에 앉는다.
  *
@@ -11,22 +13,24 @@ export function OfflineBar() {
   return (
     <div
       role="status"
-      className="t-label tnum"
+      className="t-caption"
       style={{
         position: 'absolute',
         top: 'var(--safe-top)',
         left: 0,
         right: 0,
-        height: 'var(--badge-h)',
+        height: 'var(--offline-h)',
         zIndex: 6,
         display: 'flex',
         alignItems: 'center',
+        gap: 6,
         padding: '0 var(--pad)',
-        background: 'var(--risk-medium)',
-        color: 'var(--on-color)',
+        background: 'var(--risk-med-bg)',
+        color: 'var(--risk-med-fg)',
       }}
     >
-      오프라인 · 저장된 데이터로 표시 중
+      <Icon name="triangle-alert" size={14} />
+      오프라인이에요 · 저장된 데이터로 보여드려요
     </div>
   );
 }
