@@ -353,13 +353,22 @@ html, body {
 /* Screen의 바깥 래퍼. 높이를 뷰포트 단위가 아니라 fixed + inset: 0으로 잡는다 —
    100dvh는 iOS Safari가 하단 툴바를 접을 때 굳는다(§39).
 
-   홈 화면 앱(standalone)에서만 높이를 100lvh로 바꾼다. 거기에는 툴바가 없어 §39의
-   이유가 성립하지 않는데, iOS가 fixed 컨테이너의 아래 끝을 브라우저 UI가 아직 있는
-   것처럼 짧게 잡아 탭바가 바닥에서 뜬다(§168). lvh는 브라우저 UI가 없을 때의
-   높이라 standalone에서는 곧 화면 전체다. 위 끝은 그대로 top: 0이다. */
+   홈 화면 앱(standalone)에서만 높이를 따로 잡는다. 거기에는 툴바가 없어 §39의 이유가
+   성립하지 않는데, iOS가 fixed 컨테이너의 아래 끝을 브라우저 UI가 아직 있는 것처럼
+   짧게 잡아 탭바가 바닥에서 뜬다(§168).
+
+   그렇다고 100lvh로 세우면 이번에는 길다. 실기기에서 상태바 높이만큼 아래가 잘렸다 —
+   탭바 라벨과 홈 인디케이터 자리가 화면 밖으로 나갔다(§169). standalone 웹뷰는
+   상태바 아래에서 시작하는데 lvh는 상태바까지 포함한 화면 전체이기 때문이다.
+   그래서 추측하지 않고 잰다: --app-h는 components/AppHeight.tsx가 넣는 window.innerHeight,
+   곧 웹뷰의 실제 높이다.
+
+   min()은 둘 중 짧은 쪽을 고른다 — 어느 쪽이 길게 나와도 잘리지 않는다. 재기 전
+   첫 페인트에는 100%로 돈다. fixed 컨테이너의 높이라 §168처럼 짧을 수는 있어도
+   길지는 않다. 위 끝은 그대로 top: 0이다. */
 .neo-viewport { position: fixed; inset: 0; }
 @media (display-mode: standalone) {
-  .neo-viewport { bottom: auto; height: 100lvh; }
+  .neo-viewport { bottom: auto; height: min(100lvh, var(--app-h, 100%)); }
 }
 
 /* Screen의 프레임. --screen-bg는 Screen이 화면마다 넣는다(canvas / primary).

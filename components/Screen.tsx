@@ -1,8 +1,10 @@
 'use client';
 
 import type { CSSProperties, ReactNode } from 'react';
+import { useEffect } from 'react';
 import { OfflineBar } from '@/components/OfflineBar';
 import { useOnline } from '@/lib/useOnline';
+import { paintScreenBg } from '@/lib/useTheme';
 
 /**
  * 화면 바탕. 디자인 원본이 두 가지로 나눴다 —
@@ -52,6 +54,12 @@ export function Screen({
   bg?: keyof typeof BG;
 }) {
   const online = useOnline();
+
+  // 상태바 자리는 앱이 그리지 않는다 — 홈 화면 앱에서 iOS가 theme-color로 칠한다.
+  // 화면 바탕을 알려 상태바와 화면이 한 색으로 이어지게 한다.
+  useEffect(() => {
+    paintScreenBg(bg);
+  }, [bg]);
 
   return (
     <div

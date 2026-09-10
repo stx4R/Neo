@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { THEME_COLOR } from '@/lib/theme';
+import { SCREEN_COLOR } from '@/lib/theme';
 
 /**
  * public/manifest.json이 아니라 metadata route로 쓴다 — 타입 검사가 붙고
@@ -18,8 +18,8 @@ export default function manifest(): MetadataRoute.Manifest {
     start_url: '/',
     display: 'standalone',
     orientation: 'portrait',
-    background_color: THEME_COLOR.light,
-    theme_color: THEME_COLOR.light,
+    background_color: SCREEN_COLOR.light.canvas,
+    theme_color: SCREEN_COLOR.light.canvas,
     icons: [
       { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
       { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },

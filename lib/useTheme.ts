@@ -2,7 +2,7 @@
 
 import { useSyncExternalStore } from 'react';
 import { flushSync } from 'react-dom';
-import { THEME_COLOR, THEME_KEY, type Theme } from '@/lib/theme';
+import { SCREEN_COLOR, THEME_KEY, type ScreenBg, type Theme } from '@/lib/theme';
 
 /**
  * 화면 테마 스토어. 라이트가 기본이고, 홈 상단바의 버튼으로 다크를 켜고 끈다.
@@ -33,18 +33,39 @@ export function currentTheme(): Theme {
   return snapshot;
 }
 
+/** 지금 화면의 바탕. Screen이 알려준다. 기본은 첫 화면(S1 홈)의 바탕이다. */
+let screenBg: ScreenBg = 'canvas';
+
+/**
+ * 브라우저 UI 색(theme-color). 지금 테마와 지금 화면 바탕이 함께 정한다.
+ * meta는 app/layout.tsx의 <head>에 하나 있다. 그래도 하나라고 가정하지 않고 전부 고친다 —
+ * 확인할 방법이 없는 값이라 하나만 어긋나도 모른다.
+ */
+function paintThemeColor(theme: Theme): void {
+  for (const meta of document.querySelectorAll('meta[name="theme-color"]')) {
+    meta.setAttribute('content', SCREEN_COLOR[theme][screenBg]);
+  }
+}
+
+/**
+ * 화면 바탕이 바뀐 것을 알린다. Screen이 화면마다 부른다.
+ *
+ * 홈 화면 앱에서 상태바 자리는 iOS가 theme-color로 칠한다. 이걸 화면 바탕에 맞춰 두지
+ * 않으면 흰 바탕 화면 위에 회색 띠가 얹힌 것처럼 보인다.
+ */
+export function paintScreenBg(bg: ScreenBg): void {
+  screenBg = bg;
+  paintThemeColor(snapshot);
+}
+
 /**
  * DOM에 입힌다 — <html data-theme>와 브라우저 UI 색(theme-color).
- * theme-color meta는 하나라고 가정하지 않는다. 새로 연 화면에 따라 Next가 같은 meta를
- * 하나 더 싣는 경우가 있어(/laws에서 실측) 전부 고친다.
  */
 export function paintTheme(theme: Theme): void {
   const root = document.documentElement;
   if (theme === 'dark') root.setAttribute('data-theme', 'dark');
   else root.removeAttribute('data-theme');
-  for (const meta of document.querySelectorAll('meta[name="theme-color"]')) {
-    meta.setAttribute('content', THEME_COLOR[theme]);
-  }
+  paintThemeColor(theme);
 }
 
 function setTheme(next: Theme): void {
