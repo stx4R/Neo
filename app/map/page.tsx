@@ -1,0 +1,456 @@
+'use client';
+
+import Link from 'next/link';
+import { useCallback, useMemo, useState } from 'react';
+import { Badge } from '@/components/Badge';
+import { DotGeo, outsideArtboardBox, type Projector } from '@/components/DotGeo';
+import { Label } from '@/components/Label';
+import { Mark } from '@/components/Mark';
+import { Row, RowTitle } from '@/components/Row';
+import { Screen } from '@/components/Screen';
+import { TabBar } from '@/components/TabBar';
+import { TopBar } from '@/components/TopBar';
+import { countries, countryByCode } from '@/lib/data';
+import { useDataset } from '@/lib/dataset';
+import {
+  countryRisk,
+  lawsOfCountry,
+  listBadge,
+  markColor,
+  openActionCountOfCountry,
+  sheetLaws,
+} from '@/lib/derive';
+import { useActionsDone } from '@/lib/useActionsDone';
+import { saveProfile } from '@/lib/useProfile';
+import { RISK_COLOR, RISK_LABEL, type CountryInfo } from '@/types/neo';
+
+/**
+ * 지도 마커는 countries.json에서 나온다 — 좌표를 가진 국가 전부다.
+ * 규격은 S9 MAP MARKER 실측이다.
+ *
+ *   지원 국가   6×6 위험도 색
+ *   출발국      4×4 --text
+ *   지원 예정   4×4 --text-3 + `지원 예정`
+ *
+ * 항로의 출발점·도착점은 DotGeo가 캔버스에 이미 찍으므로 그 두 국가에는
+ * HTML 정사각을 겹쳐 그리지 않는다(size 0). 원형 도트는 없다. 전부 정사각이다.
+ * 마커와 라벨 사이는 --marker-gap.
+ */
+/**
+ * 지도 박스 실측값. 우측으로 MAP_BLEED만큼 흘려 잘리는 것이 아트보드의 의도다
+ * — S1 지구본과 같은 어법이다. 가운데 정렬하지 않는다.
+ */
+const MAP_W = 330;
+const MAP_H = 366;
+const MAP_BLEED = 36;
+
+/**
+ * 마커 라벨이 점 오른쪽으로 먹는 폭. 가장 긴 것이 `US · CRITICAL` 84px이고
+ * 점과 라벨 사이가 15px다 — 99에 여백 13을 더해 잡았다. 딱 맞춰 두면
+ * 라벨이 화면 끝에 1px을 남기고 붙는다. 도착국 마커는 이 자리가 있어야 읽힌다.
+ */
+const LABEL_ROOM = 112;
+
+interface MarkerSpec {
+  country: CountryInfo;
+  size: number;
+  color: string;
+  labelColor: string;
+  label: string;
+  /** 라벨이 점의 어느 쪽에 붙는가. 기본은 오른쪽이고 출발국만 뒤집힐 수 있다. */
+  labelSide: 'left' | 'right';
+}
+
+// S5 Map.
+/**
+ * 조사 '로/으로'를 붙인다. 받침이 없거나 받침이 ㄹ이면 '로', 아니면 '으로'다.
+ * 국가명이 데이터에서 오므로 문장에 고정할 수 없다 —
+ * "일본로", "미국로"가 그대로 화면에 나간다.
+ */
+function withRo(word: string): string {
+  const last = word.charCodeAt(word.length - 1);
+  // 한글 음절이 아니면 판단하지 않고 '로'를 쓴다. 지금 데이터는 전부 한글이다.
+  if (last < 0xac00 || last > 0xd7a3) return `${word}로`;
+  const jong = (last - 0xac00) % 28;
+  return jong === 0 || jong === 8 ? `${word}로` : `${word}으로`;
+}
+
+/**
+ * 국가 검색 판정. 코드(`VN`)·한국어명(`베트남`)·영문명(`Viet Nam`) 셋 다 본다.
+ * 사용자가 무엇을 칠지 모른다 — 지도에 보이는 것은 코드뿐이지만 머리에 있는 것은
+ * 한국어 이름이다. 빈 검색어는 전부 통과시킨다.
+ */
+/**
+ * 도착국이 출발국의 동쪽인가. 경도가 ±180에서 감기므로 짧은 쪽으로 재서 본다 —
+ * KR(129)에서 US(-118.2)는 서쪽으로 247도가 아니라 동쪽으로 113도다.
+ */
+function isEastward(origin: CountryInfo, dest: CountryInfo): boolean {
+  let d = dest.lng - origin.lng;
+  while (d > 180) d -= 360;
+  while (d <= -180) d += 360;
+  return d > 0;
+}
+
+function matchesCountry(c: CountryInfo, query: string): boolean {
+  const q = query.trim().toLowerCase();
+  if (q === '') return true;
+  return [c.code, c.nameKo, c.nameEn].some((s) => s.toLowerCase().includes(q));
+}
+
+export default function MapPage() {
+  const done = useActionsDone();
+  const ds = useDataset();
+
+  // 지도 박스 안의 마커 픽셀 좌표. DotGeo가 다시 그릴 때마다 갱신되므로
+  // 창 크기를 바꿔도 마커가 점을 따라간다.
+  const [points, setPoints] = useState<([number, number] | null)[]>([]);
+  // 지원 국가 마커를 탭했을 때 "도착국을 바꿀까요"를 묻는 상대. 모달이 아니다.
+  const [ask, setAsk] = useState<CountryInfo | null>(null);
+  // 국가 검색어. 마커만 거른다 — 지도와 항로는 그대로 둔다.
+  // 검색으로 지형이 사라지면 어디를 보고 있는지 알 수 없다.
+  const [query, setQuery] = useState('');
+  // 시트는 프로필의 도착국 하나를 말한다.
+  const focus = ds?.country;
+  const origin = ds ? countryByCode(ds.profile.originCountry) : undefined;
+  const countryLaws = ds && focus ? lawsOfCountry(ds, focus.code) : [];
+  const rows = ds && focus ? sheetLaws(ds, focus.code, done) : [];
+  const openCount = ds && focus ? openActionCountOfCountry(ds, focus.code, done) : 0;
+  const risk = ds && focus ? countryRisk(ds, focus.code) : null;
+
+  const markers: MarkerSpec[] = useMemo(() => {
+    if (!ds) return [];
+    const destCode = ds.profile.destinationCountry;
+    const originCode = ds.profile.originCountry;
+    const destRisk = focus ? countryRisk(ds, focus.code) : null;
+    // 도착국이 아시아 밖이면 지도가 태평양까지 넓어져 축척이 작아진다. 그러면
+    // 이웃 국가 라벨이 서로 겹쳐 글자가 글자 위에 얹힌다 — `JP`가 `CN · 지원 예정`
+    // 위에 앉았다. 지원 예정 마커는 "왜 넷뿐인가"에 답하는 장치인데 그 답은
+    // 아시아 지도에서만 읽힌다. 넓어진 지도에서는 접는다(§166).
+    const dense = focus ? outsideArtboardBox([focus.lng, focus.lat]) : false;
+    return countries
+      .filter((c) => c.destination || c.code === originCode)
+      .filter((c) => !dense || c.supported || c.code === originCode)
+      .map((c) => {
+        if (c.code === originCode) {
+          return {
+            country: c,
+            // 항로 출발점은 캔버스가 이미 찍는다.
+            size: c.code === destCode ? 0 : 4,
+            color: 'var(--text)',
+            labelColor: 'var(--text-3)',
+            label: `${c.code} · 출발`,
+            // 도착국이 동쪽이면 라벨을 왼쪽에 붙인다. 항로가 나가는 쪽에 그대로 두면
+            // 이웃한 도착국 라벨과 겹친다 — KR(129)과 JP(139.8)는 10.8도 떨어져
+            // 있고 그 간격보다 `KR · 출발`이 넓다(§166).
+            labelSide: focus && isEastward(c, focus) ? 'left' : 'right',
+          };
+        }
+        if (!c.supported) {
+          return {
+            country: c,
+            size: 4,
+            color: 'var(--text-3)',
+            labelColor: 'var(--text-3)',
+            label: `${c.code} · 지원 예정`,
+            labelSide: 'right',
+          };
+        }
+        const isDest = c.code === destCode;
+        const r = isDest ? destRisk : null;
+        return {
+          country: c,
+          size: isDest ? 0 : 6,
+          color: r ? RISK_COLOR[r] : 'var(--text)',
+          labelColor: isDest ? 'var(--text)' : 'var(--text-3)',
+          label: isDest && r ? `${c.code} · ${RISK_LABEL[r]}` : c.code,
+          labelSide: 'right',
+        };
+      });
+  }, [ds, focus]);
+
+  // DotGeo는 이 콜백을 ref에 담아 두고 매 렌더 갱신한다. 그래서 markers가 바뀌면
+  // 다음 재생성 때 최신 목록으로 좌표를 뽑는다. markers가 바뀌는 유일한 계기는
+  // 도착국 변경이고, 그때 DotGeo의 to도 같이 바뀌어 재생성이 걸린다.
+  const handleProject = useCallback(
+    (project: Projector) => {
+      setPoints(markers.map((m) => project([m.country.lng, m.country.lat])));
+    },
+    [markers],
+  );
+
+
+  const confirmSwitch = ask && (
+    <div
+      role="status"
+      style={{
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 'calc(418px + var(--safe-bottom))',
+        zIndex: 6,
+        minHeight: 'var(--block-h)',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 'var(--row-gap)',
+        padding: '0 var(--pad)',
+        background: 'var(--risk-medium)',
+      }}
+    >
+      <span className="t-body" style={{ flex: 1, minWidth: 0, color: 'var(--on-color)' }}>
+        도착국을 {withRo(ask.nameKo)} 바꾸면 완료 표시가 초기화됩니다
+      </span>
+      <button
+        type="button"
+        className="t-body"
+        onClick={() => {
+          if (ds) {
+            saveProfile({
+              ...ds.profile,
+              destinationCountry: ask.code,
+              updatedAt: new Date().toISOString(),
+            });
+          }
+          setAsk(null);
+        }}
+        style={{
+          flex: 'none',
+          padding: 0,
+          border: 'none',
+          background: 'transparent',
+          color: 'var(--on-color)',
+          textDecoration: 'underline',
+          cursor: 'pointer',
+        }}
+      >
+        바꾸기
+      </button>
+      <button
+        type="button"
+        className="t-meta"
+        onClick={() => setAsk(null)}
+        style={{
+          flex: 'none',
+          padding: 0,
+          border: 'none',
+          background: 'transparent',
+          color: 'var(--on-color)',
+          cursor: 'pointer',
+        }}
+      >
+        취소
+      </button>
+    </div>
+  );
+
+  const sheet = (
+    <div
+      style={{
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 0,
+        // 시트 위에 탭바가 겹쳐 앉는 구조는 유지한다. 다만 탭바가 안전영역만큼
+        // 두꺼워지므로 시트도 같이 늘려야 마지막 행("법률 N건 모두 보기")이
+        // 탭바 뒤로 들어가지 않는다. 418은 안전영역 0 기준 실측값이다.
+        height: 'calc(418px + var(--safe-bottom))',
+        zIndex: 4,
+        background: 'var(--surface)',
+        borderTop: '1px solid var(--hairline)',
+      }}
+    >
+      {/* 드래그 핸들. 이 화면의 유일한 중앙 정렬이다.
+          시각 요소로만 둔다 — 드래그로 펼친 뒤의 상태가 명세에 없고, 시트 내용이
+          418px에 정확히 맞아 확장할 것이 없다. 그래서 vaul을 쓰지 않는다. */}
+      <div style={{ display: 'flex', justifyContent: 'center', padding: '6px 0 0' }}>
+        <div style={{ width: 36, height: 3, background: 'var(--text-3)' }} />
+      </div>
+
+      <div style={{ padding: '10px var(--pad) 0' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <h1 className="t-h1" style={{ margin: 0, color: 'var(--text)' }}>
+            {focus?.nameKo ?? ''}
+          </h1>
+          {risk && <Badge tone={RISK_COLOR[risk]}>{RISK_LABEL[risk]}</Badge>}
+        </div>
+        <p className="t-meta tnum" style={{ margin: '10px 0 0', color: 'var(--text-3)' }}>
+          규제 {countryLaws.length} · 미완 액션 {openCount}
+        </p>
+
+        {rows.length > 0 ? (
+          <div style={{ marginTop: 20 }}>
+            {rows.map((law, i) => {
+              const badge = listBadge(law, ds!.today);
+              return (
+                <Row
+                  key={law.id}
+                  height="info"
+                  href={`/laws/${law.id}`}
+                  leading={<Mark status={law.status} color={markColor(law)} />}
+                  trailing={
+                    badge && (
+                      <Badge tone={badge.tone} tnum={badge.tnum}>
+                        {badge.text}
+                      </Badge>
+                    )
+                  }
+                  last={i === rows.length - 1}
+                >
+                  <Label>{law.officialRef}</Label>
+                  <RowTitle>{law.title}</RowTitle>
+                </Row>
+              );
+            })}
+          </div>
+        ) : (
+          <p className="t-meta" style={{ margin: '20px 0 0', color: 'var(--text-3)' }}>
+            대응이 필요한 법률이 없습니다
+          </p>
+        )}
+
+        <div style={{ marginTop: 12 }}>
+          <Link href="/laws" className="t-body tap-y">
+            법률 {countryLaws.length}건 모두 보기
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <Screen
+      // 시트가 스크롤 영역을 통째로 덮는다. 하단 여백은 시트 쪽에서 잡는다.
+      scrollPadBottom="0px"
+      footer={
+        <>
+          {confirmSwitch}
+          {sheet}
+          <TabBar />
+        </>
+      }
+    >
+      {/* 상단바·검색이 지도 위에 앉는다. 지도가 DOM 뒤라 z-index로 올린다. */}
+      <div style={{ position: 'relative', zIndex: 3 }}>
+        <TopBar
+          left={<Label color="var(--text)">NEO</Label>}
+          right={
+            <span className="t-meta" style={{ color: 'var(--text-3)' }}>
+              필터
+            </span>
+          }
+        />
+        {/* 검색. 4차에서 실기능이 됐다 — 지원 국가가 VN 하나였을 때는 거를 것이
+            없었지만 지금은 넷이고 마커는 열셋이다. S2 검색과 같은 어법이다:
+            박스가 아니라 하단 1px 선만 남긴다. */}
+        <div style={{ padding: '0 var(--pad)' }}>
+          <div
+            style={{
+              height: 44,
+              display: 'flex',
+              alignItems: 'center',
+              borderBottom: '1px solid var(--hairline)',
+            }}
+          >
+            <input
+              className="t-body"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="국가 검색"
+              aria-label="국가 검색"
+              style={{
+                width: '100%',
+                // 감싸는 행은 border-box 44px라 안쪽이 43px다. 44를 명시해 타겟을 맞춘다.
+                height: 44,
+                border: 'none',
+                outline: 'none',
+                background: 'transparent',
+                color: 'var(--text)',
+                padding: 0,
+              }}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* 지도. 330×366을 우측 밖으로 흘린다 — S1 지구본과 같은 어법이다.
+          가운데 정렬하지 않는다. 좌측에 여백이 남는 비대칭이 의도다.
+          아트보드의 top:60은 화면 좌표다. Screen이 상단 상태바 자리를 이미 잡으므로
+          콘텐츠 좌표로는 16px이 된다. */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 16,
+          right: -MAP_BLEED,
+          width: MAP_W,
+          height: MAP_H,
+        }}
+      >
+        <DotGeo
+          mode="asia"
+          dotColor="var(--geo-dot)"
+          from={origin ? [origin.lng, origin.lat] : undefined}
+          to={focus ? [focus.lng, focus.lat] : undefined}
+          // 도착국 마커가 라벨까지 보이는 자리에 들어와야 한다. 잘리는 우측과
+          // 라벨 자리를 뺀 선을 넘으면 DotGeo가 축척을 줄인다(§166).
+          safeRight={MAP_W - MAP_BLEED - LABEL_ROOM}
+          onProject={handleProject}
+        />
+        {markers.map((m, i) => {
+          const xy = points[i];
+          if (!xy) return null;
+          // 검색은 여기서 거른다. markers 배열 자체를 줄이면 points의 인덱스가
+          // 어긋나 마커가 엉뚱한 좌표에 붙는다 — 좌표는 DotGeo가 markers 순서대로 준다.
+          if (!matchesCountry(m.country, query)) return null;
+          const selectable =
+            m.country.supported && m.country.code !== ds?.profile.destinationCountry;
+          const flip = m.labelSide === 'left';
+          return (
+            <div
+              key={m.country.code}
+              style={{
+                position: 'absolute',
+                // 왼쪽에 붙는 라벨은 상자가 점에서 **끝나야** 한다. left로 두면
+                // 상자가 점에서 시작해 라벨이 오른쪽에 그대로 남는다.
+                left: flip ? undefined : Math.round(xy[0]),
+                right: flip ? MAP_W - Math.round(xy[0]) : undefined,
+                top: Math.round(xy[1]),
+                display: 'flex',
+                flexDirection: flip ? 'row-reverse' : 'row',
+                alignItems: 'center',
+                gap: 'var(--marker-gap)',
+                transform: 'translateY(-50%)',
+                pointerEvents: selectable ? 'auto' : 'none',
+              }}
+            >
+              {m.size > 0 && (
+                <span
+                  style={{ display: 'block', width: m.size, height: m.size, background: m.color }}
+                />
+              )}
+              <button
+                type="button"
+                disabled={!selectable}
+                onClick={() => selectable && setAsk(m.country)}
+                // 고를 수 있는 마커만 히트 영역을 넓힌다. 지원 국가는 지도에서 서로
+                // 멀리 떨어져 있어 44px로 키워도 겹치지 않는다. 미지원 마커는
+                // pointerEvents:none이라 애초에 타겟이 아니다.
+                className={selectable ? 't-label tap' : 't-label'}
+                style={{
+                  marginLeft: m.size || flip ? 0 : 9 + 6,
+                  marginRight: !m.size && flip ? 9 + 6 : 0,
+                  padding: 0,
+                  border: 'none',
+                  background: 'transparent',
+                  whiteSpace: 'nowrap',
+                  color: m.labelColor,
+                  cursor: selectable ? 'pointer' : 'default',
+                }}
+              >
+                {m.label}
+              </button>
+            </div>
+          );
+        })}
+      </div>
+    </Screen>
+  );
+}

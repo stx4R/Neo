@@ -1,0 +1,51 @@
+node_modules/
+.next/
+out/
+build/
+.DS_Store
+*.pem
+.env*
+!.env.example
+.vercel
+*.tsbuildinfo
+next-env.d.ts
+
+# public/sw*.js 와 public/workbox-*.js 를 무시하던 줄을 지웠다.
+# Serwist·next-pwa가 생성하는 산출물을 걸러내려던 규칙인데, 4단계 판정에서
+# 서비스워커를 직접 쓰기로 했다. public/sw.js는 생성물이 아니라 소스다.
+
+# create-next-app 기본값에서 병합
+/coverage
+.pnp
+.pnp.*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# 에디터·IDE 설정. 사람마다 다르고 앱과 무관하다
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS 부산물. 이 폴더는 OneDrive 동기화 아래에 있어 실제로 생긴다
+Thumbs.db
+ehthumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# 툴체인 캐시. 지우면 다시 만들어진다
+.turbo/
+.swc/
+.eslintcache
+.cache/
+
+# 로그
+*.log
+logs/
+
+# 에이전트 로컬 설정.
+# .claude/launch.json은 dev 서버 정의라 공용이다 — 계속 추적한다.
+.claude/settings.local.json
+.claude/*.local.json

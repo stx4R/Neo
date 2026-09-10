@@ -1,0 +1,199 @@
+{
+  "laws": [
+    {
+      "id": "VN-2026-037",
+      "officialRef": "DECREE 37/2026",
+      "title": "상품 라벨 규정 전면 개정 — 전자라벨 도입",
+      "country": "VN",
+      "category": "labeling",
+      "itemCategories": [
+        "food",
+        "cosmetics",
+        "electronics"
+      ],
+      "hsPrefixes": [],
+      "sourceTier": "official",
+      "status": "active",
+      "riskLevel": "high",
+      "effectiveDate": "2026-01-23",
+      "deadline": "2028-01-23",
+      "addedAt": "2026-09-01",
+      "transitionEndsAt": "2028-01-23",
+      "transitionNote": "시행일(2026.01.23) 전에 인쇄된 라벨·포장재는 시행일부터 2년을 넘기지 않는 범위에서 소진 허용 — 2028.01.23까지",
+      "changes": [
+        {
+          "before": "라벨 규정이 Decree 43/2017과 Decree 111/2021로 나뉘어 있음",
+          "after": "Decree 37/2026이 둘을 대체해 하나로 통합"
+        },
+        {
+          "before": "종이 라벨의 물리적 표시만 인정",
+          "after": "QR·RFID·NFC 등 데이터 매체를 통한 전자라벨 허용"
+        },
+        {
+          "before": "품목 구분 없이 동일한 표시 항목",
+          "after": "저위험 상품은 필수 표시항목 전부를 전자라벨로 대체 가능하나, 중·고위험 상품은 상품명·책임자·원산지·경고문구를 반드시 물리적 라벨에 표시(제53조)"
+        }
+      ],
+      "affectedProductIds": [],
+      "actionIds": [
+        "VN-a-037-all-01",
+        "VN-a-037-all-02",
+        "VN-a-037-food-01",
+        "VN-a-037-cos-01",
+        "VN-a-037-elec-01"
+      ],
+      "source": {
+        "url": "https://congbao.chinhphu.vn/van-ban/nghi-dinh-so-37-2026-nd-cp-468865.htm",
+        "publisher": "베트남 정부",
+        "publishedAt": "2026-01-23",
+        "originalLang": "vi",
+        "lastVerified": "2026-09-06"
+      }
+    },
+    {
+      "id": "VN-2026-110",
+      "officialRef": "DECREE 110/2026",
+      "title": "생산자책임재활용(EPR) 의무 시행",
+      "country": "VN",
+      "category": "packaging",
+      "itemCategories": [
+        "food",
+        "cosmetics",
+        "electronics"
+      ],
+      "hsPrefixes": [],
+      "sourceTier": "secondary",
+      "status": "active",
+      "riskLevel": "critical",
+      "effectiveDate": "2026-05-25",
+      "deadline": null,
+      "addedAt": "2026-09-01",
+      "changes": [
+        {
+          "before": "포장재 재활용 의무 없음",
+          "after": "자체 재활용 또는 기금 분담금 납부 의무"
+        },
+        {
+          "before": "포장재 중량 신고 불필요",
+          "after": "포장재 종류별 중량 산정·신고 의무"
+        },
+        {
+          "before": "08/2022/ND-CP 체계에서 면제 기준 연매출 200억 동",
+          "after": "110/2026/ND-CP가 대체 — 면제 기준 연매출 300억 동, 전기전자는 포장재와 별도의 재활용률 적용"
+        }
+      ],
+      "affectedProductIds": [],
+      "actionIds": [
+        "VN-a-05",
+        "VN-a-06",
+        "VN-a-07",
+        "VN-a-110-elec-01",
+        "VN-a-110-elec-02"
+      ],
+      "source": {
+        "url": "https://english.luatvietnam.vn/decree-no-110-2026-nd-cp-dated-april-01-2026-of-the-government-detailing-a-number-of-articles-of-the-law-on-environmental-protection-regarding-respo-430991-doc1.html",
+        "publisher": "베트남 정부",
+        "publishedAt": "2026-04-01",
+        "originalLang": "vi",
+        "lastVerified": "2026-09-06"
+      }
+    }
+  ],
+  "actions": [
+    {
+      "id": "VN-a-037-all-01",
+      "lawId": "VN-2026-037",
+      "title": "라벨 시안을 Decree 37/2026 표시 항목에 맞춰 재작성",
+      "owner": "디자인",
+      "effort": "4주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-037-all-02",
+      "lawId": "VN-2026-037",
+      "title": "2026.01.23 이전 인쇄 포장재 재고 소진 계획 수립",
+      "owner": "영업",
+      "effort": "1주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-037-food-01",
+      "lawId": "VN-2026-037",
+      "title": "식품 표시사항(원산지·영양성분) 베트남어 보조라벨 확정",
+      "owner": "품질팀",
+      "effort": "3주",
+      "dueDate": null,
+      "itemCategories": [
+        "food"
+      ]
+    },
+    {
+      "id": "VN-a-037-cos-01",
+      "lawId": "VN-2026-037",
+      "title": "화장품 전성분·사용기한 베트남어 보조라벨 확정",
+      "owner": "품질팀",
+      "effort": "3주",
+      "dueDate": null,
+      "itemCategories": [
+        "cosmetics"
+      ]
+    },
+    {
+      "id": "VN-a-037-elec-01",
+      "lawId": "VN-2026-037",
+      "title": "전기전자 표시사항(정격전압·소비전력·안전경고) 베트남어 보조라벨 확정",
+      "owner": "품질팀",
+      "effort": "3주",
+      "dueDate": null,
+      "itemCategories": [
+        "electronics"
+      ]
+    },
+    {
+      "id": "VN-a-05",
+      "lawId": "VN-2026-110",
+      "title": "포장재 중량 산정 자료 제출",
+      "owner": "품질팀",
+      "effort": "2주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-06",
+      "lawId": "VN-2026-110",
+      "title": "재활용 계획 등록 또는 분담금 납부 결정",
+      "owner": "경영",
+      "effort": "1주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-07",
+      "lawId": "VN-2026-110",
+      "title": "포장재 종류별 재질 분류표 작성",
+      "owner": "품질팀",
+      "effort": "1주",
+      "dueDate": null
+    },
+    {
+      "id": "VN-a-110-elec-01",
+      "lawId": "VN-2026-110",
+      "title": "전기전자 제품 재활용 의무 대상 여부 판정 — 연매출 300억 동 기준",
+      "owner": "경영",
+      "effort": "2주",
+      "dueDate": null,
+      "itemCategories": [
+        "electronics"
+      ]
+    },
+    {
+      "id": "VN-a-110-elec-02",
+      "lawId": "VN-2026-110",
+      "title": "제품별 재활용 비용 분담을 수입자와 계약서에 반영",
+      "owner": "영업",
+      "effort": "3주",
+      "dueDate": null,
+      "itemCategories": [
+        "electronics"
+      ]
+    }
+  ]
+}
